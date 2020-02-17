@@ -43,6 +43,8 @@ public class ServerFacade {
 
     private static Map<User, List<Status>> statusesByUser;
 
+    private static Set<User> allUsers;
+
     /*--------------------------------FOLLOWEE-----------------------------------------------------*/
 
     public FollowingResponse getFollowees(FollowingRequest request) {
@@ -206,11 +208,86 @@ public class ServerFacade {
 
 
     public FollowResponse postFollow(FollowRequest request){
+        if(allUsers == null){
+            getAllUsers();
+        }
+
+        Follow follow = request.getFollow();
+        User follower = follow.getFollower();
+        User followee = follow.getFollowee();
+
+        /* Check to see if the follower and followee actually exist */
+        if(!allUsers.contains(followee)){
+            return new FollowResponse(false, "Followee doesn't exist");
+        }
+        if(!allUsers.contains(follower)){
+            return new FollowResponse(false, "Follower doesn't exist");
+        }
+
+        if(follower.equals(followee)){
+            return new FollowResponse(false, "User can't follow themself");
+        }
+
+        List<User> followers = followersByFollowee.get(followee);
+
+        if(followers == null){
+            followers = new ArrayList<User>();
+            followersByFollowee.put(followee, followers);
+        }
+
+        List<User> followees = followeesByFollower.get(follower);
+        if(followees == null){
+            followees = new ArrayList<User>();
+            followeesByFollower.put(follower, followees);
+        }
+
+        if(followees.contains(followee)){
+            return new FollowResponse(false, "Follow relationship already exists");
+        }
+        if(followers.contains(follower)){
+            return new FollowResponse(false, "Follow relationship already exists");
+        }
+
+        followers.add(follower);
+        followees.add(followee);
+
         return new FollowResponse(true, "Follow posted");
     }
 
     public UnfollowResponse deleteFollow(UnfollowRequest request){
-        return new UnfollowResponse(true, "Follow posted");
+        if(allUsers == null){
+            getAllUsers();
+        }
+
+        Follow follow = request.getFollow();
+        User follower = follow.getFollower();
+        User followee = follow.getFollowee();
+
+        /* Check to see if the follower and followee actually exist */
+        if(!allUsers.contains(followee)){
+            return new UnfollowResponse(false, "Followee doesn't exist");
+        }
+        if(!allUsers.contains(follower)){
+            return new UnfollowResponse(false, "Follower doesn't exist");
+        }
+
+
+        List<User> followers = followersByFollowee.get(followee);
+
+
+        List<User> followees = followeesByFollower.get(follower);
+
+        if(followees == null || !followees.contains(followee)){
+            return new UnfollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
+        }
+        if(followers == null || !followers.contains(follower)){
+            return new UnfollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
+        }
+
+        followers.remove(follower);
+        followees.remove(followee);
+
+        return new UnfollowResponse(true, "Follow deleted");
     }
 
 
@@ -220,18 +297,9 @@ public class ServerFacade {
 
     private Map<User, List<Status>> initializeStatuses() {
         Map<User, List<Status>> statusesByUser = new HashMap<>();
-        if(followeesByFollower == null) {
-            followeesByFollower = initializeFollowees();
+        if(allUsers == null){
+            getAllUsers();
         }
-        if(followersByFollowee == null){
-            followersByFollowee = initializeFollowers();
-        }
-        Set<User> users1 = followeesByFollower.keySet();
-        Set<User> users2 = followersByFollowee.keySet();
-
-        Set<User> allUsers = new HashSet<>();
-        allUsers.addAll(users1);
-        allUsers.addAll(users2);
 
         List<Status> statuses = getStatusGenerator().generateAllStatuses(new ArrayList<>(allUsers), 0,5);
         for(Status status: statuses){
@@ -293,6 +361,14 @@ public class ServerFacade {
     /*------------------------------------------STATUS Related------------------------------*/
 
     public StatusResponse postStatus(StatusRequest request){
+        if(statusesByUser == null){
+            statusesByUser = initializeStatuses();
+        }
+        List<Status> userStatuses = statusesByUser.get(request.getAuthor());
+        if(userStatuses == null){
+            userStatuses = new ArrayList<Status>();
+        }
+        userStatuses.add(request.getStatus());
         return new StatusResponse(true, "Status posted");
     }
 
@@ -375,16 +451,29 @@ public class ServerFacade {
 
     /*------------------------------------------USER-RELATED-------------------------------------*/
 
+    private void getAllUsers(){
+        if(followeesByFollower == null) {
+            followeesByFollower = initializeFollowees();
+        }
+        if(followersByFollowee == null){
+            followersByFollowee = initializeFollowers();
+        }
+        Set<User> users1 = followeesByFollower.keySet();
+        Set<User> users2 = followersByFollowee.keySet();
 
+        Set<User> users = new HashSet<>();
+        users.addAll(users1);
+        users.addAll(users2);
+        allUsers = users;
+
+    }
 
     public SignUpResponse postUser(SignUpRequest request){
         SignUpResponse response;
-        if(followeesByFollower == null){
-            followeesByFollower = initializeFollowees();
-        }
         if(checkValidAlias(request.getNewUser().getAlias())){
             /*Add new user to the existing list of users*/
             followeesByFollower.put(request.getNewUser(), new ArrayList<User>());
+            followersByFollowee.put(request.getNewUser(), new ArrayList<User>());
 
             /*Log the new user in*/
             LoginService.getInstance().setCurrentUser(request.getNewUser());
@@ -412,12 +501,11 @@ public class ServerFacade {
     }
 
     private User searchUser(String alias){
-        if(followeesByFollower == null){
-            followeesByFollower = initializeFollowees();
+        if(allUsers == null){
+            getAllUsers();
         }
-        User desiredUser = null;
 
-        Set<User> allUsers = followeesByFollower.keySet();
+        User desiredUser = null;
         for(User user: allUsers) {
             if(user.getAlias().equals(alias)){
                 desiredUser = user;

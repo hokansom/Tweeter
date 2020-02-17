@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.net;
 
+import android.util.ArraySet;
 import android.util.StatsLog;
 
 import org.junit.jupiter.api.Assertions;
@@ -7,21 +8,32 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.Feed;
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.Status;
+import edu.byu.cs.tweeter.model.domain.URIs;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.services.LoginService;
 import edu.byu.cs.tweeter.net.request.FeedRequest;
+import edu.byu.cs.tweeter.net.request.FollowRequest;
 import edu.byu.cs.tweeter.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.net.request.SignUpRequest;
+import edu.byu.cs.tweeter.net.request.StatusRequest;
 import edu.byu.cs.tweeter.net.request.StoryRequest;
+import edu.byu.cs.tweeter.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.net.response.FeedResponse;
+import edu.byu.cs.tweeter.net.response.FollowResponse;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.net.response.SignUpResponse;
+import edu.byu.cs.tweeter.net.response.StatusResponse;
 import edu.byu.cs.tweeter.net.response.StoryResponse;
+import edu.byu.cs.tweeter.net.response.UnfollowResponse;
 
 class ServerFacadeTest {
 
@@ -40,6 +52,9 @@ class ServerFacadeTest {
     private final User user13 = new User("John", "Doe", "");
     private final User user14 = new User("Jane", "Doe", "");
     private final User user15 = new User("Scooby", "Do", "");
+    private final User user16 = new User("Shawn", "Spencer", "");
+    private final User user17 = new User("Henry", "Spencer", "");
+
 
     private final Follow follow1 = new Follow(user9, user5);
 
@@ -64,11 +79,12 @@ class ServerFacadeTest {
     private final Follow follow17 = new Follow(user14,  user8);
     private final Follow follow18 = new Follow(user15, user8);
     private final Follow follow19 = new Follow(user13, user12);
+    private final Follow follow20 = new Follow(user16, user17);
 
 
     private final List<Follow> follows = Arrays.asList(follow1, follow2, follow3, follow4, follow5, follow6,
             follow7, follow8, follow9, follow10, follow11, follow12, follow13, follow14, follow15,
-            follow16, follow17, follow18, follow19);
+            follow16, follow17, follow18, follow19, follow20);
 
     private final Status status1 = new Status(user3, "Testing status 1");
     private final Status status2 = new Status(user3, "Testing status 2");
@@ -268,6 +284,91 @@ class ServerFacadeTest {
         Assertions.assertFalse(response.hasMorePages());
     }
 
+    /*--------------------------------- Follow test---------------------------------------*/
+    @Test
+    void testPostFollow(){
+        FollowerRequest followerRequest = new FollowerRequest(user2, 5,null);
+        FollowerResponse followerResponse = serverFacadeSpy.getFollowers(followerRequest);
+        Assertions.assertFalse(followerResponse.getFollowers().contains(user1));
+
+        Follow follow = new Follow(user3, user2);
+        FollowRequest request = new FollowRequest(follow);
+        FollowResponse response = serverFacadeSpy.postFollow(request);
+
+        Assertions.assertEquals("Follow posted", response.getMessage());
+
+        followerRequest = new FollowerRequest(user2, 5,null);
+        followerResponse = serverFacadeSpy.getFollowers(followerRequest);
+        Assertions.assertTrue(followerResponse.getFollowers().contains(user3));
+    }
+
+    @Test
+    void testPostFollow_followSelf(){
+        Follow follow = new Follow(user1, user1);
+        FollowRequest request = new FollowRequest(follow);
+        FollowResponse response = serverFacadeSpy.postFollow(request);
+
+        Assertions.assertEquals("User can't follow themself", response.getMessage());
+    }
+
+    @Test
+    void testPostFollow_nonexistingFollowee(){
+        User nonexisting = new User("No", "Name", "");
+        Follow follow = new Follow(user1, nonexisting);
+        FollowRequest request = new FollowRequest(follow);
+        FollowResponse response = serverFacadeSpy.postFollow(request);
+
+        Assertions.assertEquals("Followee doesn't exist", response.getMessage());
+    }
+
+    @Test
+    void testPostFollow_nonexistingFollower(){
+        User nonexisting = new User("No", "Name", "");
+        Follow follow = new Follow(nonexisting, user1);
+        FollowRequest request = new FollowRequest(follow);
+        FollowResponse response = serverFacadeSpy.postFollow(request);
+
+        Assertions.assertEquals("Follower doesn't exist", response.getMessage());
+    }
+
+    @Test
+    void testPostFollow_alreadyFollowing(){
+        Follow follow = new Follow(user9, user5);
+        FollowRequest request = new FollowRequest(follow);
+        FollowResponse response = serverFacadeSpy.postFollow(request);
+
+        Assertions.assertEquals("Follow relationship already exists", response.getMessage());
+    }
+
+    /*--------------------------------- Unfollow test---------------------------------------*/
+
+    @Test
+    void testPostUnfollow(){
+        FollowerRequest followerRequest = new FollowerRequest(user17, 5,null);
+        FollowerResponse followerResponse = serverFacadeSpy.getFollowers(followerRequest);
+        Assertions.assertTrue(followerResponse.getFollowers().contains(user16));
+
+        Follow follow = new Follow(user16, user17);
+        UnfollowRequest request = new UnfollowRequest(follow);
+        UnfollowResponse response = serverFacadeSpy.deleteFollow(request);
+
+        Assertions.assertEquals("Follow deleted", response.getMessage());
+
+        followerRequest = new FollowerRequest(user17, 5,null);
+        followerResponse = serverFacadeSpy.getFollowers(followerRequest);
+        Assertions.assertFalse(followerResponse.getFollowers().contains(user16));
+    }
+
+    @Test
+    void testPostUnfollow_invalidFollow(){
+        Follow follow = new Follow(user17, user16);
+        UnfollowRequest request = new UnfollowRequest(follow);
+        UnfollowResponse response = serverFacadeSpy.deleteFollow(request);
+
+        Assertions.assertEquals("Can't remove a follow relationship that doesn't exist.", response.getMessage());
+    }
+
+
     /*---------------------------------Stories test---------------------------------------*/
 
     @Test
@@ -363,4 +464,85 @@ class ServerFacadeTest {
         Assertions.assertEquals(response.getFeed().getFeed().get(0).getAuthor(),user8);
         Assertions.assertFalse(response.hasMorePages());
     }
+
+    /*---------------------------------Status test---------------------------------------*/
+    @Test
+    void testPostStatus(){
+        Status status = new Status(user1, "Testing posting status");
+        StatusRequest request = new StatusRequest(user1, status);
+        StatusResponse response = serverFacadeSpy.postStatus(request);
+
+        Assertions.assertEquals(response.getMessage(), "Status posted");
+
+        StoryRequest storyRequest = new StoryRequest(user1, 5, null);
+        StoryResponse storyResponse = serverFacadeSpy.getStory(storyRequest);
+
+        Assertions.assertEquals(2, storyResponse.getStory().getStory().size());
+        Assertions.assertTrue(storyResponse.getStory().getStory().contains(status));
+
+    }
+
+    /*--------------------------------- Signup test---------------------------------------*/
+
+    @Test
+    void testPostUser_DuplicateAlias(){
+        User user = new User("Daffy", "Duck", "");
+        SignUpRequest request = new SignUpRequest(user);
+        SignUpResponse response = serverFacadeSpy.postUser(request);
+
+        Assertions.assertEquals(response.getMessage(), "Alias is already taken");
+        Assertions.assertNull(response.getUser());
+    }
+
+    @Test
+    void testPostUser_sameName_differentAlias(){
+        User user = new User("Daffy", "Duck", "ducky", "");
+        SignUpRequest request = new SignUpRequest(user);
+        SignUpResponse response = serverFacadeSpy.postUser(request);
+
+        Assertions.assertEquals(response.getUser(), user);
+        Assertions.assertNotEquals( "Alias is already taken", response.getMessage());
+    }
+
+    @Test
+    void testPostUser_validUsername(){
+        User user = new User("Morgan", "Davis", "Morgan", "");
+        SignUpRequest request = new SignUpRequest(user);
+        SignUpResponse response = serverFacadeSpy.postUser(request);
+
+        Assertions.assertEquals(response.getUser(), user);
+        Assertions.assertNotEquals( "Alias is already taken", response.getMessage());
+    }
+
+
+    @Test
+    void testPostUser_checkStory(){
+        User user = new User("Jacob", "Davis", "Jacob", "");
+        SignUpRequest request = new SignUpRequest(user);
+        SignUpResponse response = serverFacadeSpy.postUser(request);
+
+        Assertions.assertEquals(response.getUser(), user);
+        Assertions.assertNotEquals( "Alias is already taken", response.getMessage());
+
+        StoryRequest storyRequest = new StoryRequest(user, 5, null);
+        StoryResponse storyResponse = serverFacadeSpy.getStory(storyRequest);
+
+        Assertions.assertEquals(0, storyResponse.getStory().getStory().size());
+    }
+
+    @Test
+    void testPostUser_checkFeed(){
+        User user = new User("Morgan", "Davis", "");
+        SignUpRequest request = new SignUpRequest(user);
+        SignUpResponse response = serverFacadeSpy.postUser(request);
+
+        Assertions.assertEquals(response.getUser(), user);
+        Assertions.assertNotEquals( "Alias is already taken", response.getMessage());
+
+        FeedRequest feedRequest = new FeedRequest(user, 5, null);
+        FeedResponse feedResponse = serverFacadeSpy.getFeed(feedRequest);
+
+        Assertions.assertEquals(0, feedResponse.getFeed().getFeed().size());
+    }
+
 }

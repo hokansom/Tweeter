@@ -22,6 +22,7 @@ import edu.byu.cs.tweeter.net.request.FeedRequest;
 import edu.byu.cs.tweeter.net.request.FollowRequest;
 import edu.byu.cs.tweeter.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.request.StatusRequest;
 import edu.byu.cs.tweeter.net.request.StoryRequest;
@@ -30,6 +31,7 @@ import edu.byu.cs.tweeter.net.response.FeedResponse;
 import edu.byu.cs.tweeter.net.response.FollowResponse;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.net.response.SearchResponse;
 import edu.byu.cs.tweeter.net.response.SignUpResponse;
 import edu.byu.cs.tweeter.net.response.StatusResponse;
 import edu.byu.cs.tweeter.net.response.StoryResponse;
@@ -496,7 +498,7 @@ class ServerFacadeTest {
 
     @Test
     void testPostUser_sameName_differentAlias(){
-        User user = new User("Daffy", "Duck", "ducky", "");
+        User user = new User("Daffy", "Duck", "@ducky", "");
         SignUpRequest request = new SignUpRequest(user);
         SignUpResponse response = serverFacadeSpy.postUser(request);
 
@@ -506,7 +508,7 @@ class ServerFacadeTest {
 
     @Test
     void testPostUser_validUsername(){
-        User user = new User("Morgan", "Davis", "Morgan", "");
+        User user = new User("Morgan", "Davis", "@Morgan", "");
         SignUpRequest request = new SignUpRequest(user);
         SignUpResponse response = serverFacadeSpy.postUser(request);
 
@@ -517,7 +519,7 @@ class ServerFacadeTest {
 
     @Test
     void testPostUser_checkStory(){
-        User user = new User("Jacob", "Davis", "Jacob", "");
+        User user = new User("Jacob", "Davis", "@Jacob", "");
         SignUpRequest request = new SignUpRequest(user);
         SignUpResponse response = serverFacadeSpy.postUser(request);
 
@@ -545,4 +547,23 @@ class ServerFacadeTest {
         Assertions.assertEquals(0, feedResponse.getFeed().getFeed().size());
     }
 
+    /*--------------------------------- Search user test---------------------------------------*/
+    @Test
+    void testSearchAlias_existingUser(){
+        String alias = "@DaffyDuck";
+        SearchRequest request = new SearchRequest(alias);
+        SearchResponse response = serverFacadeSpy.searchUser(request);
+
+        Assertions.assertEquals(String.format("Found user with given alias %s", alias), response.getMessage());
+        Assertions.assertEquals(response.getUser(), user1);
+    }
+
+    @Test
+    void testSearchAlias_nonexistingUser(){
+        String alias = "@Ducky";
+        SearchRequest request = new SearchRequest(alias);
+        SearchResponse response = serverFacadeSpy.searchUser(request);
+
+        Assertions.assertEquals(String.format("Could not find user with given alias %s", alias), response.getMessage());
+    }
 }

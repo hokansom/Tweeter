@@ -2,7 +2,7 @@ package edu.byu.cs.tweeter.model.services;
 
 import edu.byu.cs.tweeter.net.ServerFacade;
 import edu.byu.cs.tweeter.net.request.FeedRequest;
-import edu.byu.cs.tweeter.net.response.FeedRepsonse;
+import edu.byu.cs.tweeter.net.response.FeedResponse;
 
 public class FeedService {
 
@@ -20,7 +20,7 @@ public class FeedService {
 
     private FeedService(){ serverFacade = new ServerFacade();}
 
-    public FeedRepsonse getFeed(FeedRequest request){
+    public FeedResponse getFeed(FeedRequest request){
         return serverFacade.getFeed(request);
     }
 }

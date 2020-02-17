@@ -16,4 +16,8 @@ public class FollowerResponse extends PagedResponse {
         this.followers = followers;
     }
 
+    public List<User> getFollowers(){
+        return this.followers;
+    }
+
 }

@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.net;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.request.StatusRequest;
 import edu.byu.cs.tweeter.net.request.StoryRequest;
 import edu.byu.cs.tweeter.net.request.UnfollowRequest;
-import edu.byu.cs.tweeter.net.response.FeedRepsonse;
+import edu.byu.cs.tweeter.net.response.FeedResponse;
 import edu.byu.cs.tweeter.net.response.FollowResponse;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
@@ -182,13 +183,11 @@ public class ServerFacade {
 
     /* Generate follower data */
     private Map<User, List<User>> initializeFollowers() {
-
         Map<User, List<User>> followersByFollowee = new HashMap<>();
-
         List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
-                0, 50, FollowGenerator.Sort.FOLLOWER_FOLLOWEE);
+                0, 50, FollowGenerator.Sort.FOLLOWEE_FOLLOWER);
 
-        // Populate a map of followees, keyed by follower so we can easily handle followee requests
+        // Populate a map of followers, keyed by followee so we can easily handle follower requests
         for(Follow follow : follows) {
             List<User> followers = followersByFollowee.get(follow.getFollowee());
 
@@ -197,9 +196,8 @@ public class ServerFacade {
                 followersByFollowee.put(follow.getFollowee(), followers);
             }
 
-            followers.add(follow.getFollowee());
+            followers.add(follow.getFollower());
         }
-
         return followersByFollowee;
     }
 
@@ -256,7 +254,7 @@ public class ServerFacade {
         Collections.sort(statuses, new Comparator<Status>() {
             @Override
             public int compare(Status status1, Status status2) {
-                int result = status1.getPublishDate().compareTo(status2.getPublishDate());
+                int result = status1.compareTo(status2);
                 return result;
             }
         });
@@ -278,14 +276,14 @@ public class ServerFacade {
         return statusIndex;
     }
 
-    private List<Status> getPagedStatuses(int limit, Status lastStatus, List<Status> statuses){
+    private List<Status> getPagedStatuses(int limit, int statusIndex, List<Status> statuses){
         statuses = sortStatuses(statuses);
         List<Status> desiredStatuses = new ArrayList<>(limit);
 
         if(null != statuses ){
-            int statusIndex = getStatusStartingIndex(lastStatus, statuses);
+//            int statusIndex = getStatusStartingIndex(lastStatus, statuses);
             for(int limitCounter = 0; statusIndex < statuses.size() && limitCounter < limit; limitCounter++, statusIndex++){
-                desiredStatuses.add(statuses.get(limitCounter));
+                desiredStatuses.add(statuses.get(statusIndex));
             }
 
         }
@@ -302,11 +300,12 @@ public class ServerFacade {
 
     /*------------------------------------------FEED-------------------------------------*/
 
-    public FeedRepsonse getFeed(FeedRequest request){
+    public FeedResponse getFeed(FeedRequest request){
         List<Status> all_statuses = new ArrayList<>();
         List<Status> final_statuses = new ArrayList<>(request.getLimit());
         assert request.getLimit() >= 0;
         assert request.getUser() != null;
+        int endingIndex = 0;
 
         if(statusesByUser == null){
             statusesByUser = initializeStatuses();
@@ -314,6 +313,9 @@ public class ServerFacade {
 
         if(request.getLimit() > 0){
             List<User> allFollowees = followeesByFollower.get(request.getUser());
+            if(allFollowees == null){
+                return new FeedResponse(new Feed(new ArrayList<Status>(), request.getUser()), false);
+            }
             for(User user: allFollowees){
                 List<Status> temp_statuses = statusesByUser.get(user);
                 if(null != temp_statuses){
@@ -322,12 +324,15 @@ public class ServerFacade {
                     }
                 }
             }
-            final_statuses = getPagedStatuses(request.getLimit(), request.getLastStatus(), all_statuses);
+            int statusIndex = getStatusStartingIndex(request.getLastStatus(), all_statuses);
+            final_statuses = getPagedStatuses(request.getLimit(), statusIndex, all_statuses);
+            endingIndex  = statusIndex + final_statuses.size();
+
         }
         Feed feed = new Feed(final_statuses, request.getUser());
-        boolean hasMorePages = all_statuses.size() > final_statuses.size() ? true :  false;
+        boolean hasMorePages = endingIndex < all_statuses.size();
 
-        return new FeedRepsonse(feed, hasMorePages);
+        return new FeedResponse(feed, hasMorePages);
     }
 
 
@@ -343,6 +348,8 @@ public class ServerFacade {
         assert request.getLimit() >= 0;
         assert request.getUser() != null;
 
+        int endingIndex = 0;
+
         if(statusesByUser == null){
             statusesByUser = initializeStatuses();
         }
@@ -350,14 +357,16 @@ public class ServerFacade {
         if(request.getLimit() > 0){
            all_statuses = statusesByUser.get(request.getUser());
            if(all_statuses == null){
-               throw new RuntimeException("Expected List of statuses, got null");
+               return new StoryResponse(new Story(new ArrayList<Status>(), request.getUser()), false);
            }
-           final_statuses = getPagedStatuses(request.getLimit(), request.getLastStatus(), all_statuses);
+           int statusIndex = getStatusStartingIndex(request.getLastStatus(), all_statuses);
+           final_statuses = getPagedStatuses(request.getLimit(), statusIndex, all_statuses);
+           endingIndex = statusIndex + final_statuses.size();
         }
 
         Story story = new Story(final_statuses, request.getUser());
 
-        boolean hasMorePages = all_statuses.size() > final_statuses.size() ? true :  false;
+        boolean hasMorePages = endingIndex < all_statuses.size();
 
         return new StoryResponse(story, hasMorePages);
     }

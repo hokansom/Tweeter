@@ -77,7 +77,7 @@ public class StatusGenerator {
         Collections.sort(statuses, new Comparator<Status>() {
             @Override
             public int compare(Status status1, Status status2) {
-                int result = status1.getPublishDate().compareTo(status2.getPublishDate());
+                int result = status1.compareTo(status2);
                 return result;
             }
         });

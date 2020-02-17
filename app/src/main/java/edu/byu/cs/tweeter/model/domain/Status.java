@@ -2,10 +2,14 @@ package edu.byu.cs.tweeter.model.domain;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.net.URISyntaxException;
 import java.util.Date;
 
-public class Status {
+public class Status implements Comparable<Status> {
     private Date publishDate;
     private String message;
     private User author;
@@ -72,5 +76,34 @@ public class Status {
         this.mentions = mentions;
     }
 
-    //FIXME: implement a compareTo using the status dates
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Status status = (Status) o;
+        if (!publishDate.equals(status.publishDate)){ return false;  }
+        else if(!author.equals(status.getAuthor())) { return false; }
+        else if(!message.equals(status.getMessage())) { return false; }
+        else{
+            /*FIXME: potential error. May need more than just checking the date, author, and message*/
+            return true;
+        }
+    }
+
+    @Override
+    public int compareTo(Status o) {
+        return this.getPublishDate().compareTo(o.getPublishDate());
+    }
+
+    @NotNull
+
+    @NonNull
+    @Override
+    public String toString(){
+        return "Status{" +
+                "message='" + message + '\'' +
+                ", author ='" + author.getName() + '\'' +
+                ", publish date ='" + publishDate + '\'' +
+                '}';
+    }
 }

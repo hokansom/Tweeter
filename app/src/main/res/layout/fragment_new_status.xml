@@ -46,11 +46,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="false"
             android:layout_marginRight="0dp"
-            android:src="@android:drawable/btn_dialog" />
+            android:background="#FFFFFF"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
-        <!--        <Icon-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:margin="16dp"/>-->
 
     </RelativeLayout>
 

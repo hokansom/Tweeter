@@ -28,6 +28,7 @@
 
     <string name="sampleAlias">"@UserAlias"</string>
     <string name="sampleUserName">The User</string>
+    <string name="dot">· </string>
     <string name="sampleDate">February 14</string>
     <string name="sampleStatus">This is a sample status. </string>
 

@@ -12,6 +12,8 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.view.main.feed.FeedFragment;
 import edu.byu.cs.tweeter.view.main.follower.FollowerFragment;
 import edu.byu.cs.tweeter.view.main.following.FollowingFragment;
+import edu.byu.cs.tweeter.view.main.signIn.SignInFragment;
+import edu.byu.cs.tweeter.view.main.signUp.SignUpFragment;
 import edu.byu.cs.tweeter.view.main.story.StoryFragment;
 
 /**
@@ -34,12 +36,11 @@ class SignInPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == SIGNIN_FRAGMENT_POSITION){
-//            return new SignInFragment();
-            return PlaceholderFragment.newInstance(position + 1);
+            return new SignInFragment();
         }
         else if(position == SIGNUP_FRAGMENT_POSITION){
-//            return new SignUpFragment();
-            return PlaceholderFragment.newInstance(position + 1);
+            return new SignUpFragment();
+
         }
         else{
             return PlaceholderFragment.newInstance(position + 1);

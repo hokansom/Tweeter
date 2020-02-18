@@ -25,14 +25,16 @@ public class Status implements Comparable<Status> {
         this.message = message;
         this.uris = uris;
         this.mentions = mentions;
-        this.publishDate = LocalDate.now().toString();
+        this.publishDate = "Feb 18";
+//        this.publishDate = LocalDate.now().toString();
     }
 
     public Status(User author, String message){
         this.author = author;
         this.message = message;
         this.uris = new URIs();
-        this.publishDate = LocalDate.now().toString();
+//        this.publishDate = LocalDate.now().toString();
+        this.publishDate = "Feb 18";
         parseMessage(message);
     }
 

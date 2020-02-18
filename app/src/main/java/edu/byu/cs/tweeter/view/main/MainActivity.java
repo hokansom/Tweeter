@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.view.main;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -23,7 +25,7 @@ import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.status.StatusModal;
 
-public class MainActivity extends AppCompatActivity implements LoadImageTask.LoadImageObserver, MainPresenter.View, MenuItem.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity implements LoadImageTask.LoadImageObserver, MainPresenter.View {
 
     private MainPresenter presenter;
     private User user;
@@ -90,30 +92,41 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.main_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch(menuItem.getItemId()){
+                    case R.id.menu_profile:
+                        Toast.makeText(getBaseContext(), "Clicked profile", Toast.LENGTH_SHORT );
+                        //FIXME: go to profile
+                        return true;
+                    case R.id.menu_log:
+                        if(presenter.getCurrentUser() != null){
+                            //FIXME: logout
+                            switchToSignIn();
+                        }
+                        else{
+                            //FIXME: login
+                            switchToSignIn();
+                        }
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
         popup.show();
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item){
-        switch(item.getItemId()){
-            case R.id.menu_profile:
-                //FIXME: go to profile
-                return true;
-            case R.id.menu_log:
-                if(presenter.getCurrentUser() != null){
-                    //FIXME: logout
-                }
-                else{
-                    //FIXME: login
-                }
-                return true;
-            default:
-                return false;
-        }
-    }
 
     private void createNewStatus(View v){
        StatusModal modal = new StatusModal();
        modal.showPopupWindow(v);
+    }
+
+    private void switchToSignIn(){
+        Toast.makeText(this, "Clicked login", Toast.LENGTH_SHORT );
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
     }
 }

@@ -4,14 +4,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import edu.byu.cs.tweeter.R;
@@ -19,9 +21,9 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.presenter.MainPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
-import edu.byu.cs.tweeter.view.main.status.StatusFragment;
+import edu.byu.cs.tweeter.view.main.status.StatusModal;
 
-public class MainActivity extends AppCompatActivity implements LoadImageTask.LoadImageObserver, MainPresenter.View {
+public class MainActivity extends AppCompatActivity implements LoadImageTask.LoadImageObserver, MainPresenter.View, MenuItem.OnMenuItemClickListener {
 
     private MainPresenter presenter;
     private User user;
@@ -44,12 +46,18 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StatusFragment fragment = new StatusFragment();
-
+                createNewStatus(view);
             }
         });
 
         userImageView = findViewById(R.id.userImage);
+
+        userImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               showPopup(v);
+            }
+        });
 
         user = presenter.getCurrentUser();
 
@@ -76,5 +84,36 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         if(drawables[0] != null) {
             userImageView.setImageDrawable(drawables[0]);
         }
+    }
+
+    public void showPopup(View v){
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.main_menu, popup.getMenu());
+        popup.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.menu_profile:
+                //FIXME: go to profile
+                return true;
+            case R.id.menu_log:
+                if(presenter.getCurrentUser() != null){
+                    //FIXME: logout
+                }
+                else{
+                    //FIXME: login
+                }
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private void createNewStatus(View v){
+       StatusModal modal = new StatusModal();
+       modal.showPopupWindow(v);
     }
 }

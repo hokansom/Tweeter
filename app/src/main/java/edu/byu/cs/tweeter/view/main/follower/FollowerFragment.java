@@ -119,6 +119,9 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             View view;
             if(isLoading){
                 view = layoutInflater.inflate(R.layout.loading_row, parent, false);
+            } else if(users.size() == 0){
+                view = layoutInflater.inflate(R.layout.no_data_row, parent, false);
+
             } else{
                 view = layoutInflater.inflate(R.layout.user_row, parent, false);
             }

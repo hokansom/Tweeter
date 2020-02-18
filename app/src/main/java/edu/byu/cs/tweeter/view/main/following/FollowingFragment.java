@@ -90,10 +90,10 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         }
 
         void switchProfile(){
-            Intent intent = new Intent(this, MainActivity.class);
-            String message = userAlias.getText().toString();
-            intent.putExtra("USER_MESSAGE", message);
-            startActivity(intent);
+//            Intent intent = new Intent(this, MainActivity.class);
+//            String message = userAlias.getText().toString();
+//            intent.putExtra("USER_MESSAGE", message);
+//            startActivity(intent);
         }
     }
 
@@ -135,6 +135,9 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
             if(isLoading) {
                 view =layoutInflater.inflate(R.layout.loading_row, parent, false);
+
+            } else if(users.size() == 0){
+                view = layoutInflater.inflate(R.layout.no_data_row, parent, false);
 
             } else {
                 view = layoutInflater.inflate(R.layout.user_row, parent, false);

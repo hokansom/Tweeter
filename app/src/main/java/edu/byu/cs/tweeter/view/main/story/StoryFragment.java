@@ -133,6 +133,9 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
             if(isLoading) {
                 view =layoutInflater.inflate(R.layout.loading_row, parent, false);
 
+            } else if(statuses.size() == 0){
+                view = layoutInflater.inflate(R.layout.no_data_row, parent, false);
+
             } else {
                 view = layoutInflater.inflate(R.layout.status_row, parent, false);
             }

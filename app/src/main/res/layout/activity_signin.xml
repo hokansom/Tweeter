@@ -7,6 +7,7 @@
     tools:context=".view.main.SignInActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -16,8 +17,11 @@
             android:id="@+id/tweeterImage"
             android:layout_width="match_parent"
             android:layout_height="240dp"
+            android:layout_margin="16dp"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"/>
+            android:cropToPadding="false"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@drawable/twitter" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"

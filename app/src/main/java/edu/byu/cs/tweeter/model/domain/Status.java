@@ -8,8 +8,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Status implements Comparable<Status> {
     private String publishDate;
@@ -30,12 +32,30 @@ public class Status implements Comparable<Status> {
         this.author = author;
         this.message = message;
         this.uris = new URIs();
-        this.mentions = new UserMentions();
         this.publishDate = LocalDate.now().toString();
+        parseMessage(message);
     }
 
     public Status(User author) {
         this.author = author;
+    }
+
+    private void parseMessage(String message){
+        String copy = message;
+        List<String> aliases = new ArrayList<>();
+        if(message.contains("@")){
+            String[] parsed = copy.split("@");
+            for(int i = 1; i < parsed.length; i++){
+                String mention = "@" + parsed[i];
+                int index = mention.indexOf(' ');
+                if(index != -1){
+                    mention = mention.substring(0, index);
+                }
+                aliases.add(mention);
+            }
+
+            this.mentions = new UserMentions(aliases);
+        }
     }
 
     public String getPublishDate() {
@@ -58,6 +78,7 @@ public class Status implements Comparable<Status> {
     }
 
 
+
     public URIs getUris() {
         return uris;
     }
@@ -69,6 +90,7 @@ public class Status implements Comparable<Status> {
     public UserMentions getMentions() {
         return mentions;
     }
+
 
     public void setMentions(UserMentions mentions) {
         this.mentions = mentions;

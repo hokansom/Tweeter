@@ -10,8 +10,20 @@
     <string name="followingTabTitle">Following</string>
     <string name="followersTabTitle">Followers</string>
 
+    <string name="signInTabTitle">Sign In</string>
+    <string name="signUpTabTitle">Sign Up</string>
+    <string name="signInHandle">"@Handle"</string>
+    <string name="signInPassword">Password</string>
+    <string name="signIn">Sign In</string>
+    <string name="signUp">Sign Up</string>
+    <string name="signUpEmail">Email</string>
+    <string name="dontHaveAccount">"Don't have an account?</string>
+
     <string name="sampleAlias">"@UserAlias"</string>
     <string name="sampleUserName">The User</string>
     <string name="sampleDate">February 14</string>
     <string name="sampleStatus">This is a sample status. </string>
+
+    <string name="statusPlaceholder">"What's on your mind?"</string>
+    <string name="share">Share</string>
 </resources>

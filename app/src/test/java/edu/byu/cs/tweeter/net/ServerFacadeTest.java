@@ -477,6 +477,38 @@ class ServerFacadeTest {
 
     }
 
+//    @Test
+//    void testPostStatus_withMention(){
+//        Status status = new Status(user3, "Testing posting status @DaffyDuck");
+//        StatusRequest request = new StatusRequest(user3, status);
+//        StatusResponse response = serverFacadeSpy.postStatus(request);
+//
+//        Assertions.assertEquals(response.getMessage(), "Status posted");
+//
+//        StoryRequest storyRequest = new StoryRequest(user3, 5, null);
+//        StoryResponse storyResponse = serverFacadeSpy.getStory(storyRequest);
+//
+//        Assertions.assertEquals(2, storyResponse.getStory().getStory().size());
+//        Assertions.assertTrue(storyResponse.getStory().getStory().contains(status));
+//
+//    }
+//
+//    @Test
+//    void testPostStatus_withMentions(){
+//        Status status = new Status(user2, "Testing posting status @DaffyDuck @FredFlintstone");
+//        StatusRequest request = new StatusRequest(user2, status);
+//        StatusResponse response = serverFacadeSpy.postStatus(request);
+//
+//        Assertions.assertEquals(response.getMessage(), "Status posted");
+//
+//        StoryRequest storyRequest = new StoryRequest(user2, 5, null);
+//        StoryResponse storyResponse = serverFacadeSpy.getStory(storyRequest);
+//
+//        Assertions.assertEquals(2, storyResponse.getStory().getStory().size());
+//        Assertions.assertTrue(storyResponse.getStory().getStory().contains(status));
+//
+//    }
+
     /*--------------------------------- Signup test---------------------------------------*/
 
     @Test

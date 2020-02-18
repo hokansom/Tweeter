@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.main.status.StatusFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:padding="10dp"
+        android:id="@+id/container">
+
+        <ImageView
+            android:id="@+id/userImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="11dp"
+            android:layout_toEndOf="@id/userImage"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="@string/sampleUserName" />
+
+<!--        <Icon-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:margin="16dp"/>-->
+
+    </RelativeLayout>
+
+        <EditText
+            android:id="@+id/editMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/statusPlaceholder"
+            android:layout_below="@id/container"/>
+
+        <TextView
+            android:id="@+id/share"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:text="@string/share"
+            android:layout_alignParentBottom="true"
+            android:padding="16dp"
+            />
+
+</RelativeLayout>

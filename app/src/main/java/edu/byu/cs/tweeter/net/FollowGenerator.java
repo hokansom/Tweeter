@@ -111,7 +111,7 @@ public class FollowGenerator {
         int i = random.nextInt(users.size());
         for(;i < users.size(); i++){
             Follow follow = new Follow(users.get(i), testUser);
-            follows.add(follow); 
+            follows.add(follow);
         }
 
         // Sort by the specified sort order

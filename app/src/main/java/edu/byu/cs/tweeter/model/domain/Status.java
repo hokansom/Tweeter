@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Status implements Comparable<Status> {
@@ -36,8 +38,9 @@ public class Status implements Comparable<Status> {
         this.author = author;
     }
 
-    public Date getPublishDate() {
-        return publishDate;
+    public String getPublishDate() {
+        String date = String.format("%s %s", publishDate.getMonth(), publishDate.getDay());
+        return date;
     }
 
     public void setPublishDate(Date publishDate) {

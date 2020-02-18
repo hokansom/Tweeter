@@ -1,7 +1,5 @@
 package edu.byu.cs.tweeter.model.services;
 
-import edu.byu.cs.tweeter.model.domain.User;
-
 public class SignOutService {
 
     private static SignOutService instance;
@@ -14,6 +12,6 @@ public class SignOutService {
     }
 
     private SignOutService(){
-        LoginService.getInstance().setCurrentUser(null);
+        SignInService.getInstance().setCurrentUser(null);
     }
 }

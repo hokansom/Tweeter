@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     private MainPresenter presenter;
     private User user;
     private ImageView userImageView;
+    private TextView userAlias;
+    private TextView userName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         });
 
         userImageView = findViewById(R.id.userImage);
+        userName = findViewById(R.id.userName);
+        userAlias = findViewById(R.id.userAlias);
 
         userImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,14 +74,16 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
 
         // Asynchronously load the user's image
         LoadImageTask loadImageTask = new LoadImageTask(this);
-        loadImageTask.execute(presenter.getCurrentUser().getImageUrl());
-
-        TextView userName = findViewById(R.id.userName);
-        userName.setText(user.getName());
-
-        TextView userAlias = findViewById(R.id.userAlias);
-        userAlias.setText(user.getAlias());
-
+        if(presenter.getCurrentUser() != null){
+            loadImageTask.execute(presenter.getCurrentUser().getImageUrl());
+            userName.setText(user.getName());
+            userAlias.setText(user.getAlias());
+        }
+        else{
+            userImageView.setImageResource(R.drawable.profile_default);
+            userName.setText("");
+            userAlias.setText("");
+        }
 
         ImageView searchButton = findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -85,11 +94,6 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         });
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        presenter.setViewingUser(null);
-    }
 
     @Override
     public void imageLoadProgressUpdated(Integer progress) {
@@ -109,6 +113,16 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.main_menu, popup.getMenu());
+
+        Menu menu = popup.getMenu();
+
+        if(presenter.getCurrentUser() != null){
+            menu.getItem(1).setTitle(R.string.menu_logout);
+        }
+        else{
+            menu.getItem(1).setTitle(R.string.menu_login);
+        }
+
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -119,8 +133,7 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
                         return true;
                     case R.id.menu_log:
                         if(presenter.getCurrentUser() != null){
-                            //FIXME: update to be logout
-                            switchToSignIn();
+                            presenter.signOutUser();
                         }
                         else{
                             switchToSignIn();
@@ -131,11 +144,24 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
                 }
             }
         });
+
         popup.show();
     }
 
+
     private void createNewStatus(){
-        Intent intent = new Intent(this, StatusActivity.class);
+        if(presenter.getCurrentUser() !=  null){
+            Intent intent = new Intent(this, StatusActivity.class);
+            startActivity(intent);
+        } else{
+            Toast.makeText(getBaseContext(), R.string.mustLogIn, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void clearData(){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
@@ -145,12 +171,25 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     }
 
     private void switchToProfile(){
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
+        if(presenter.getCurrentUser() != null){
+            presenter.setViewingUser(null);
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getBaseContext(), R.string.mustLogInProfile, Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private void switchToSearch(){
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void updateUserData() {
+        userAlias.setText("");
+        userName.setText("");
+        userImageView.setImageResource(R.drawable.profile_default);
     }
 }

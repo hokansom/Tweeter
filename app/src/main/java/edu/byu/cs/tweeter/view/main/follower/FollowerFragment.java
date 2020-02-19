@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,14 +21,11 @@ import java.util.List;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FollowerRequest;
-import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
-import edu.byu.cs.tweeter.net.response.SearchResponse;
 import edu.byu.cs.tweeter.presenter.ActivityPresenter;
 import edu.byu.cs.tweeter.presenter.FollowerPresenter;
 import edu.byu.cs.tweeter.presenter.SearchPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowerTask;
-import edu.byu.cs.tweeter.view.asyncTasks.GetUserTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 
@@ -41,7 +37,6 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
     private static final int PAGE_SIZE = 10;
 
     private FollowerPresenter presenter;
-    private SearchPresenter searchPresenter;
     private ActivityPresenter activityPresenter;
 
     private FollowerRecyclerViewAdapter followerRecyclerViewAdapter;
@@ -51,7 +46,6 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         View view = inflater.inflate(R.layout.fragment_follower, container, false);
 
         presenter = new FollowerPresenter(this);
-        searchPresenter = new SearchPresenter(this);
         activityPresenter = new ActivityPresenter(this);
 
         RecyclerView followerRecyclerView = view.findViewById(R.id.followerRecyclerView);
@@ -72,11 +66,11 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
     }
 
-
-    private class FollowerHolder extends RecyclerView.ViewHolder implements GetUserTask.GetUserObserver{
+    private class FollowerHolder extends RecyclerView.ViewHolder{
         private final ImageView userImage;
         private final TextView userAlias;
         private final TextView userName;
+        private User tempUser;
 
         FollowerHolder(@NonNull View itemView){
             super(itemView);
@@ -88,7 +82,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    initiateUserSearch(userAlias.getText().toString());
+                    switchToProfile();
                 }
             });
         }
@@ -97,31 +91,16 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             userImage.setImageDrawable(ImageCache.getInstance().getImageDrawable(user));
             userAlias.setText(user.getAlias());
             userName.setText(user.getName());
+            tempUser = user;
         }
 
-        private void initiateUserSearch(String alias){
-            GetUserTask getUserTask = new GetUserTask(searchPresenter, this);
-            SearchRequest request = new SearchRequest(alias);
-            getUserTask.execute(request);
-
-        }
 
         private void switchToProfile(){
+            presenter.setViewingUser(tempUser);
             Intent intent = new Intent(getContext(), ProfileActivity.class);
             startActivity(intent);
         }
 
-        @Override
-        public void userRetrieved(SearchResponse response) {
-            User user = response.getUser();
-            if(user != null){
-                presenter.setViewingUser(user);
-                switchToProfile();
-            }
-            else{
-                Toast.makeText(getContext(), "User doesn't exist", Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     private class FollowerRecyclerViewAdapter extends RecyclerView.Adapter<FollowerHolder> implements GetFollowerTask.GetFollowersObserver{

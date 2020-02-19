@@ -5,11 +5,43 @@
 
     <string name="title_activity_main">MainActivity</string>
     <string name="loadingData">Loading More Data…</string>
+    <string name="noData">No Data</string>
     <string name="feedTabTitle">Feed</string>
     <string name="storyTabTitle">Story</string>
     <string name="followingTabTitle">Following</string>
     <string name="followersTabTitle">Followers</string>
 
+    <string name="signInTabTitle">Sign In</string>
+    <string name="signUpTabTitle">Sign Up</string>
+    <string name="signInHandle">"@Handle"</string>
+    <string name="signInPassword">Password</string>
+    <string name="signIn">Sign In</string>
+    <string name="signUp">Sign Up</string>
+    <string name="signUpEmail">Email</string>
+    <string name="showPassword">Show Password</string>
+    <string name="dontHaveAccount">"Don't have an account?</string>
+
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="editPhoto">Edit Photo</string>
+    <string name="signUpContinue">Continue</string>
+
     <string name="sampleAlias">"@UserAlias"</string>
     <string name="sampleUserName">The User</string>
+    <string name="dot">· </string>
+    <string name="sampleDate">February 14</string>
+    <string name="sampleStatus">This is a sample status. </string>
+
+    <string name="statusPlaceholder">"What's on your mind?"</string>
+    <string name="share">Share</string>
+
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
+
+    <string name="menu_profile">Go to Profile</string>
+    <string name="menu_login">Login</string>
+    <string name="menu_logout">Logout</string>
+
+    <string name="search">Search</string>
+    <string name="search_term">Search by Alias</string>
 </resources>

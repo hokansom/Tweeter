@@ -1,7 +1,6 @@
 package edu.byu.cs.tweeter.net;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.Story;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.services.LoginService;
+import edu.byu.cs.tweeter.model.services.SignInService;
 import edu.byu.cs.tweeter.net.request.FeedRequest;
 import edu.byu.cs.tweeter.net.request.FollowRequest;
 import edu.byu.cs.tweeter.net.request.FollowerRequest;
@@ -71,9 +70,12 @@ public class ServerFacade {
 
                 hasMorePages = followeesIndex < allFollowees.size();
             }
+            else{
+                return new FollowingResponse(responseFollowees, false, 0);
+            }
         }
 
-        return new FollowingResponse(responseFollowees, hasMorePages);
+        return new FollowingResponse(responseFollowees, hasMorePages, allFollowees.size());
     }
 
     private int getFolloweesStartingIndex(User lastFollowee, List<User> allFollowees) {
@@ -159,9 +161,12 @@ public class ServerFacade {
 
                 hasMorePages = followersIndex < allFollowers.size();
             }
+            else{
+                return new FollowerResponse(responseFollowers, false, 0);
+            }
         }
 
-        return new FollowerResponse(responseFollowers, hasMorePages);
+        return new FollowerResponse(responseFollowers, hasMorePages, allFollowers.size());
     }
 
     private int getFollowersStartingIndex(User lastFollower, List<User> allFollowers) {
@@ -474,9 +479,10 @@ public class ServerFacade {
             /*Add new user to the existing list of users*/
             followeesByFollower.put(request.getNewUser(), new ArrayList<User>());
             followersByFollowee.put(request.getNewUser(), new ArrayList<User>());
+            allUsers.add(request.getNewUser());
 
             /*Log the new user in*/
-            LoginService.getInstance().setCurrentUser(request.getNewUser());
+            SignInService.getInstance().setCurrentUser(request.getNewUser());
             response = new SignUpResponse(request.getNewUser());
         }
         else{

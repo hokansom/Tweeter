@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.view.main.following;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,12 +23,18 @@ import java.util.List;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.net.response.SearchResponse;
+import edu.byu.cs.tweeter.presenter.ActivityPresenter;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
+import edu.byu.cs.tweeter.presenter.SearchPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowingTask;
+import edu.byu.cs.tweeter.view.asyncTasks.GetUserTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
+import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 
-public class FollowingFragment extends Fragment implements FollowingPresenter.View {
+public class FollowingFragment extends Fragment implements FollowingPresenter.View, SearchPresenter.View, ActivityPresenter.View {
 
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
@@ -35,6 +42,8 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     private static final int PAGE_SIZE = 10;
 
     private FollowingPresenter presenter;
+    private SearchPresenter searchPresenter;
+    private ActivityPresenter activityPresenter;
 
     private FollowingRecyclerViewAdapter followingRecyclerViewAdapter;
 
@@ -44,6 +53,8 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         View view = inflater.inflate(R.layout.fragment_following, container, false);
 
         presenter = new FollowingPresenter(this);
+        searchPresenter = new SearchPresenter(this);
+        activityPresenter = new ActivityPresenter(this);
 
         RecyclerView followingRecyclerView = view.findViewById(R.id.followingRecyclerView);
 
@@ -58,8 +69,13 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         return view;
     }
 
+    @Override
+    public void updateNumbers() {
 
-    private class FollowingHolder extends RecyclerView.ViewHolder {
+    }
+
+
+    private class FollowingHolder extends RecyclerView.ViewHolder implements GetUserTask.GetUserObserver {
 
         private final ImageView userImage;
         private final TextView userAlias;
@@ -75,7 +91,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show();
+                    initiateUserSearch(userAlias.getText().toString());
                 }
             });
         }
@@ -84,6 +100,30 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             userImage.setImageDrawable(ImageCache.getInstance().getImageDrawable(user));
             userAlias.setText(user.getAlias());
             userName.setText(user.getName());
+        }
+
+        private void initiateUserSearch(String alias){
+            GetUserTask getUserTask = new GetUserTask(searchPresenter, this);
+            SearchRequest request = new SearchRequest(alias);
+            getUserTask.execute(request);
+
+        }
+
+        private void switchToProfile(){
+            Intent intent = new Intent(getContext(), ProfileActivity.class);
+            startActivity(intent);
+        }
+
+        @Override
+        public void userRetrieved(SearchResponse response) {
+            User user = response.getUser();
+            if(user != null){
+               presenter.setViewingUser(user);
+               switchToProfile();
+            }
+            else{
+                Toast.makeText(getContext(), "User doesn't exist", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -126,6 +166,9 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             if(isLoading) {
                 view =layoutInflater.inflate(R.layout.loading_row, parent, false);
 
+            } else if(users.size() == 0){
+                view = layoutInflater.inflate(R.layout.no_data_row, parent, false);
+
             } else {
                 view = layoutInflater.inflate(R.layout.user_row, parent, false);
             }
@@ -156,7 +199,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             addLoadingFooter();
 
             GetFollowingTask getFollowingTask = new GetFollowingTask(presenter, this);
-            FollowingRequest request = new FollowingRequest(presenter.getCurrentUser(), PAGE_SIZE, lastFollowee);
+            FollowingRequest request = new FollowingRequest(presenter.getViewingUser(), PAGE_SIZE, lastFollowee);
             getFollowingTask.execute(request);
         }
 
@@ -170,6 +213,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             isLoading = false;
             removeLoadingFooter();
             followingRecyclerViewAdapter.addItems(followees);
+            activityPresenter.updateFollowees(followingResponse.getNumOffollowees());
         }
 
         private void addLoadingFooter() {

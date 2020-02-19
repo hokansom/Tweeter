@@ -108,6 +108,13 @@ public class FollowGenerator {
             follows.add(follow);
         }
 
+        // Add random people following the test user
+        int i = random.nextInt(users.size());
+        for(;i < users.size(); i++){
+            Follow follow = new Follow(users.get(i), testUser);
+            follows.add(follow);
+        }
+
         // Sort by the specified sort order
         switch (sortOrder) {
             case FOLLOWEE_FOLLOWER:

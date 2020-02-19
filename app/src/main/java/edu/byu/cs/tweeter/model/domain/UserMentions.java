@@ -1,18 +1,20 @@
 package edu.byu.cs.tweeter.model.domain;
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class UserMentions {
-    private Set<String> mentions; // Using set so no duplication
+    private List<String> mentions; // Using set so no duplication
 
-    public UserMentions(Set<String> mentions){
+    public UserMentions(List<String> mentions){
         this.mentions = mentions;
     }
 
     public UserMentions(){
-        this.mentions = new HashSet<>();
+        this.mentions = new ArrayList<>();
     }
 
     public UserMentions getUserMentions(){

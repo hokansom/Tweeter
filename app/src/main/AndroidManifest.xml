@@ -21,6 +21,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.main.SignInActivity"
+            android:label="signInActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".view.main.signUp.UserSettingsActivity"
+            android:label="userSettingsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".view.main.profile.ProfileActivity"
+            android:label="profileActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".view.main.status.StatusActivity"
+            android:label="statusActivity"
+            android:theme="@style/AppTheme.Modal">
+        </activity>
+        <activity
+            android:name=".view.main.search.SearchActivity"
+            android:label="searchActivity"
+            android:theme="@style/AppTheme.Modal">
+        </activity>
      </application>
 
 </manifest>

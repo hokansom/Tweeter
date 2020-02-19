@@ -1,23 +1,16 @@
 package edu.byu.cs.tweeter.net;
 
-import android.util.ArraySet;
-import android.util.StatsLog;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import edu.byu.cs.tweeter.model.domain.Feed;
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.Status;
-import edu.byu.cs.tweeter.model.domain.URIs;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.services.LoginService;
 import edu.byu.cs.tweeter.net.request.FeedRequest;
 import edu.byu.cs.tweeter.net.request.FollowRequest;
 import edu.byu.cs.tweeter.net.request.FollowerRequest;
@@ -483,6 +476,38 @@ class ServerFacadeTest {
         Assertions.assertTrue(storyResponse.getStory().getStory().contains(status));
 
     }
+
+//    @Test
+//    void testPostStatus_withMention(){
+//        Status status = new Status(user3, "Testing posting status @DaffyDuck");
+//        StatusRequest request = new StatusRequest(user3, status);
+//        StatusResponse response = serverFacadeSpy.postStatus(request);
+//
+//        Assertions.assertEquals(response.getMessage(), "Status posted");
+//
+//        StoryRequest storyRequest = new StoryRequest(user3, 5, null);
+//        StoryResponse storyResponse = serverFacadeSpy.getStory(storyRequest);
+//
+//        Assertions.assertEquals(2, storyResponse.getStory().getStory().size());
+//        Assertions.assertTrue(storyResponse.getStory().getStory().contains(status));
+//
+//    }
+//
+//    @Test
+//    void testPostStatus_withMentions(){
+//        Status status = new Status(user2, "Testing posting status @DaffyDuck @FredFlintstone");
+//        StatusRequest request = new StatusRequest(user2, status);
+//        StatusResponse response = serverFacadeSpy.postStatus(request);
+//
+//        Assertions.assertEquals(response.getMessage(), "Status posted");
+//
+//        StoryRequest storyRequest = new StoryRequest(user2, 5, null);
+//        StoryResponse storyResponse = serverFacadeSpy.getStory(storyRequest);
+//
+//        Assertions.assertEquals(2, storyResponse.getStory().getStory().size());
+//        Assertions.assertTrue(storyResponse.getStory().getStory().contains(status));
+//
+//    }
 
     /*--------------------------------- Signup test---------------------------------------*/
 

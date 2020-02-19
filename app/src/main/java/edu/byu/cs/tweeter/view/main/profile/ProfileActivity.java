@@ -3,8 +3,10 @@ package edu.byu.cs.tweeter.view.main.profile;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -21,6 +23,7 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
     private User user;
     private ImageView back;
     private ImageView userImageView;
+    private Button followButton;
 
     private ActivityPresenter presenter;
 
@@ -52,6 +55,23 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
         userAlias.setText(user.getAlias());
 
         updateNumbers();
+
+        followButton = findViewById(R.id.followButton);
+        //Don't show button if it is the current user
+        if(presenter.getCurrentUser().equals(user)){
+            followButton.setVisibility(View.INVISIBLE);
+        }else{
+            followButton.setVisibility(View.VISIBLE);
+            //TODO: change text to follow/unfollow;
+
+            followButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO: add functionality
+                    Toast.makeText(getBaseContext(), "Follow clicked", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
 
         back = findViewById(R.id.backButton);
         back.setOnClickListener(new View.OnClickListener() {

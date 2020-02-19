@@ -72,7 +72,7 @@ public class ServerFacade {
             }
         }
 
-        return new FollowingResponse(responseFollowees, hasMorePages);
+        return new FollowingResponse(responseFollowees, hasMorePages, allFollowees.size());
     }
 
     private int getFolloweesStartingIndex(User lastFollowee, List<User> allFollowees) {
@@ -160,7 +160,7 @@ public class ServerFacade {
             }
         }
 
-        return new FollowerResponse(responseFollowers, hasMorePages);
+        return new FollowerResponse(responseFollowers, hasMorePages, allFollowers.size());
     }
 
     private int getFollowersStartingIndex(User lastFollower, List<User> allFollowers) {

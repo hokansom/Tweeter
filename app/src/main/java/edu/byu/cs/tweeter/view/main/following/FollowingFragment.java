@@ -92,7 +92,6 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
                 @Override
                 public void onClick(View view) {
                     initiateUserSearch(userAlias.getText().toString());
-                    Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -144,7 +143,6 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         void addItems(List<User> newUsers) {
             int startInsertPosition = users.size();
             users.addAll(newUsers);
-            activityPresenter.updateFollowees(users.size());
             this.notifyItemRangeInserted(startInsertPosition, newUsers.size());
         }
 
@@ -215,6 +213,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             isLoading = false;
             removeLoadingFooter();
             followingRecyclerViewAdapter.addItems(followees);
+            activityPresenter.updateFollowees(followingResponse.getNumOffollowees());
         }
 
         private void addLoadingFooter() {

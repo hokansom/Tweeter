@@ -36,6 +36,13 @@
             android:label="profileActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".view.main.status.StatusActivity"
+            android:label="statusActivity"
+            android:theme="@style/AppTheme.Modal">
+
+
+        </activity>
      </application>
 
 </manifest>

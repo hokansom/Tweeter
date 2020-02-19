@@ -78,14 +78,6 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             userName = itemView.findViewById(R.id.userName);
             statusMessage = itemView.findViewById(R.id.statusMessage);
             statusDate = itemView.findViewById(R.id.statusDate);
-
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    //FIXME: NEED TO IMPLEMENT THIS
-//                    Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show();
-//                }
-//            });
         }
 
         void bindStatus(Status status) {
@@ -93,7 +85,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             userAlias.setText(status.getAuthor().getAlias());
             userName.setText(status.getAuthor().getName());
             statusMessage.setText(status.getMessage());
-            statusDate.setText(status.getPublishDate().toString());
+            statusDate.setText(status.getPublishDate());
         }
     }
 

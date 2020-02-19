@@ -24,7 +24,7 @@ import edu.byu.cs.tweeter.presenter.MainPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
-import edu.byu.cs.tweeter.view.main.status.StatusModal;
+import edu.byu.cs.tweeter.view.main.status.StatusActivity;
 
 public class MainActivity extends AppCompatActivity implements LoadImageTask.LoadImageObserver, MainPresenter.View {
 
@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
 
 
     private void createNewStatus(View v){
-       StatusModal modal = new StatusModal();
-       modal.showPopupWindow(v);
+        Intent intent = new Intent(this, StatusActivity.class);
+        startActivity(intent);
     }
 
     private void switchToSignIn(){

@@ -137,7 +137,6 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         void addItems(List<User> newUsers){
             int startInsertPosition = users.size();
             users.addAll(newUsers);
-            activityPresenter.updateFollowers(users.size());
             this.notifyItemRangeInserted(startInsertPosition, newUsers.size());
         }
 
@@ -205,6 +204,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             isLoading = false;
             removeLoadingFooter();
             followerRecyclerViewAdapter.addItems(followers);
+            activityPresenter.updateFollowers(followerResponse.getNumOfFolllowers());
 
         }
         private void addLoadingFooter() {

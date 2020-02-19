@@ -49,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
 
         // Asynchronously load the user's image
         LoadImageTask loadImageTask = new LoadImageTask(this);
-        loadImageTask.execute(presenter.getCurrentUser().getImageUrl());
+        loadImageTask.execute(presenter.getViewingUser().getImageUrl());
 
         TextView userName = findViewById(R.id.userName);
         userName.setText(user.getName());
@@ -68,8 +68,9 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
         });
 
         followButton = findViewById(R.id.followButton);
-        //Don't show button if it is the current user
-        if(presenter.getCurrentUser().equals(user)){
+
+        //Don't show button if it is the current user or the user isn't signed in
+        if(presenter.getCurrentUser() == null || presenter.getCurrentUser().equals(user)){
             followButton.setVisibility(View.INVISIBLE);
         }else{
             followButton.setVisibility(View.VISIBLE);
@@ -123,8 +124,13 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
     }
 
     private void createNewStatus(){
-        Intent intent = new Intent(this, StatusActivity.class);
-        startActivity(intent);
+        if(presenter.getCurrentUser() != null){
+            Intent intent = new Intent(this, StatusActivity.class);
+            startActivity(intent);
+        } else{
+            Toast.makeText(getBaseContext(), R.string.mustLogIn, Toast.LENGTH_LONG).show();
+        }
+
     }
 
 }

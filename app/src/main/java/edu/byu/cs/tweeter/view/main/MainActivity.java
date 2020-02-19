@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -88,13 +89,6 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         });
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-
-//        presenter.setViewingUser(null);
-    }
-
 
     @Override
     public void imageLoadProgressUpdated(Integer progress) {
@@ -139,8 +133,12 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     }
 
     private void createNewStatus(){
-        Intent intent = new Intent(this, StatusActivity.class);
-        startActivity(intent);
+        if(presenter.getCurrentUser() !=  null){
+            Intent intent = new Intent(this, StatusActivity.class);
+            startActivity(intent);
+        } else{
+            Toast.makeText(getBaseContext(), R.string.mustLogIn, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void switchToSignIn(){
@@ -149,9 +147,14 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     }
 
     private void switchToProfile(){
-        presenter.setViewingUser(null);
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
+        if(presenter.getCurrentUser() != null){
+            presenter.setViewingUser(null);
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getBaseContext(), R.string.mustLogInProfile, Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private void switchToSearch(){

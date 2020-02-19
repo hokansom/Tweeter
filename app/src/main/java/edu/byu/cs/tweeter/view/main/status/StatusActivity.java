@@ -14,12 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.byu.cs.tweeter.R;
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.net.request.StatusRequest;
+import edu.byu.cs.tweeter.net.response.StatusResponse;
 import edu.byu.cs.tweeter.presenter.StatusPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
+import edu.byu.cs.tweeter.view.asyncTasks.PostStatusTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 
-public class StatusActivity extends Activity implements  LoadImageTask.LoadImageObserver,StatusPresenter.View {
+public class StatusActivity extends Activity implements  LoadImageTask.LoadImageObserver, StatusPresenter.View, PostStatusTask.PostStatusObserver {
 
     private User user;
     private TextView shareButton;
@@ -100,6 +104,19 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
 
     private void share(){
         Toast.makeText(getBaseContext(), "Clicked share", Toast.LENGTH_LONG).show();
+        Status status = new Status(user, editMessage.getText().toString());
+        PostStatusTask postStatusTask = new PostStatusTask(presenter, this);
+        StatusRequest request = new StatusRequest(user, status);
+        postStatusTask.execute(request);
     }
 
+    @Override
+    public void statusRetrieved(StatusResponse response) {
+        if(response.getMessage().equals("Status posted")){
+            finish();
+        }
+        else{
+            Toast.makeText(getBaseContext(), "Could not share post.", Toast.LENGTH_LONG).show();
+        }
+    }
 }

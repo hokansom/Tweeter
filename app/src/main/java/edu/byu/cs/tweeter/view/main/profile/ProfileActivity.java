@@ -51,6 +51,8 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
         TextView userAlias = findViewById(R.id.userAlias);
         userAlias.setText(user.getAlias());
 
+        updateNumbers();
+
         back = findViewById(R.id.backButton);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +60,6 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
                 goBack();
             }
         });
-
     }
 
     @Override
@@ -78,7 +79,16 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
     private void goBack(){
         presenter.setViewingUser(null);
         finish();
+    }
 
+    public void updateNumbers(){
+        TextView numFolloweesText = findViewById(R.id.numFollowing);
+        int numfollowees = presenter.getNumOfFollowees();
+        numFolloweesText.setText(String.format("%d",numfollowees ));
+
+        TextView numFollowersText = findViewById(R.id.numFollowers);
+        int numFollowers = presenter.getNumOfFollowers();
+        numFollowersText.setText(String.format("%d",numFollowers ));
     }
 
 }

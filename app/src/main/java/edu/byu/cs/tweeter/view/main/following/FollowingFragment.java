@@ -26,6 +26,7 @@ import edu.byu.cs.tweeter.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.net.response.SearchResponse;
+import edu.byu.cs.tweeter.presenter.ActivityPresenter;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.presenter.SearchPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowingTask;
@@ -33,7 +34,7 @@ import edu.byu.cs.tweeter.view.asyncTasks.GetUserTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 
-public class FollowingFragment extends Fragment implements FollowingPresenter.View, SearchPresenter.View {
+public class FollowingFragment extends Fragment implements FollowingPresenter.View, SearchPresenter.View, ActivityPresenter.View {
 
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
@@ -42,6 +43,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
     private FollowingPresenter presenter;
     private SearchPresenter searchPresenter;
+    private ActivityPresenter activityPresenter;
 
     private FollowingRecyclerViewAdapter followingRecyclerViewAdapter;
 
@@ -52,6 +54,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
         presenter = new FollowingPresenter(this);
         searchPresenter = new SearchPresenter(this);
+        activityPresenter = new ActivityPresenter(this);
 
         RecyclerView followingRecyclerView = view.findViewById(R.id.followingRecyclerView);
 
@@ -64,6 +67,11 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         followingRecyclerView.addOnScrollListener(new FollowRecyclerViewPaginationScrollListener(layoutManager));
 
         return view;
+    }
+
+    @Override
+    public void updateNumbers() {
+
     }
 
 
@@ -136,6 +144,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         void addItems(List<User> newUsers) {
             int startInsertPosition = users.size();
             users.addAll(newUsers);
+            activityPresenter.updateFollowees(users.size());
             this.notifyItemRangeInserted(startInsertPosition, newUsers.size());
         }
 

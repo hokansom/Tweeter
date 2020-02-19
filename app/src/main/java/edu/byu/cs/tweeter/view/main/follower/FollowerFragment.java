@@ -25,6 +25,7 @@ import edu.byu.cs.tweeter.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.net.response.SearchResponse;
+import edu.byu.cs.tweeter.presenter.ActivityPresenter;
 import edu.byu.cs.tweeter.presenter.FollowerPresenter;
 import edu.byu.cs.tweeter.presenter.SearchPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowerTask;
@@ -32,7 +33,7 @@ import edu.byu.cs.tweeter.view.asyncTasks.GetUserTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 
-public class FollowerFragment extends Fragment implements FollowerPresenter.View, SearchPresenter.View {
+public class FollowerFragment extends Fragment implements FollowerPresenter.View, SearchPresenter.View, ActivityPresenter.View {
 
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
@@ -41,6 +42,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
     private FollowerPresenter presenter;
     private SearchPresenter searchPresenter;
+    private ActivityPresenter activityPresenter;
 
     private FollowerRecyclerViewAdapter followerRecyclerViewAdapter;
 
@@ -50,6 +52,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
         presenter = new FollowerPresenter(this);
         searchPresenter = new SearchPresenter(this);
+        activityPresenter = new ActivityPresenter(this);
 
         RecyclerView followerRecyclerView = view.findViewById(R.id.followerRecyclerView);
 
@@ -62,6 +65,11 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         followerRecyclerView.addOnScrollListener(new FollowerRecyclerViewPaginationScrollListener(layoutManager));
 
         return view;
+    }
+
+    @Override
+    public void updateNumbers() {
+
     }
 
 
@@ -129,6 +137,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         void addItems(List<User> newUsers){
             int startInsertPosition = users.size();
             users.addAll(newUsers);
+            activityPresenter.updateFollowers(users.size());
             this.notifyItemRangeInserted(startInsertPosition, newUsers.size());
         }
 
@@ -196,6 +205,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             isLoading = false;
             removeLoadingFooter();
             followerRecyclerViewAdapter.addItems(followers);
+
         }
         private void addLoadingFooter() {
             addItem(new User("Dummy", "User", ""));

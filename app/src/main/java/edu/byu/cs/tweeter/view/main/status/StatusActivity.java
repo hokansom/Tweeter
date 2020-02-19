@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.view.main.status;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -86,6 +89,14 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
         });
 
         editMessage = findViewById(R.id.editMessage);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createNewStatus(view);
+            }
+        });
     }
 
     @Override
@@ -118,5 +129,10 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
         else{
             Toast.makeText(getBaseContext(), "Could not share post.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void createNewStatus(View v){
+        Intent intent = new Intent(this, StatusActivity.class);
+        startActivity(intent);
     }
 }

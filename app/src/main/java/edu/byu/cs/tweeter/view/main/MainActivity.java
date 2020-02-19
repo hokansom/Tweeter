@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import edu.byu.cs.tweeter.presenter.MainPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
+import edu.byu.cs.tweeter.view.main.search.SearchActivity;
 import edu.byu.cs.tweeter.view.main.status.StatusActivity;
 
 public class MainActivity extends AppCompatActivity implements LoadImageTask.LoadImageObserver, MainPresenter.View {
@@ -72,6 +74,15 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
 
         TextView userAlias = findViewById(R.id.userAlias);
         userAlias.setText(user.getAlias());
+
+
+        Button searchButton = findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switchToSearch();
+            }
+        });
     }
 
     @Override
@@ -123,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         popup.show();
     }
 
-
     private void createNewStatus(View v){
         Intent intent = new Intent(this, StatusActivity.class);
         startActivity(intent);
@@ -136,6 +146,11 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
 
     private void switchToProfile(){
         Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    private void switchToSearch(){
+        Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
 }

@@ -25,14 +25,16 @@
                 android:text="@string/app_name"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
-            <SearchView
+            <ImageView
+                android:id="@+id/searchButton"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_toRightOf="@id/title"
-                android:gravity="end"
-                android:hapticFeedbackEnabled="false"
-                android:iconifiedByDefault="false" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                app:srcCompat="@android:drawable/ic_menu_search" />
 
         </RelativeLayout>
 

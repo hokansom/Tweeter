@@ -45,8 +45,6 @@ public class Status implements Comparable<Status> {
         parseMessage(message);
     }
 
-
-
     public Status(User author) {
         this.author = author;
     }
@@ -75,7 +73,6 @@ public class Status implements Comparable<Status> {
        return String.format("%s %s",parsed[1], parsed[2]);
     }
 
-
     public String getMessage() {
         return message;
     }
@@ -87,8 +84,6 @@ public class Status implements Comparable<Status> {
     public User getAuthor() {
         return author;
     }
-
-
 
     public URIs getUris() {
         return uris;

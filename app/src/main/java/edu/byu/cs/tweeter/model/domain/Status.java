@@ -1,42 +1,51 @@
 package edu.byu.cs.tweeter.model.domain;
 
-import android.net.Uri;
-
 import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.net.URISyntaxException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class Status implements Comparable<Status> {
-    private Date publishDate;
+    private String publishDate;
     private String message;
     private User author;
     private URIs uris;
     private UserMentions mentions;
 
-    public Status(User author, String message, URIs uris, UserMentions mentions){
+    public Status(User author, String message, URIs uris, UserMentions mentions, Date date){
         this.author = author;
         this.message = message;
         this.uris = uris;
         this.mentions = mentions;
-//        this.publishDate = new Date();
-        this.publishDate = Calendar.getInstance().getTime();
-//        this.publishDate = LocalDate.now().toString();
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        this.publishDate =  c.getTime().toString();
+        parseMessage(message);
+    }
+
+    public Status(User author, String message, Date date){
+        this.author = author;
+        this.message = message;
+        this.uris = new URIs();
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        this.publishDate =  c.getTime().toString();
+        parseMessage(message);
     }
 
     public Status(User author, String message){
         this.author = author;
         this.message = message;
         this.uris = new URIs();
-        this.publishDate = new Date();
+        this.publishDate = Calendar.getInstance().getTime().toString();
         parseMessage(message);
     }
+
+
 
     public Status(User author) {
         this.author = author;
@@ -61,12 +70,9 @@ public class Status implements Comparable<Status> {
     }
 
     public String getPublishDate() {
-//        Calendar calendar = publishDate.dateToCalendar(publishDate);
-//        System.out.println(calendar.getTime());
-//        String date = ;date
-        //FIXME:!!!!
-//        return publishDate;
-        return "Test";
+       String date = publishDate;
+       String [] parsed = date.split(" ");
+       return String.format("%s %s",parsed[1], parsed[2]);
     }
 
 
@@ -110,7 +116,6 @@ public class Status implements Comparable<Status> {
         else if(!author.equals(status.getAuthor())) { return false; }
         else if(!message.equals(status.getMessage())) { return false; }
         else{
-            /*FIXME: potential error. May need more than just checking the date, author, and message*/
             return true;
         }
     }

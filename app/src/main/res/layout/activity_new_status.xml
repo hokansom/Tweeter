@@ -16,14 +16,14 @@
         <RelativeLayout
             android:id="@+id/cardWrapper"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:padding="10dp">
 
 
         <RelativeLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:padding="10dp">
 
             <ImageView

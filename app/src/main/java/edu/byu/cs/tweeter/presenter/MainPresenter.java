@@ -11,12 +11,13 @@ public class MainPresenter extends Presenter {
      */
     public interface View {
         void updateUserData();
+        void clearData();
         // If needed, Specify methods here that will be called on the view in response to model updates
     }
 
     public void signOutUser(){
         SignInService.getInstance().setCurrentUser(null);
-        view.updateUserData();
+        view.clearData();
     }
 
     public MainPresenter(View view) {

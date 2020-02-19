@@ -56,6 +56,8 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
 
         updateNumbers();
 
+        //TODO: add fab
+
         followButton = findViewById(R.id.followButton);
         //Don't show button if it is the current user
         if(presenter.getCurrentUser().equals(user)){

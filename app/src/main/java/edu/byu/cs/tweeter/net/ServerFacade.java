@@ -70,6 +70,9 @@ public class ServerFacade {
 
                 hasMorePages = followeesIndex < allFollowees.size();
             }
+            else{
+                return new FollowingResponse(responseFollowees, false, 0);
+            }
         }
 
         return new FollowingResponse(responseFollowees, hasMorePages, allFollowees.size());
@@ -157,6 +160,9 @@ public class ServerFacade {
                 }
 
                 hasMorePages = followersIndex < allFollowers.size();
+            }
+            else{
+                return new FollowerResponse(responseFollowers, false, 0);
             }
         }
 

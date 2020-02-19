@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewStatus(view);
+                createNewStatus();
             }
         });
 
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         userAlias.setText(user.getAlias());
 
 
-        Button searchButton = findViewById(R.id.searchButton);
+        ImageView searchButton = findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         popup.show();
     }
 
-    private void createNewStatus(View v){
+    private void createNewStatus(){
         Intent intent = new Intent(this, StatusActivity.class);
         startActivity(intent);
     }

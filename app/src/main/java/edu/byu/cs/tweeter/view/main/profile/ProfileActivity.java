@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.view.main.profile;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.presenter.ActivityPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
+import edu.byu.cs.tweeter.view.main.status.StatusActivity;
 
 public class ProfileActivity extends AppCompatActivity implements ActivityPresenter.View, LoadImageTask.LoadImageObserver {
 
@@ -56,7 +59,13 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
 
         updateNumbers();
 
-        //TODO: add fab
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createNewStatus();
+            }
+        });
 
         followButton = findViewById(R.id.followButton);
         //Don't show button if it is the current user
@@ -111,6 +120,11 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
         TextView numFollowersText = findViewById(R.id.numFollowers);
         int numFollowers = presenter.getNumOfFollowers();
         numFollowersText.setText(String.format("%d",numFollowers ));
+    }
+
+    private void createNewStatus(){
+        Intent intent = new Intent(this, StatusActivity.class);
+        startActivity(intent);
     }
 
 }

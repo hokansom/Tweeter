@@ -117,10 +117,9 @@ public class Status implements Comparable<Status> {
 
     @Override
     public int compareTo(Status o) {
-        return this.getPublishDate().compareTo(o.getPublishDate());
+        return (this.getPublishDate().compareTo(o.getPublishDate()) * -1 ) ;
+        //FIXME: MAKE THIS SORT THE RIGHT WAY;
     }
-
-    @NotNull
 
     @NonNull
     @Override

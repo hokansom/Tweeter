@@ -39,7 +39,7 @@ public class SearchActivity extends Activity implements GetUserTask.GetUserObser
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width *.8), (int)( height*.5));
+        getWindow().setLayout((int)(width *.8), (int)( height*.25));
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.CENTER;
         params.x = 0;
@@ -61,6 +61,7 @@ public class SearchActivity extends Activity implements GetUserTask.GetUserObser
 
     @Override
     public void userRetrieved(SearchResponse response) {
+        finish();
         if(response.getUser() != null){
             presenter.setViewingUser(response.getUser());
             Intent intent = new Intent(this, ProfileActivity.class );

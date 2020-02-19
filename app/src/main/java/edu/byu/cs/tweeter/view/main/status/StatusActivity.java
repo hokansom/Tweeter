@@ -89,14 +89,6 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
         });
 
         editMessage = findViewById(R.id.editMessage);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createNewStatus(view);
-            }
-        });
     }
 
     @Override
@@ -114,7 +106,6 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
     }
 
     private void share(){
-        Toast.makeText(getBaseContext(), "Clicked share", Toast.LENGTH_LONG).show();
         Status status = new Status(user, editMessage.getText().toString());
         PostStatusTask postStatusTask = new PostStatusTask(presenter, this);
         StatusRequest request = new StatusRequest(user, status);
@@ -131,8 +122,4 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
         }
     }
 
-    private void createNewStatus(View v){
-        Intent intent = new Intent(this, StatusActivity.class);
-        startActivity(intent);
-    }
 }

@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     private MainPresenter presenter;
     private User user;
     private ImageView userImageView;
+    private TextView userAlias;
+    private TextView userName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +72,10 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         LoadImageTask loadImageTask = new LoadImageTask(this);
         loadImageTask.execute(presenter.getCurrentUser().getImageUrl());
 
-        TextView userName = findViewById(R.id.userName);
+        userName = findViewById(R.id.userName);
         userName.setText(user.getName());
 
-        TextView userAlias = findViewById(R.id.userAlias);
+        userAlias = findViewById(R.id.userAlias);
         userAlias.setText(user.getAlias());
 
 
@@ -88,8 +91,10 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     @Override
     public void onResume(){
         super.onResume();
-        presenter.setViewingUser(null);
+
+//        presenter.setViewingUser(null);
     }
+
 
     @Override
     public void imageLoadProgressUpdated(Integer progress) {
@@ -119,8 +124,7 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
                         return true;
                     case R.id.menu_log:
                         if(presenter.getCurrentUser() != null){
-                            //FIXME: update to be logout
-                            switchToSignIn();
+                            presenter.signOutUser();
                         }
                         else{
                             switchToSignIn();
@@ -145,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     }
 
     private void switchToProfile(){
+        presenter.setViewingUser(null);
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
@@ -152,5 +157,12 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     private void switchToSearch(){
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void updateUserData() {
+        userAlias.setText("");
+        userName.setText("");
+        userImageView.setImageResource(R.drawable.profile_default);
     }
 }

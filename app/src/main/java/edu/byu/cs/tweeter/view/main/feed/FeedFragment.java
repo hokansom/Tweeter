@@ -79,13 +79,13 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             statusMessage = itemView.findViewById(R.id.statusMessage);
             statusDate = itemView.findViewById(R.id.statusDate);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //FIXME: NEED TO IMPLEMENT THIS
-                    Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show();
-                }
-            });
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //FIXME: NEED TO IMPLEMENT THIS
+//                    Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show();
+//                }
+//            });
         }
 
         void bindStatus(Status status) {
@@ -170,7 +170,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             addLoadingFooter();
 
             GetFeedTask getFeedTask = new GetFeedTask(presenter, this);
-            FeedRequest request = new FeedRequest(presenter.getCurrentUser(), PAGE_SIZE, lastStatus);
+            FeedRequest request = new FeedRequest(presenter.getViewingUser(), PAGE_SIZE, lastStatus);
             getFeedTask.execute(request);
         }
 

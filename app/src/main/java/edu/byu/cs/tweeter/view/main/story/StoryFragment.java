@@ -75,13 +75,13 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
             statusMessage = itemView.findViewById(R.id.statusMessage);
             statusDate = itemView.findViewById(R.id.statusDate);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //FIXME: NEED TO IMPLEMENT THIS
-                    Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show();
-                }
-            });
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //FIXME: NEED TO IMPLEMENT THIS
+//                    Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show();
+//                }
+//            });
         }
 
         void bindStatus(Status status) {
@@ -166,7 +166,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
             addLoadingFooter();
 
             GetStoryTask getStoryTask = new GetStoryTask(presenter, this);
-            StoryRequest request = new StoryRequest(presenter.getCurrentUser(), PAGE_SIZE, lastStatus);
+            StoryRequest request = new StoryRequest(presenter.getViewingUser(), PAGE_SIZE, lastStatus);
             getStoryTask.execute(request);
         }
 

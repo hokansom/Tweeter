@@ -23,6 +23,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.presenter.MainPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
+import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 import edu.byu.cs.tweeter.view.main.status.StatusModal;
 
 public class MainActivity extends AppCompatActivity implements LoadImageTask.LoadImageObserver, MainPresenter.View {
@@ -75,6 +76,12 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        presenter.setViewingUser(null);
+    }
+
+    @Override
     public void imageLoadProgressUpdated(Integer progress) {
         // We're just loading one image. No need to indicate progress.
     }
@@ -97,16 +104,15 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch(menuItem.getItemId()){
                     case R.id.menu_profile:
-                        Toast.makeText(getBaseContext(), "Clicked profile", Toast.LENGTH_SHORT );
-                        //FIXME: go to profile
+                        switchToProfile();
+
                         return true;
                     case R.id.menu_log:
                         if(presenter.getCurrentUser() != null){
-                            //FIXME: logout
+                            //FIXME: update to be logout
                             switchToSignIn();
                         }
                         else{
-                            //FIXME: login
                             switchToSignIn();
                         }
                         return true;
@@ -126,6 +132,11 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
 
     private void switchToSignIn(){
         Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
+    }
+
+    private void switchToProfile(){
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
 }

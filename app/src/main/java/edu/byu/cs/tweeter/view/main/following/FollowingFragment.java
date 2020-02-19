@@ -23,13 +23,17 @@ import java.util.List;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
+import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.net.response.SearchResponse;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
+import edu.byu.cs.tweeter.presenter.SearchPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowingTask;
+import edu.byu.cs.tweeter.view.asyncTasks.GetUserTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
-import edu.byu.cs.tweeter.view.main.MainActivity;
+import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 
-public class FollowingFragment extends Fragment implements FollowingPresenter.View {
+public class FollowingFragment extends Fragment implements FollowingPresenter.View, SearchPresenter.View {
 
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
@@ -37,6 +41,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     private static final int PAGE_SIZE = 10;
 
     private FollowingPresenter presenter;
+    private SearchPresenter searchPresenter;
 
     private FollowingRecyclerViewAdapter followingRecyclerViewAdapter;
 
@@ -46,6 +51,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         View view = inflater.inflate(R.layout.fragment_following, container, false);
 
         presenter = new FollowingPresenter(this);
+        searchPresenter = new SearchPresenter(this);
 
         RecyclerView followingRecyclerView = view.findViewById(R.id.followingRecyclerView);
 
@@ -61,7 +67,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     }
 
 
-    private class FollowingHolder extends RecyclerView.ViewHolder {
+    private class FollowingHolder extends RecyclerView.ViewHolder implements GetUserTask.GetUserObserver {
 
         private final ImageView userImage;
         private final TextView userAlias;
@@ -77,7 +83,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switchProfile();
+                    initiateUserSearch(userAlias.getText().toString());
                     Toast.makeText(getContext(), "You selected '" + userName.getText() + "'.", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -89,11 +95,28 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             userName.setText(user.getName());
         }
 
-        void switchProfile(){
-//            Intent intent = new Intent(this, MainActivity.class);
-//            String message = userAlias.getText().toString();
-//            intent.putExtra("USER_MESSAGE", message);
-//            startActivity(intent);
+        private void initiateUserSearch(String alias){
+            GetUserTask getUserTask = new GetUserTask(searchPresenter, this);
+            SearchRequest request = new SearchRequest(alias);
+            getUserTask.execute(request);
+
+        }
+
+        private void switchToProfile(){
+            Intent intent = new Intent(getContext(), ProfileActivity.class);
+            startActivity(intent);
+        }
+
+        @Override
+        public void userRetrieved(SearchResponse response) {
+            User user = response.getUser();
+            if(user != null){
+               presenter.setViewingUser(user);
+               switchToProfile();
+            }
+            else{
+                Toast.makeText(getContext(), "User doesn't exist", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -169,7 +192,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             addLoadingFooter();
 
             GetFollowingTask getFollowingTask = new GetFollowingTask(presenter, this);
-            FollowingRequest request = new FollowingRequest(presenter.getCurrentUser(), PAGE_SIZE, lastFollowee);
+            FollowingRequest request = new FollowingRequest(presenter.getViewingUser(), PAGE_SIZE, lastFollowee);
             getFollowingTask.execute(request);
         }
 

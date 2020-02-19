@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.view.main.signUp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +40,21 @@ public class SignUpFragment extends Fragment implements SignUpPresenter.View {
 
         editPassword = view.findViewById(R.id.input_password);
 
+        showPasswordSwitch = view.findViewById(R.id.showPassword);
+
         signUpButton = view.findViewById(R.id.btn_login);
 
-        showPasswordSwitch = view.findViewById(R.id.showPassword);
+        signUpButton.setEnabled(true); //FIXME:
+
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), UserSettingsActivity.class);
+                intent.putExtra("ALIAS", editHandle.getText().toString());
+                intent.putExtra("PASSWORD", editPassword.getText().toString());
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

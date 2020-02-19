@@ -25,9 +25,18 @@
             android:name=".view.main.SignInActivity"
             android:label="signInActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.SIGNIN" />
-            </intent-filter>
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.SIGNIN" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".view.main.signUp.UserSettingsActivity"
+            android:label="userSettingsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+<!--            <intent-filter>-->
+<!--                <action android:name="andro"-->
+<!--            </intent-filter>-->
+
         </activity>
      </application>
 

@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Status implements Comparable<Status> {
-    private String publishDate;
+    private Date publishDate;
     private String message;
     private User author;
     private URIs uris;
@@ -25,7 +25,8 @@ public class Status implements Comparable<Status> {
         this.message = message;
         this.uris = uris;
         this.mentions = mentions;
-        this.publishDate = "Feb 18";
+//        this.publishDate = new Date();
+        this.publishDate = Calendar.getInstance().getTime();
 //        this.publishDate = LocalDate.now().toString();
     }
 
@@ -33,8 +34,7 @@ public class Status implements Comparable<Status> {
         this.author = author;
         this.message = message;
         this.uris = new URIs();
-//        this.publishDate = LocalDate.now().toString();
-        this.publishDate = "Feb 18";
+        this.publishDate = new Date();
         parseMessage(message);
     }
 
@@ -61,9 +61,12 @@ public class Status implements Comparable<Status> {
     }
 
     public String getPublishDate() {
-
+//        Calendar calendar = publishDate.dateToCalendar(publishDate);
+//        System.out.println(calendar.getTime());
+//        String date = ;date
         //FIXME:!!!!
-        return publishDate;
+//        return publishDate;
+        return "Test";
     }
 
 

@@ -473,6 +473,7 @@ public class ServerFacade {
             /*Add new user to the existing list of users*/
             followeesByFollower.put(request.getNewUser(), new ArrayList<User>());
             followersByFollowee.put(request.getNewUser(), new ArrayList<User>());
+            allUsers.add(request.getNewUser());
 
             /*Log the new user in*/
             SignInService.getInstance().setCurrentUser(request.getNewUser());

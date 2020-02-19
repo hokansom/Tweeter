@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     }
 
     private void switchToSignIn(){
-        Toast.makeText(this, "Clicked login", Toast.LENGTH_SHORT );
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
     }

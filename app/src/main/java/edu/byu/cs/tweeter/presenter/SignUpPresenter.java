@@ -11,7 +11,7 @@ public class SignUpPresenter extends Presenter {
     private static String password = "";
     private static String firstName = "";
     private static String lastName = "";
-    private static String url = "";
+    private static String stringImage = "";
 
 
     public void updateHandle(String handle){
@@ -44,6 +44,10 @@ public class SignUpPresenter extends Presenter {
         if(valid){
             checkIfComplete();
         }
+    }
+
+    public void updateImageString(String s){
+        stringImage = s;
     }
 
 
@@ -84,15 +88,15 @@ public class SignUpPresenter extends Presenter {
         if(s.length() > 0){
             return true;
         } else{
-            view.setHandleFirst("Last name is required.");
+            view.setHandleLast("Last name is required.");
             return false;
         }
     }
 
     private void checkIfComplete(){
-        if(!checkValidFirstName(firstName) || !checkValidFirstName(lastName)){
+        if(!checkValidFirstName(firstName) || !checkValidLastName(lastName)){
             view.enableButton(false);
-        } else if(url.equals("")){
+        } else if(stringImage.equals("")){
             view.enableButton(false);
         } else{
             view.enableButton(true);

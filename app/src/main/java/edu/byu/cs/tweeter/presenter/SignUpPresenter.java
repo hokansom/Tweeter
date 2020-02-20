@@ -12,12 +12,13 @@ public class SignUpPresenter extends Presenter {
      * The interface by which this presenter communicates with it's view.
      */
     public interface View {
+
         // If needed, Specify methods here that will be called on the view in response to model updates
     }
 
     public SignUpPresenter(View view) { this.view = view; }
 
-    public SignUpResponse postUseer(SignUpRequest request){
+    public SignUpResponse postUser(SignUpRequest request){
         return SignUpService.getInstance().postUser(request);
     }
 }

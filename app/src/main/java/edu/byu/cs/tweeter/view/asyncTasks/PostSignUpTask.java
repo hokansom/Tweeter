@@ -22,7 +22,7 @@ public class PostSignUpTask extends AsyncTask<SignUpRequest, Void, SignUpRespons
 
     @Override
     protected SignUpResponse doInBackground(SignUpRequest... signUpRequests) {
-        SignUpResponse response = presenter.postUseer(signUpRequests[0]);
+        SignUpResponse response = presenter.postUser(signUpRequests[0]);
         return response;
     }
 

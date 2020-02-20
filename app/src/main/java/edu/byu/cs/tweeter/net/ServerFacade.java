@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.net;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,6 +22,7 @@ import edu.byu.cs.tweeter.net.request.FollowRequest;
 import edu.byu.cs.tweeter.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.net.request.SearchRequest;
+import edu.byu.cs.tweeter.net.request.SignInRequest;
 import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.request.StatusRequest;
 import edu.byu.cs.tweeter.net.request.StoryRequest;
@@ -29,6 +32,8 @@ import edu.byu.cs.tweeter.net.response.FollowResponse;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.net.response.SearchResponse;
+import edu.byu.cs.tweeter.net.response.SignInResponse;
+import edu.byu.cs.tweeter.net.response.SignInResponse;
 import edu.byu.cs.tweeter.net.response.SignUpResponse;
 import edu.byu.cs.tweeter.net.response.StatusResponse;
 import edu.byu.cs.tweeter.net.response.StoryResponse;
@@ -43,6 +48,8 @@ public class ServerFacade {
     private static Map<User, List<Status>> statusesByUser;
 
     private static Set<User> allUsers;
+
+    private static Map<String, String> authentication;
 
     /*--------------------------------FOLLOWEE-----------------------------------------------------*/
 
@@ -473,6 +480,35 @@ public class ServerFacade {
 
     }
 
+    public SignInResponse postSignIn(SignInRequest request){
+        if(authentication == null){
+            initializeAuthentication();
+        }
+        String message;
+        if(!authentication.containsKey(request.getAlias())){
+            message = String.format("User with given alias (%s) does not exist.");
+            return new SignInResponse(false, message);
+        }
+        String hashed = hashPassword(request.getPassword());
+        if(hashed == null){
+            message = "Error signing in.";
+            return new SignInResponse(false, message);
+        }
+        if(!hashed.equals(authentication.get(request.getAlias()))){
+            message = "Invalid alias or password";
+            return new SignInResponse(false, message);
+        }
+        User user = searchUser(request.getAlias());
+        if(user != null){
+            return new SignInResponse(user);
+        }
+        else{
+            message = String.format("User with given alias (%s) does not exist.");
+            return new SignInResponse(false, message);
+        }
+
+    }
+
     public SignUpResponse postUser(SignUpRequest request){
         SignUpResponse response;
         if(checkValidAlias(request.getNewUser().getAlias())){
@@ -529,6 +565,38 @@ public class ServerFacade {
         else{
             return false;
         }
+    }
+
+
+    private String hashPassword(String password){
+        String generatedPassword = null;
+        try{
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            //Add password bytes to digest
+            md.update(password.getBytes());
+            //Get the hash's bytes
+            byte[] bytes = md.digest();
+            //This bytes[] has bytes in decimal format;
+            //Convert it to hexadecimal format
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++)
+            {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            //Get complete hashed password in hex format
+            generatedPassword = sb.toString();
+        } catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
+        return generatedPassword;
+    }
+
+    private void initializeAuthentication(){
+        Map<String, String> auth = new HashMap<>();
+        String testUser = "@TestUser";
+        String hashedPass = hashPassword("Password");
+        auth.put(testUser, hashedPass);
+        authentication = auth;
     }
 }
 

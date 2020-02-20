@@ -1,10 +1,15 @@
 package edu.byu.cs.tweeter.model.services;
 
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.net.ServerFacade;
+import edu.byu.cs.tweeter.net.request.SignInRequest;
+import edu.byu.cs.tweeter.net.response.SignInResponse;
 
 public class SignInService {
 
     private static SignInService instance;
+
+    private final ServerFacade serverFacade;
 
     private User currentUser;
 
@@ -16,11 +21,14 @@ public class SignInService {
         return instance;
     }
 
-    private SignInService() {
-        // TODO: Remove when the actual login functionality exists.
-        currentUser = new User("Test", "User",
-                "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
-        setCurrentUser(currentUser);
+    private SignInService(){
+        serverFacade = new ServerFacade();
+    }
+
+    public SignInResponse postSignIn(SignInRequest request){
+        SignInResponse response = serverFacade.postSignIn(request);
+        setCurrentUser(response.getUser());
+        return response;
     }
 
     public User getCurrentUser() {

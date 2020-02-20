@@ -1,6 +1,9 @@
 package edu.byu.cs.tweeter.view.main.signIn;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +13,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import edu.byu.cs.tweeter.R;
+import edu.byu.cs.tweeter.net.request.SignInRequest;
+import edu.byu.cs.tweeter.net.response.SignInResponse;
 import edu.byu.cs.tweeter.presenter.SignInPresenter;
+import edu.byu.cs.tweeter.view.asyncTasks.PostSignInTask;
+import edu.byu.cs.tweeter.view.main.MainActivity;
 
-public class SignInFragment extends Fragment implements SignInPresenter.View {
+public class SignInFragment extends Fragment implements SignInPresenter.View, PostSignInTask.PostSignInObserver {
 
     private SignInPresenter presenter;
     private EditText editHandle;
@@ -37,22 +43,92 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
         presenter = new SignInPresenter(this);
 
         editHandle = view.findViewById(R.id.input_alias);
+        editHandle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                presenter.updateHandle(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
         editPassword = view.findViewById(R.id.input_password);
+        editPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                presenter.updatePassword(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         signInButton = view.findViewById(R.id.btn_login);
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
+            }
+        });
 
         noAccount = view.findViewById(R.id.link_signup);
+        noAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: implement a method for this
+            }
+        });
 
         noAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //FIXME: add switch to sign up
-                Toast.makeText(getContext(), "Switch to sign up", Toast.LENGTH_SHORT);
+                signIn();
             }
         });
 
         return view;
     }
 
+    @Override
+    public void signInPosted(SignInResponse response) {
+        if(response.getUser() != null){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            Bundle extras = new Bundle();
+            extras.putSerializable("USER", response.getUser());
+            intent.putExtras(extras);
+            startActivity(intent);
+        }
+        else{
+            Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void signIn(){
+        PostSignInTask task = new PostSignInTask(presenter, this);
+        String alias = editHandle.getText().toString();
+        String password = editPassword.getText().toString();
+        SignInRequest request = new SignInRequest(alias, password);
+        task.execute(request);
+    }
+
+    @Override
+    public void enableButton(Boolean enabled) {
+        signInButton.setEnabled(enabled);
+    }
 }

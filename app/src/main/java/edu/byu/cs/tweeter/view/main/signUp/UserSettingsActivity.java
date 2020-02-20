@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +34,7 @@ import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.response.SignUpResponse;
 import edu.byu.cs.tweeter.presenter.SignUpPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.PostSignUpTask;
+import edu.byu.cs.tweeter.view.main.MainActivity;
 
 public class UserSettingsActivity extends AppCompatActivity implements SignUpPresenter.View, PostSignUpTask.PostSignUpObserver {
     private final int PICK_IMAGE = 12345;
@@ -125,7 +127,6 @@ public class UserSettingsActivity extends AppCompatActivity implements SignUpPre
         User newUser = new User(firstName.getText().toString(), lastName.getText().toString(), presenter.getHandle(), "");
         SignUpRequest request = new SignUpRequest(newUser, presenter.getPassword(), imageString);
         task.execute(request);
-
     }
 
 
@@ -243,6 +244,12 @@ public class UserSettingsActivity extends AppCompatActivity implements SignUpPre
 
     @Override
     public void signUpPosted(SignUpResponse response) {
-
+        if(response.getUser() != null){
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } else{
+            Toast.makeText(getBaseContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }

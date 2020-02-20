@@ -486,7 +486,7 @@ public class ServerFacade {
         }
         String message;
         if(!authentication.containsKey(request.getAlias())){
-            message = String.format("User with given alias (%s) does not exist.");
+            message = String.format("User with given alias (%s) does not exist.", request.getAlias());
             return new SignInResponse(false, message);
         }
         String hashed = hashPassword(request.getPassword());
@@ -503,7 +503,7 @@ public class ServerFacade {
             return new SignInResponse(user);
         }
         else{
-            message = String.format("User with given alias (%s) does not exist.");
+            message = String.format("User with given alias (%s) does not exist.", request.getAlias());
             return new SignInResponse(false, message);
         }
 

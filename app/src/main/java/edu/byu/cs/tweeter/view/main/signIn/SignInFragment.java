@@ -51,12 +51,12 @@ public class SignInFragment extends Fragment implements SignInPresenter.View, Po
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                presenter.updateHandle(s.toString());
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                presenter.updateHandle(s.toString());
             }
         });
 
@@ -70,16 +70,18 @@ public class SignInFragment extends Fragment implements SignInPresenter.View, Po
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                presenter.updatePassword(s.toString());
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                presenter.updatePassword(s.toString());
             }
         });
 
+
         signInButton = view.findViewById(R.id.btn_login);
+        signInButton.setEnabled(false);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,13 +94,6 @@ public class SignInFragment extends Fragment implements SignInPresenter.View, Po
             @Override
             public void onClick(View v) {
                 //TODO: implement a method for this
-            }
-        });
-
-        noAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn();
             }
         });
 
@@ -130,5 +125,15 @@ public class SignInFragment extends Fragment implements SignInPresenter.View, Po
     @Override
     public void enableButton(Boolean enabled) {
         signInButton.setEnabled(enabled);
+    }
+
+    @Override
+    public void setPasswordError(String error) {
+        editPassword.setError(error);
+    }
+
+    @Override
+    public void setHandleError(String error) {
+        editHandle.setError(error);
     }
 }

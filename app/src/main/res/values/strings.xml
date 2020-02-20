@@ -24,6 +24,7 @@
     <string name="firstName">First Name</string>
     <string name="lastName">Last Name</string>
     <string name="editPhoto">Edit Photo</string>
+    <string name="uploadImage">Upload Image</string>
     <string name="signUpContinue">Continue</string>
 
     <string name="sampleAlias">"@UserAlias"</string>
@@ -46,4 +47,6 @@
 
     <string name="search">Search</string>
     <string name="search_term">Search by Alias</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

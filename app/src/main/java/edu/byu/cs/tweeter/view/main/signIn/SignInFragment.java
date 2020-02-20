@@ -27,7 +27,6 @@ public class SignInFragment extends Fragment implements SignInPresenter.View, Po
     private EditText editHandle;
     private EditText editPassword;
     private Button signInButton;
-    private TextView noAccount;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -86,14 +85,6 @@ public class SignInFragment extends Fragment implements SignInPresenter.View, Po
             @Override
             public void onClick(View v) {
                 signIn();
-            }
-        });
-
-        noAccount = view.findViewById(R.id.link_signup);
-        noAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO: implement a method for this
             }
         });
 

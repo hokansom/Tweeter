@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,12 +32,14 @@ import edu.byu.cs.tweeter.view.cache.ImageCache;
 public class StatusActivity extends Activity implements  LoadImageTask.LoadImageObserver, StatusPresenter.View, PostStatusTask.PostStatusObserver {
 
     private User user;
-    private TextView shareButton;
+    private Button shareButton;
     private ImageView userImage;
     private TextView userName;
     private ImageButton closeButton;
-
+    private TextView count;
+    private TextView warning;
     private EditText editMessage;
+
 
     private StatusPresenter presenter;
 
@@ -53,7 +58,7 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width *.8), (int)( height*.5));
+        getWindow().setLayout((int)(width *.8), (int)( height*.75));
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.CENTER;
         params.x = 0;
@@ -61,9 +66,15 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
 
         getWindow().setAttributes(params);
 
+        count = findViewById(R.id.count);
+        count.setText("0");
+
+        warning = findViewById(R.id.warning);
+
         shareButton = findViewById(R.id.share);
         shareButton.setText(R.string.share);
-        shareButton.setVisibility(View.VISIBLE);
+        shareButton.setEnabled(false);
+
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,6 +100,22 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
         });
 
         editMessage = findViewById(R.id.editMessage);
+        editMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                presenter.checkStatus(s.toString());
+            }
+        });
     }
 
     @Override
@@ -122,4 +149,22 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
         }
     }
 
+    @Override
+    public void updateCounts(String chars) {
+        count.setText(chars);
+    }
+
+    @Override
+    public void handleEditing(String error) {
+        if(error == null){
+            warning.setText("");
+        } else {
+            warning.setText(error);
+        }
+    }
+
+    @Override
+    public void enableShare(boolean enable) {
+        shareButton.setEnabled(enable);
+    }
 }

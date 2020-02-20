@@ -33,7 +33,6 @@ import edu.byu.cs.tweeter.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.net.response.SearchResponse;
 import edu.byu.cs.tweeter.net.response.SignInResponse;
-import edu.byu.cs.tweeter.net.response.SignInResponse;
 import edu.byu.cs.tweeter.net.response.SignUpResponse;
 import edu.byu.cs.tweeter.net.response.StatusResponse;
 import edu.byu.cs.tweeter.net.response.StoryResponse;
@@ -500,6 +499,7 @@ public class ServerFacade {
         }
         User user = searchUser(request.getAlias());
         if(user != null){
+            SignInService.getInstance().setCurrentUser(user);
             return new SignInResponse(user);
         }
         else{
@@ -517,9 +517,23 @@ public class ServerFacade {
             followersByFollowee.put(request.getNewUser(), new ArrayList<User>());
             allUsers.add(request.getNewUser());
 
+            if(authentication == null){
+                initializeAuthentication();
+            }
+            String hashed = hashPassword(request.getPassword());
+            authentication.put(request.getNewUser().getAlias(), hashed);
+
+            //Will need to do something with the image base64 string.
+
             /*Log the new user in*/
-            SignInService.getInstance().setCurrentUser(request.getNewUser());
-            response = new SignUpResponse(request.getNewUser());
+            SignInRequest signInRequest = new SignInRequest(request.getNewUser().getAlias(), request.getPassword());
+            SignInResponse signInResponse = postSignIn(signInRequest);
+            if(signInResponse.getUser() != null){
+                response = new SignUpResponse(signInResponse.getUser());
+            }
+            else{
+                response = new SignUpResponse(false, signInResponse.getMessage());
+            }
         }
         else{
             response = new SignUpResponse(false, "Alias is already taken");

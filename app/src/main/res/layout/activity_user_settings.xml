@@ -11,50 +11,42 @@
         android:layout_height="280dp"
         android:adjustViewBounds="true"
         android:cropToPadding="false"
-        android:scaleType="center"
+        android:scaleType="fitCenter"
         tools:srcCompat="@tools:sample/avatars[12]" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/editPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="16dp"
-        android:text="@string/editPhoto" />
+        android:clickable="true"
+        android:hint="@string/editPhoto" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/firstName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:ems="10"
+        android:hint="@string/firstName"
         android:inputType="textPersonName"
-        android:selectAllOnFocus="true"
-        android:text="@string/firstName" />
+        android:selectAllOnFocus="true" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/lastName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="@string/lastName" />
-
-    <EditText
-        android:id="@+id/editText3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="@string/signInHandle" />
+        android:hint="@string/lastName"
+        android:inputType="textPersonName" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/signUpButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="@string/signUpContinue" />
+        android:text="@string/signUp" />
 
 </LinearLayout>

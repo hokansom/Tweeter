@@ -36,6 +36,7 @@
     <string name="mustLogIn">You must sign in to write a status</string>
     <string name="statusPlaceholder">"What's on your mind?"</string>
     <string name="share">Share</string>
+    <string name="maxChar">/ 280</string>
 
     <string name="following">Following</string>
     <string name="followers">Followers</string>

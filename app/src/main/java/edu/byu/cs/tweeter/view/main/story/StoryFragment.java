@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,6 +46,10 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
     private StoryRecyclerViewAdapter storyRecyclerViewAdapter;
 
+    private TextView noData;
+
+    private SwipeRefreshLayout swipeContainer;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,7 +58,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
         presenter = new StoryPresenter(this);
 
-        RecyclerView storyRecyclerView = view.findViewById(R.id.storyRecyclerView);
+        final RecyclerView storyRecyclerView = view.findViewById(R.id.storyRecyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         storyRecyclerView.setLayoutManager(layoutManager);
@@ -63,8 +68,26 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
         storyRecyclerView.addOnScrollListener(new StoryRecyclerViewPaginationScrollListener(layoutManager));
 
+        noData = view.findViewById(R.id.noData);
+        swipeContainer = view.findViewById(R.id.swipe_container);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                storyRecyclerViewAdapter.lastStatus = null;
+                storyRecyclerViewAdapter.removeAll();
+                storyRecyclerViewAdapter.loadMoreItems();
+            }
+        });
+
         return view;
     }
+
+    @Override
+    public void displayNoData(int visible) {
+        noData.setVisibility(visible);
+
+    }
+
 
     private class StoryHolder extends RecyclerView.ViewHolder {
 
@@ -207,6 +230,11 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
             this.notifyItemRemoved(position);
         }
 
+        void removeAll(){
+            statuses.clear();
+            this.notifyDataSetChanged();
+        }
+
         @NonNull
         @Override
         public StoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -247,7 +275,6 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
         void loadMoreItems() {
             isLoading = true;
             addLoadingFooter();
-
             GetStoryTask getStoryTask = new GetStoryTask(presenter, this);
             StoryRequest request = new StoryRequest(presenter.getViewingUser(), PAGE_SIZE, lastStatus);
             getStoryTask.execute(request);
@@ -256,8 +283,9 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
         @Override
         public void storyRetrieved(StoryResponse storyResponse) {
+            swipeContainer.setRefreshing(false);
             List<Status> statuses = storyResponse.getStory().getStory();
-
+            presenter.updateNumStatuses(statuses.size());
             lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() -1) : null;
             hasMorePages = storyResponse.hasMorePages();
 

@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,6 +38,9 @@ import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 
 public class FeedFragment extends Fragment implements FeedPresenter.View {
     private static final int LOADING_DATA_VIEW = 0;
+
+
+
     private static final int ITEM_VIEW = 1;
 
     private static final int PAGE_SIZE = 10;
@@ -44,6 +48,10 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
     private FeedPresenter presenter;
 
     private FeedRecyclerViewAdapter feedRecyclerViewAdapter;
+
+    private TextView noData;
+
+    private SwipeRefreshLayout swipeContainer;
 
 
     @Override
@@ -63,7 +71,24 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
         feedRecyclerView.addOnScrollListener(new FeedRecyclerViewPaginationScrollListener(layoutManager));
 
+        noData = view.findViewById(R.id.noData);
+
+        swipeContainer = view.findViewById(R.id.swipe_container);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                feedRecyclerViewAdapter.lastStatus = null;
+                feedRecyclerViewAdapter.removeAll();
+                feedRecyclerViewAdapter.loadMoreItems();
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void displayNoData(int visible) {
+        noData.setVisibility(visible);
     }
 
     private class FeedHolder extends RecyclerView.ViewHolder {
@@ -208,6 +233,11 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             this.notifyItemRemoved(position);
         }
 
+        void removeAll(){
+            statuses.clear();
+            this.notifyDataSetChanged();
+        }
+
         @NonNull
         @Override
         public FeedHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -257,7 +287,9 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
         @Override
         public void feedRetrieved(FeedResponse feedResponse) {
+            swipeContainer.setRefreshing(false);
             List<Status> statuses = feedResponse.getFeed().getFeed();
+            presenter.updateNumStatuses(statuses.size());
 
             lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() -1) : null;
             hasMorePages = feedResponse.hasMorePages();

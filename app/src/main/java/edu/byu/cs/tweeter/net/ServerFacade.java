@@ -369,6 +369,7 @@ public class ServerFacade {
             userStatuses = new ArrayList<Status>();
         }
         userStatuses.add(request.getStatus());
+        statusesByUser.put(request.getAuthor(), userStatuses);
         return new StatusResponse(true, "Status posted");
     }
 

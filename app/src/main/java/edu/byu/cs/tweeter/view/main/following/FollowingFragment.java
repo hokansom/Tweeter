@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,6 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
-import edu.byu.cs.tweeter.presenter.ActivityPresenter;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowingTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
@@ -36,6 +36,9 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
     private static final int PAGE_SIZE = 10;
 
+    private TextView noData;
+
+    private SwipeRefreshLayout swipeContainer;
 
     private FollowingPresenter presenter;
 
@@ -58,7 +61,24 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
         followingRecyclerView.addOnScrollListener(new FollowRecyclerViewPaginationScrollListener(layoutManager));
 
+        noData = view.findViewById(R.id.noData);
+
+        swipeContainer = view.findViewById(R.id.swipe_container);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                followingRecyclerViewAdapter.lastFollowee = null;
+                followingRecyclerViewAdapter.removeAll();
+                followingRecyclerViewAdapter.loadMoreItems();
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void displayNoData(int visibility) {
+        noData.setVisibility(visibility);
     }
 
     private class FollowingHolder extends RecyclerView.ViewHolder {
@@ -128,6 +148,11 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             this.notifyItemRemoved(position);
         }
 
+        void removeAll(){
+            users.clear();
+            this.notifyDataSetChanged();
+        }
+
         @NonNull
         @Override
         public FollowingHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -176,7 +201,9 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
         @Override
         public void followeesRetrieved(FollowingResponse followingResponse) {
+            swipeContainer.setRefreshing(false);
             List<User> followees = followingResponse.getFollowees();
+            presenter.updateNumFollowees(followingResponse.getNumOffollowees());
 
             lastFollowee = (followees.size() > 0) ? followees.get(followees.size() -1) : null;
             hasMorePages = followingResponse.hasMorePages();

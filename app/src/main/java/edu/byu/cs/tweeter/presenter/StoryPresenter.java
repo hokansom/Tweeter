@@ -8,10 +8,13 @@ public class StoryPresenter extends Presenter {
 
     private final View view;
 
+    private static int numberOfstatuses = 0;
+
     /**
      * The interface by which this presenter communicates with it's view.
      */
     public interface View {
+        void displayNoData(int visible);
         // If needed, Specify methods here that will be called on the view in response to model updates
     }
 
@@ -19,5 +22,14 @@ public class StoryPresenter extends Presenter {
 
     public StoryResponse getStory(StoryRequest request){
         return StoryService.getInstance().getStory(request);
+    }
+
+    public void updateNumStatuses(int num){
+        numberOfstatuses = num;
+        if(numberOfstatuses == 0){
+            view.displayNoData(0);
+        } else {
+            view.displayNoData(8);
+        }
     }
 }

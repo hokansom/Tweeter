@@ -8,10 +8,13 @@ public class FollowingPresenter extends Presenter {
 
     private final View view;
 
+    private static int numberOfFollowees = 0;
+
     /**
      * The interface by which this presenter communicates with it's view.
      */
     public interface View {
+        void displayNoData(int visibility);
         // If needed, Specify methods here that will be called on the view in response to model updates
     }
 
@@ -21,5 +24,14 @@ public class FollowingPresenter extends Presenter {
 
     public FollowingResponse getFollowing(FollowingRequest request) {
         return FollowingService.getInstance().getFollowees(request);
+    }
+
+    public void updateNumFollowees(int num){
+        numberOfFollowees = num;
+        if(numberOfFollowees == 0){
+            view.displayNoData(0);
+        } else {
+            view.displayNoData(8);
+        }
     }
 }

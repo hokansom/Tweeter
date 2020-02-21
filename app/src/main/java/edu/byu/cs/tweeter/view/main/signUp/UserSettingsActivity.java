@@ -32,7 +32,7 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.response.SignUpResponse;
-import edu.byu.cs.tweeter.presenter.SignUpPresenter;
+import edu.byu.cs.tweeter.presenter.signUp.SignUpPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.PostSignUpTask;
 import edu.byu.cs.tweeter.view.main.MainActivity;
 

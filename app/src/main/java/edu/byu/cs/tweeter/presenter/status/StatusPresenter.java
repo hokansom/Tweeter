@@ -1,11 +1,12 @@
-package edu.byu.cs.tweeter.presenter;
+package edu.byu.cs.tweeter.presenter.status;
 
 
 import edu.byu.cs.tweeter.model.services.StatusService;
 import edu.byu.cs.tweeter.net.request.StatusRequest;
 import edu.byu.cs.tweeter.net.response.StatusResponse;
+import edu.byu.cs.tweeter.presenter.Presenter;
 
-public class StatusPresenter extends Presenter {
+public class StatusPresenter extends AbstractStatusPresenter {
     private final View view;
     private int MAX_CHAR = 280;
 

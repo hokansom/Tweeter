@@ -1,10 +1,11 @@
-package edu.byu.cs.tweeter.presenter;
+package edu.byu.cs.tweeter.presenter.search;
 
 import edu.byu.cs.tweeter.model.services.UserService;
 import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.response.SearchResponse;
+import edu.byu.cs.tweeter.presenter.Presenter;
 
-public class SearchPresenter extends Presenter {
+public class SearchPresenter extends AbstractSearchPresenter {
     private final View view;
 
     /**

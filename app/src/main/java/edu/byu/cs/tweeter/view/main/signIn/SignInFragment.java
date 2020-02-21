@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -17,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.net.request.SignInRequest;
 import edu.byu.cs.tweeter.net.response.SignInResponse;
-import edu.byu.cs.tweeter.presenter.SignInPresenter;
+import edu.byu.cs.tweeter.presenter.signIn.SignInPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.PostSignInTask;
 import edu.byu.cs.tweeter.view.main.MainActivity;
 

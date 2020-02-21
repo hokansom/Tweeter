@@ -18,6 +18,17 @@ public class StatusService {
         return instance;
     }
 
+    public static StatusService getTestingInstance(ServerFacade facade){
+        if(instance == null){
+            instance = new StatusService(facade);
+        }
+        return instance;
+    }
+
+    private StatusService(ServerFacade serverFacade) {
+        this.serverFacade = serverFacade;
+    }
+
     private StatusService() { serverFacade = new ServerFacade();}
 
     public StatusResponse postStatus(StatusRequest request){

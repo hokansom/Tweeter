@@ -4,10 +4,11 @@ import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.response.SearchResponse;
-import edu.byu.cs.tweeter.presenter.SearchPresenter;
+import edu.byu.cs.tweeter.presenter.search.AbstractSearchPresenter;
+import edu.byu.cs.tweeter.presenter.search.SearchPresenter;
 
 public class GetUserTask extends AsyncTask<SearchRequest, Void, SearchResponse> {
-   private final SearchPresenter presenter;
+   private final AbstractSearchPresenter presenter;
    private final GetUserObserver observer;
 
    public interface GetUserObserver{

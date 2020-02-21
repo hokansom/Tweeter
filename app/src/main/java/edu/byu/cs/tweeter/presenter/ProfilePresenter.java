@@ -1,7 +1,7 @@
 package edu.byu.cs.tweeter.presenter;
 
 
-public class ActivityPresenter extends Presenter {
+public class ProfilePresenter extends Presenter {
     private final View view;
 
     private static int numOfFollowers = 0;
@@ -21,7 +21,7 @@ public class ActivityPresenter extends Presenter {
         void updateNumbers();
     }
 
-    public ActivityPresenter(View view) { this.view = view;}
+    public ProfilePresenter(View view) { this.view = view;}
 
     public int getNumOfFollowers(){
         return numOfFollowers;

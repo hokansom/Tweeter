@@ -4,10 +4,11 @@ import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.net.request.FollowRequest;
 import edu.byu.cs.tweeter.net.response.FollowResponse;
-import edu.byu.cs.tweeter.presenter.FollowPresenter;
+import edu.byu.cs.tweeter.presenter.follow.AbstractFollowPresenter;
+import edu.byu.cs.tweeter.presenter.follow.FollowPresenter;
 
 public class PostFollowTask extends AsyncTask<FollowRequest, Void, FollowResponse> {
-    private final FollowPresenter presenter;
+    private final AbstractFollowPresenter presenter;
     private final PostFollowObserver observer;
 
     public interface PostFollowObserver{

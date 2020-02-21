@@ -21,15 +21,29 @@ public class SignInService {
         return instance;
     }
 
+    public static SignInService getTestingInstance(ServerFacade facade){
+        if(instance == null){
+            instance = new SignInService(facade);
+        }
+        return instance;
+    }
+
+
     private SignInService(){
         serverFacade = new ServerFacade();
     }
+
+    public SignInService(ServerFacade facade){
+        serverFacade = facade;
+    }
+
 
     public SignInResponse postSignIn(SignInRequest request){
         SignInResponse response = serverFacade.postSignIn(request);
         setCurrentUser(response.getUser());
         return response;
     }
+
 
     public User getCurrentUser() {
         return currentUser;
@@ -38,4 +52,5 @@ public class SignInService {
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
+
 }

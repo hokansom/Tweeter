@@ -4,10 +4,11 @@ import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.net.request.StatusRequest;
 import edu.byu.cs.tweeter.net.response.StatusResponse;
-import edu.byu.cs.tweeter.presenter.StatusPresenter;
+import edu.byu.cs.tweeter.presenter.status.AbstractStatusPresenter;
+import edu.byu.cs.tweeter.presenter.status.StatusPresenter;
 
 public class PostStatusTask extends AsyncTask<StatusRequest, Void, StatusResponse> {
-    private final StatusPresenter presenter;
+    private final AbstractStatusPresenter presenter;
     private final PostStatusObserver observer;
 
     public interface PostStatusObserver{

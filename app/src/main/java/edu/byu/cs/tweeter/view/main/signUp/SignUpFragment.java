@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.presenter.SignInPresenter;
-import edu.byu.cs.tweeter.presenter.SignUpPresenter;
+import edu.byu.cs.tweeter.presenter.signUp.SignUpPresenter;
 
 public class SignUpFragment extends Fragment implements SignUpPresenter.View {
 

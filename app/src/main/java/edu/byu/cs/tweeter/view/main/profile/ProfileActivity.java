@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,30 +12,27 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.response.SearchResponse;
-import edu.byu.cs.tweeter.presenter.ActivityPresenter;
-import edu.byu.cs.tweeter.presenter.SearchPresenter;
+import edu.byu.cs.tweeter.presenter.ProfilePresenter;
+import edu.byu.cs.tweeter.presenter.search.SearchPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetUserTask;
 import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.follow.FollowFragment;
 import edu.byu.cs.tweeter.view.main.status.StatusActivity;
 
-public class ProfileActivity extends AppCompatActivity implements ActivityPresenter.View, LoadImageTask.LoadImageObserver, SearchPresenter.View, GetUserTask.GetUserObserver {
+public class ProfileActivity extends AppCompatActivity implements ProfilePresenter.View, LoadImageTask.LoadImageObserver, SearchPresenter.View, GetUserTask.GetUserObserver {
 
     private User user;
     private ImageView userImageView;
     private TextView userName;
     private TextView userAlias;
 
-    private ActivityPresenter presenter;
+    private ProfilePresenter presenter;
     private SearchPresenter searchPresenter;
 
     private boolean isFollowing;
@@ -46,7 +42,7 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        presenter = new ActivityPresenter(this);
+        presenter = new ProfilePresenter(this);
         searchPresenter = new SearchPresenter(this);
 
 

@@ -20,6 +20,17 @@ public class FollowerService {
         return instance;
     }
 
+    public static FollowerService getTestingInstance(ServerFacade facade){
+        if(instance == null){
+            instance = new FollowerService(facade);
+        }
+        return instance;
+    }
+
+    public FollowerService(ServerFacade serverFacade) {
+        this.serverFacade = serverFacade;
+    }
+
     private FollowerService() {
         serverFacade = new ServerFacade();
     }

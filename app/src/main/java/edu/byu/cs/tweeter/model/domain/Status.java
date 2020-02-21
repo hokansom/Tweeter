@@ -2,6 +2,9 @@ package edu.byu.cs.tweeter.model.domain;
 
 import androidx.annotation.NonNull;
 
+import java.io.CharArrayReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +26,7 @@ public class Status implements Comparable<Status> {
         this.mentions = mentions;
         Calendar c = Calendar.getInstance();
         c.setTime(date);
-        this.publishDate =  c.getTime().toString();
+        this.publishDate = c.getTime().toString();
     }
 
     public Status(User author, String message, Date date){
@@ -90,6 +93,10 @@ public class Status implements Comparable<Status> {
        return String.format("%s %s",parsed[1], parsed[2]);
     }
 
+    public String getFullDate(){
+        return publishDate;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -134,8 +141,21 @@ public class Status implements Comparable<Status> {
 
     @Override
     public int compareTo(Status o) {
-        return (this.getPublishDate().compareTo(o.getPublishDate()) * -1 ) ;
-        //FIXME: MAKE THIS SORT THE RIGHT WAY;
+        String date1 = this.getFullDate();
+        String date2 = o.getFullDate();
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        try{
+            cal1.setTime(sdf.parse(date1));
+            cal2.setTime(sdf.parse(date2));
+        } catch (ParseException exception){
+            System.out.println("Error trying to parse dates");
+        }
+
+        return cal1.compareTo(cal2);
     }
 
     @NonNull

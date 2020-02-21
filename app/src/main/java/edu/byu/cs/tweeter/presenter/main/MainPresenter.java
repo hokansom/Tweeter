@@ -1,8 +1,8 @@
-package edu.byu.cs.tweeter.presenter;
+package edu.byu.cs.tweeter.presenter.main;
 
 import edu.byu.cs.tweeter.model.services.SignInService;
 
-public class MainPresenter extends Presenter {
+public class MainPresenter extends AbstractMainPresenter {
 
     private final View view;
 
@@ -18,6 +18,10 @@ public class MainPresenter extends Presenter {
     public void signOutUser(){
         SignInService.getInstance().setCurrentUser(null);
         view.clearData();
+    }
+
+    public void logOut(){
+        SignInService.getInstance().setCurrentUser(null);
     }
 
     public MainPresenter(View view) {

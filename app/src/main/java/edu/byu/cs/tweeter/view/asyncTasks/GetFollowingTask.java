@@ -9,13 +9,14 @@ import java.io.IOException;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
-import edu.byu.cs.tweeter.presenter.FollowingPresenter;
+import edu.byu.cs.tweeter.presenter.following.AbstractFollowingPresenter;
+import edu.byu.cs.tweeter.presenter.following.FollowingPresenter;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 public class GetFollowingTask extends AsyncTask<FollowingRequest, Void, FollowingResponse> {
 
-    private final FollowingPresenter presenter;
+    private final AbstractFollowingPresenter presenter;
     private final GetFolloweesObserver observer;
 
     public interface GetFolloweesObserver {

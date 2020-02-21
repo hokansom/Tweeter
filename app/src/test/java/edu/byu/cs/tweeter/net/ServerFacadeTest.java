@@ -16,6 +16,7 @@ import edu.byu.cs.tweeter.net.request.FollowRequest;
 import edu.byu.cs.tweeter.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.net.request.SearchRequest;
+import edu.byu.cs.tweeter.net.request.SignInRequest;
 import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.request.StatusRequest;
 import edu.byu.cs.tweeter.net.request.StoryRequest;
@@ -24,6 +25,7 @@ import edu.byu.cs.tweeter.net.response.FollowResponse;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.net.response.SearchResponse;
+import edu.byu.cs.tweeter.net.response.SignInResponse;
 import edu.byu.cs.tweeter.net.response.SignUpResponse;
 import edu.byu.cs.tweeter.net.response.StatusResponse;
 import edu.byu.cs.tweeter.net.response.StoryResponse;
@@ -48,6 +50,8 @@ class ServerFacadeTest {
     private final User user15 = new User("Scooby", "Do", "");
     private final User user16 = new User("Shawn", "Spencer", "");
     private final User user17 = new User("Henry", "Spencer", "");
+    private final User testUser = new User("Test", "User", "");
+
 
 
     private final Follow follow1 = new Follow(user9, user5);
@@ -74,11 +78,12 @@ class ServerFacadeTest {
     private final Follow follow18 = new Follow(user15, user8);
     private final Follow follow19 = new Follow(user13, user12);
     private final Follow follow20 = new Follow(user16, user17);
+    private final Follow follow21 = new Follow(testUser, user1);
 
 
     private final List<Follow> follows = Arrays.asList(follow1, follow2, follow3, follow4, follow5, follow6,
             follow7, follow8, follow9, follow10, follow11, follow12, follow13, follow14, follow15,
-            follow16, follow17, follow18, follow19, follow20);
+            follow16, follow17, follow18, follow19, follow20, follow21);
 
     private final Status status1 = new Status(user3, "Testing status 1");
     private final Status status2 = new Status(user3, "Testing status 2");
@@ -111,7 +116,9 @@ class ServerFacadeTest {
         Mockito.when(mockStatusGenerator.generateAllStatuses((List<User>) Mockito.any(),  Mockito.anyInt(), Mockito.anyInt())).thenReturn(statuses);
 
         Mockito.when(serverFacadeSpy.getStatusGenerator()).thenReturn(mockStatusGenerator);
+
     }
+
 
     /*---------------------------------Followees test---------------------------------------*/
 
@@ -496,37 +503,72 @@ class ServerFacadeTest {
 
     }
 
-//    @Test
-//    void testPostStatus_withMention(){
-//        Status status = new Status(user3, "Testing posting status @DaffyDuck");
-//        StatusRequest request = new StatusRequest(user3, status);
-//        StatusResponse response = serverFacadeSpy.postStatus(request);
-//
-//        Assertions.assertEquals(response.getMessage(), "Status posted");
-//
-//        StoryRequest storyRequest = new StoryRequest(user3, 5, null);
-//        StoryResponse storyResponse = serverFacadeSpy.getStory(storyRequest);
-//
-//        Assertions.assertEquals(2, storyResponse.getStory().getStory().size());
-//        Assertions.assertTrue(storyResponse.getStory().getStory().contains(status));
-//
-//    }
-//
-//    @Test
-//    void testPostStatus_withMentions(){
-//        Status status = new Status(user2, "Testing posting status @DaffyDuck @FredFlintstone");
-//        StatusRequest request = new StatusRequest(user2, status);
-//        StatusResponse response = serverFacadeSpy.postStatus(request);
-//
-//        Assertions.assertEquals(response.getMessage(), "Status posted");
-//
-//        StoryRequest storyRequest = new StoryRequest(user2, 5, null);
-//        StoryResponse storyResponse = serverFacadeSpy.getStory(storyRequest);
-//
-//        Assertions.assertEquals(2, storyResponse.getStory().getStory().size());
-//        Assertions.assertTrue(storyResponse.getStory().getStory().contains(status));
-//
-//    }
+    @Test
+    void testPostStatus_withMention(){
+        Status status = new Status(user2, "Testing posting status @DaffyDuck");
+        StatusRequest request = new StatusRequest(user2, status);
+        StatusResponse response = serverFacadeSpy.postStatus(request);
+
+        Assertions.assertEquals(response.getMessage(), "Status posted");
+
+        StoryRequest storyRequest = new StoryRequest(user2, 5, null);
+        StoryResponse storyResponse = serverFacadeSpy.getStory(storyRequest);
+
+        Assertions.assertEquals(1, storyResponse.getStory().getStory().size());
+        Assertions.assertTrue(storyResponse.getStory().getStory().contains(status));
+        Status returned = storyResponse.getStory().getStory().get(0);
+        Assertions.assertEquals(1, returned.getMentions().getUserMentions().size());
+        Assertions.assertEquals("@DaffyDuck", returned.getMentions().getUserMentions().get(0));
+    }
+
+    @Test
+    void testPostStatus_withMentions(){
+        Status status = new Status(testUser, "Testing posting status @DaffyDuck @FredFlintstone");
+        StatusRequest request = new StatusRequest(testUser, status);
+        StatusResponse response = serverFacadeSpy.postStatus(request);
+
+        Assertions.assertEquals(response.getMessage(), "Status posted");
+
+        StoryRequest storyRequest = new StoryRequest(testUser, 5, null);
+        StoryResponse storyResponse = serverFacadeSpy.getStory(storyRequest);
+
+        Assertions.assertEquals(1, storyResponse.getStory().getStory().size());
+        Assertions.assertTrue(storyResponse.getStory().getStory().contains(status));
+        Assertions.assertEquals(2, storyResponse.getStory().getStory().get(0).getMentions().getUserMentions().size());
+
+    }
+
+    /*--------------------------------- Signin test---------------------------------------*/
+
+    @Test
+    void testSignIn_validUser(){
+        SignInRequest request = new SignInRequest("@TestUser", "Password");
+        SignInResponse response = serverFacadeSpy.postSignIn(request);
+
+        Assertions.assertNotNull(response.getUser());
+        Assertions.assertEquals("Test User", response.getUser().getName());
+        Assertions.assertEquals("@TestUser", response.getUser().getAlias());
+    }
+
+    @Test
+    void testSignIn_validUser_WrongPassword(){
+        SignInRequest request = new SignInRequest("@TestUser", "random123");
+        SignInResponse response = serverFacadeSpy.postSignIn(request);
+
+        Assertions.assertNull(response.getUser());
+        Assertions.assertEquals("Invalid alias or password", response.getMessage());
+    }
+
+    @Test
+    void testSignIn_nonexistingUser(){
+        SignInRequest request = new SignInRequest("@RandomUser", "Password");
+        SignInResponse response = serverFacadeSpy.postSignIn(request);
+
+        Assertions.assertNull(response.getUser());
+        Assertions.assertEquals("User with given alias (@RandomUser) does not exist.", response.getMessage());
+    }
+
+
 
     /*--------------------------------- Signup test---------------------------------------*/
 

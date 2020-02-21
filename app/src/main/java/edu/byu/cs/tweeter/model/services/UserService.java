@@ -19,6 +19,17 @@ public class UserService {
         return instance;
     }
 
+    public static UserService getTestingInstance(ServerFacade facade){
+        if(instance == null){
+            instance = new UserService(facade);
+        }
+        return instance;
+    }
+
+    public UserService(ServerFacade serverFacade) {
+        this.serverFacade = serverFacade;
+    }
+
     private UserService(){
         serverFacade = new ServerFacade();
     }

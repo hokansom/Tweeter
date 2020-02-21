@@ -3,15 +3,13 @@ package edu.byu.cs.tweeter.view.asyncTasks;
 import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.net.request.SignInRequest;
-import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.response.SignInResponse;
-import edu.byu.cs.tweeter.net.response.SignUpResponse;
-import edu.byu.cs.tweeter.presenter.SignInPresenter;
-import edu.byu.cs.tweeter.presenter.SignUpPresenter;
+import edu.byu.cs.tweeter.presenter.signIn.AbstractSignInPresenter;
+import edu.byu.cs.tweeter.presenter.signIn.SignInPresenter;
 
 public class PostSignInTask extends AsyncTask<SignInRequest, Void, SignInResponse> {
 
-    private final SignInPresenter presenter;
+    private final AbstractSignInPresenter presenter;
     private final PostSignInObserver observer;
 
     public interface PostSignInObserver{

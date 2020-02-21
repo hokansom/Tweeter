@@ -8,13 +8,14 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.net.request.StoryRequest;
 import edu.byu.cs.tweeter.net.response.StoryResponse;
-import edu.byu.cs.tweeter.presenter.StoryPresenter;
+import edu.byu.cs.tweeter.presenter.story.AbstractStoryPresenter;
+import edu.byu.cs.tweeter.presenter.story.StoryPresenter;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 public class GetStoryTask extends AsyncTask<StoryRequest, Void, StoryResponse> {
 
-    private final StoryPresenter presenter;
+    private final AbstractStoryPresenter presenter;
     private final GetStoryObserver observer;
 
     public interface GetStoryObserver{

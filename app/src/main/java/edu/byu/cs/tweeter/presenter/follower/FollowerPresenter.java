@@ -1,12 +1,13 @@
-package edu.byu.cs.tweeter.presenter;
+package edu.byu.cs.tweeter.presenter.follower;
 
 import android.view.View;
 
 import edu.byu.cs.tweeter.model.services.FollowerService;
 import edu.byu.cs.tweeter.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
+import edu.byu.cs.tweeter.presenter.Presenter;
 
-public class FollowerPresenter extends Presenter {
+public class FollowerPresenter extends AbstractFollowerPresenter {
 
     private final View view;
 

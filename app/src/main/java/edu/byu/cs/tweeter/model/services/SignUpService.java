@@ -16,6 +16,19 @@ public class SignUpService {
         return instance;
     }
 
+
+
+    public static SignUpService getTestingInstance(ServerFacade facade){
+        if(instance == null){
+            instance = new SignUpService(facade);
+        }
+        return instance;
+    }
+
+    private SignUpService(ServerFacade serverFacade) {
+        this.serverFacade = serverFacade;
+    }
+
     private SignUpService() { serverFacade = new ServerFacade(); }
 
     public SignUpResponse postUser(SignUpRequest request){

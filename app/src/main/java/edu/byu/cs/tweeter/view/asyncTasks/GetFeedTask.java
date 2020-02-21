@@ -8,13 +8,14 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.net.request.FeedRequest;
 import edu.byu.cs.tweeter.net.response.FeedResponse;
-import edu.byu.cs.tweeter.presenter.FeedPresenter;
+import edu.byu.cs.tweeter.presenter.feed.AbstractFeedPresenter;
+import edu.byu.cs.tweeter.presenter.feed.FeedPresenter;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.util.ImageUtils;
 
 public class GetFeedTask extends AsyncTask<FeedRequest, Void, FeedResponse> {
 
-    private final FeedPresenter presenter;
+    private final AbstractFeedPresenter presenter;
     private final GetFeedObserver observer;
 
     public interface GetFeedObserver{

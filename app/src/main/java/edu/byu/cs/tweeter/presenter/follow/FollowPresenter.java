@@ -1,10 +1,11 @@
-package edu.byu.cs.tweeter.presenter;
+package edu.byu.cs.tweeter.presenter.follow;
 
 import edu.byu.cs.tweeter.model.services.FollowService;
 import edu.byu.cs.tweeter.net.request.FollowRequest;
 import edu.byu.cs.tweeter.net.response.FollowResponse;
+import edu.byu.cs.tweeter.presenter.Presenter;
 
-public class FollowPresenter extends Presenter {
+public class FollowPresenter extends AbstractFollowPresenter{
     private final View view;
 
     /**

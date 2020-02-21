@@ -18,6 +18,16 @@ public class StoryService {
         return instance;
     }
 
+    public static StoryService getTestingInstance(ServerFacade facade){
+        if(instance == null){
+            instance = new StoryService(facade);
+        }
+
+        return instance;
+    }
+
+    private StoryService(ServerFacade facade){ serverFacade = facade;}
+
     private StoryService(){ serverFacade = new ServerFacade();}
 
     public StoryResponse getStory(StoryRequest request){

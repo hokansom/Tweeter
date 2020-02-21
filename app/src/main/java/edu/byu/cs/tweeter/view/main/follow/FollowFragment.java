@@ -14,7 +14,7 @@ import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FollowRequest;
 import edu.byu.cs.tweeter.net.response.FollowResponse;
-import edu.byu.cs.tweeter.presenter.FollowPresenter;
+import edu.byu.cs.tweeter.presenter.follow.FollowPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.PostFollowTask;
 
 public class FollowFragment extends Fragment implements FollowPresenter.View, PostFollowTask.PostFollowObserver {

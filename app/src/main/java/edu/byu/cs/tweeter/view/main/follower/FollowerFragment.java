@@ -23,7 +23,7 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
-import edu.byu.cs.tweeter.presenter.FollowerPresenter;
+import edu.byu.cs.tweeter.presenter.follower.FollowerPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowerTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
@@ -49,7 +49,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         View view = inflater.inflate(R.layout.fragment_follower, container, false);
 
         presenter = new FollowerPresenter(this);
-//        activityPresenter = new ActivityPresenter(this);
+//        activityPresenter = new ProfilePresenter(this);
 
         RecyclerView followerRecyclerView = view.findViewById(R.id.followerRecyclerView);
 

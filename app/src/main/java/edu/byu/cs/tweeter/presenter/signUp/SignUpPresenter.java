@@ -1,10 +1,11 @@
-package edu.byu.cs.tweeter.presenter;
+package edu.byu.cs.tweeter.presenter.signUp;
 
 import edu.byu.cs.tweeter.model.services.SignUpService;
 import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.response.SignUpResponse;
+import edu.byu.cs.tweeter.presenter.Presenter;
 
-public class SignUpPresenter extends Presenter {
+public class SignUpPresenter extends AbstractSignUpPresenter {
 
     private final View view;
     private static String handle = "";

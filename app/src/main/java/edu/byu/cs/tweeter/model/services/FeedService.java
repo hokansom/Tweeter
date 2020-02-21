@@ -18,6 +18,15 @@ public class FeedService {
         return instance;
     }
 
+    public static FeedService getTestingInstance(ServerFacade facade){
+        if(instance == null){
+            instance = new FeedService(facade);
+        }
+        return instance;
+    }
+
+    private FeedService(ServerFacade facade) { serverFacade = facade;}
+
     private FeedService(){ serverFacade = new ServerFacade();}
 
     public FeedResponse getFeed(FeedRequest request){

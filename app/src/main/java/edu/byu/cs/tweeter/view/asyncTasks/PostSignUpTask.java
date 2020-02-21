@@ -4,11 +4,12 @@ import android.os.AsyncTask;
 
 import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.response.SignUpResponse;
-import edu.byu.cs.tweeter.presenter.SignUpPresenter;
+import edu.byu.cs.tweeter.presenter.signUp.AbstractSignUpPresenter;
+import edu.byu.cs.tweeter.presenter.signUp.SignUpPresenter;
 
 public class PostSignUpTask extends AsyncTask<SignUpRequest, Void, SignUpResponse> {
 
-    private final SignUpPresenter presenter;
+    private final AbstractSignUpPresenter presenter;
     private final PostSignUpObserver observer;
 
     public interface PostSignUpObserver{

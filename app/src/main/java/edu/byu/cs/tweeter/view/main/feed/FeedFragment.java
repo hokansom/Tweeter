@@ -31,15 +31,13 @@ import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FeedRequest;
 import edu.byu.cs.tweeter.net.response.FeedResponse;
-import edu.byu.cs.tweeter.presenter.FeedPresenter;
+import edu.byu.cs.tweeter.presenter.feed.FeedPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFeedTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 
-public class FeedFragment extends Fragment implements FeedPresenter.View {
+public class FeedFragment extends Fragment implements FeedPresenter.View{
     private static final int LOADING_DATA_VIEW = 0;
-
-
 
     private static final int ITEM_VIEW = 1;
 

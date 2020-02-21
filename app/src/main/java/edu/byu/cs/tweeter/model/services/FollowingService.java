@@ -18,6 +18,18 @@ public class FollowingService {
         return instance;
     }
 
+    public static FollowingService getTestingInstance(ServerFacade facade) {
+        if(instance == null) {
+            instance = new FollowingService(facade);
+        }
+
+        return instance;
+    }
+
+    private FollowingService(ServerFacade serverFacade) {
+        this.serverFacade = serverFacade;
+    }
+
     private FollowingService() {
         serverFacade = new ServerFacade();
     }

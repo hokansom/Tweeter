@@ -18,24 +18,20 @@ public class Status implements Comparable<Status> {
     private URLs urls;
     private UserMentions mentions;
 
-    public Status(User author, String message, URLs urls, UserMentions mentions, Date date){
+    public Status(User author, String message, URLs urls, UserMentions mentions, String date){
         this.author = author;
         this.message = message;
         this.urls = urls;
         this.mentions = mentions;
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        this.publishDate = c.getTime().toString();
+        this.publishDate = date;
     }
 
-    public Status(User author, String message, Date date){
+    public Status(User author, String message, String date){
         this.author = author;
         this.message = message;
         this.urls = new URLs();
         this.mentions = new UserMentions();
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        this.publishDate =  c.getTime().toString();
+        this.publishDate =  date;
         parseAliases(message);
         parseUrls(message);
     }

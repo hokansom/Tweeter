@@ -149,8 +149,17 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
     @Override
     public void userRetrieved(SearchResponse response) {
         user = response.getUser();
-        presenter.following = response.isFollowing();
-        updateUserData();
+        if(user == null){
+            Toast.makeText(getBaseContext(), "User doesn't exist", Toast.LENGTH_LONG).show();
+            kill_activity();
+        } else {
+            presenter.following = response.isFollowing();
+            updateUserData();
+        }
+    }
+
+    private void kill_activity(){
+        finish();
     }
 
     @Override

@@ -96,7 +96,6 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
             }
         });
 
-        presenter.updateFragment();
     }
 
     private void goBack(){
@@ -127,7 +126,6 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
         userName.setText(user.getName());
         userAlias.setText(user.getAlias());
         updateNumbers();
-        presenter.updateFragment();
         initializeFragment();
     }
 
@@ -175,9 +173,5 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
         FollowFragment fragment = new FollowFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, fragment).commit();
-    }
-    @Override
-    public void refresh() {
-
     }
 }

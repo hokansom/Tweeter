@@ -30,6 +30,7 @@ import edu.byu.cs.tweeter.net.response.StoryResponse;
 
 class ServerFacadeTest {
 
+    private final User currentUser = new User("Test", "User", "");
     private final User user1 = new User("Daffy", "Duck", "");
     private final User user2 = new User("Fred", "Flintstone", "");
     private final User user3 = new User("Barney", "Rubble", ""); // 2 followees
@@ -285,7 +286,7 @@ class ServerFacadeTest {
         Assertions.assertFalse(followerResponse.getFollowers().contains(user1));
 
         Follow follow = new Follow(user3, user2);
-        FollowRequest request = new FollowRequest(follow);
+        FollowRequest request = new FollowRequest(follow, true);
         FollowResponse response = serverFacadeSpy.postFollow(request);
 
         Assertions.assertEquals("Follow posted", response.getMessage());
@@ -298,17 +299,17 @@ class ServerFacadeTest {
     @Test
     void testPostFollow_followSelf(){
         Follow follow = new Follow(user1, user1);
-        FollowRequest request = new FollowRequest(follow);
+        FollowRequest request = new FollowRequest(follow, true);
         FollowResponse response = serverFacadeSpy.postFollow(request);
 
-        Assertions.assertEquals("User can't follow themself", response.getMessage());
+        Assertions.assertEquals("User can't follow or unfollow themself", response.getMessage());
     }
 
     @Test
     void testPostFollow_nonexistingFollowee(){
         User nonexisting = new User("No", "Name", "");
         Follow follow = new Follow(user1, nonexisting);
-        FollowRequest request = new FollowRequest(follow);
+        FollowRequest request = new FollowRequest(follow, true);
         FollowResponse response = serverFacadeSpy.postFollow(request);
 
         Assertions.assertEquals("Followee doesn't exist", response.getMessage());
@@ -318,7 +319,7 @@ class ServerFacadeTest {
     void testPostFollow_nonexistingFollower(){
         User nonexisting = new User("No", "Name", "");
         Follow follow = new Follow(nonexisting, user1);
-        FollowRequest request = new FollowRequest(follow);
+        FollowRequest request = new FollowRequest(follow, true);
         FollowResponse response = serverFacadeSpy.postFollow(request);
 
         Assertions.assertEquals("Follower doesn't exist", response.getMessage());
@@ -327,13 +328,31 @@ class ServerFacadeTest {
     @Test
     void testPostFollow_alreadyFollowing(){
         Follow follow = new Follow(user9, user5);
-        FollowRequest request = new FollowRequest(follow);
+        FollowRequest request = new FollowRequest(follow, true);
         FollowResponse response = serverFacadeSpy.postFollow(request);
 
         Assertions.assertEquals("Follow relationship already exists", response.getMessage());
     }
 
+    /*--------------------------------- Unfollow test---------------------------------------*/
 
+
+    @Test
+    void testPostUnfollow(){
+//        FollowerRequest followerRequest = new FollowerRequest(user2, 5,null);
+//        FollowerResponse followerResponse = serverFacadeSpy.getFollowers(followerRequest);
+//        Assertions.assertTrue(followerResponse.getFollowers().contains(user1));
+//
+//        Follow follow = new Follow(user3, user2);
+//        FollowRequest request = new FollowRequest(follow, true);
+//        FollowResponse response = serverFacadeSpy.postFollow(request);
+//
+//        Assertions.assertEquals("Follow posted", response.getMessage());
+//
+//        followerRequest = new FollowerRequest(user2, 5,null);
+//        followerResponse = serverFacadeSpy.getFollowers(followerRequest);
+//        Assertions.assertTrue(followerResponse.getFollowers().contains(user3));
+    }
 
     /*---------------------------------Stories test---------------------------------------*/
 
@@ -485,7 +504,8 @@ class ServerFacadeTest {
     @Test
     void testPostUser_DuplicateAlias(){
         User user = new User("Daffy", "Duck", "");
-        SignUpRequest request = new SignUpRequest(user);
+        String password = "password123";
+        SignUpRequest request = new SignUpRequest(user, password, "" );
         SignUpResponse response = serverFacadeSpy.postUser(request);
 
         Assertions.assertEquals(response.getMessage(), "Alias is already taken");
@@ -495,7 +515,8 @@ class ServerFacadeTest {
     @Test
     void testPostUser_sameName_differentAlias(){
         User user = new User("Daffy", "Duck", "@ducky", "");
-        SignUpRequest request = new SignUpRequest(user);
+        String password = "password123";
+        SignUpRequest request = new SignUpRequest(user, password, "");
         SignUpResponse response = serverFacadeSpy.postUser(request);
 
         Assertions.assertEquals(response.getUser(), user);
@@ -505,7 +526,8 @@ class ServerFacadeTest {
     @Test
     void testPostUser_validUsername(){
         User user = new User("Morgan", "Davis", "@Morgan", "");
-        SignUpRequest request = new SignUpRequest(user);
+        String password = "password123";
+        SignUpRequest request = new SignUpRequest(user, password, "");
         SignUpResponse response = serverFacadeSpy.postUser(request);
 
         Assertions.assertEquals(response.getUser(), user);
@@ -516,7 +538,8 @@ class ServerFacadeTest {
     @Test
     void testPostUser_checkStory(){
         User user = new User("Jacob", "Davis", "@Jacob", "");
-        SignUpRequest request = new SignUpRequest(user);
+        String password = "password123";
+        SignUpRequest request = new SignUpRequest(user, password, "");
         SignUpResponse response = serverFacadeSpy.postUser(request);
 
         Assertions.assertEquals(response.getUser(), user);
@@ -531,7 +554,8 @@ class ServerFacadeTest {
     @Test
     void testPostUser_checkFeed(){
         User user = new User("Morgan", "Davis", "");
-        SignUpRequest request = new SignUpRequest(user);
+        String password = "password123";
+        SignUpRequest request = new SignUpRequest(user, password, "");
         SignUpResponse response = serverFacadeSpy.postUser(request);
 
         Assertions.assertEquals(response.getUser(), user);
@@ -547,7 +571,8 @@ class ServerFacadeTest {
     @Test
     void testSearchAlias_existingUser(){
         String alias = "@DaffyDuck";
-        SearchRequest request = new SearchRequest(alias);
+        String password = "password123";
+        SearchRequest request = new SearchRequest(alias, currentUser );
         SearchResponse response = serverFacadeSpy.searchUser(request);
 
         Assertions.assertEquals(String.format("Found user with given alias %s", alias), response.getMessage());
@@ -557,7 +582,7 @@ class ServerFacadeTest {
     @Test
     void testSearchAlias_nonexistingUser(){
         String alias = "@Ducky";
-        SearchRequest request = new SearchRequest(alias);
+        SearchRequest request = new SearchRequest(alias, currentUser);
         SearchResponse response = serverFacadeSpy.searchUser(request);
 
         Assertions.assertEquals(String.format("Could not find user with given alias %s", alias), response.getMessage());

@@ -2,7 +2,6 @@ package edu.byu.cs.tweeter.model.domain;
 
 import androidx.annotation.NonNull;
 
-import java.io.CharArrayReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,10 +54,9 @@ public class Status implements Comparable<Status> {
     }
 
     private void parseAliases(String message){
-        String copy = message;
         List<String> aliases = new ArrayList<>();
         if(message.contains("@")){
-            String[] parsed = copy.split("@");
+            String[] parsed = message.split("@");
             for(int i = 1; i < parsed.length; i++){
                 String mention = "@" + parsed[i];
                 int index = mention.indexOf(' ');
@@ -93,7 +91,7 @@ public class Status implements Comparable<Status> {
        return String.format("%s %s",parsed[1], parsed[2]);
     }
 
-    public String getFullDate(){
+    private String getFullDate(){
         return publishDate;
     }
 
@@ -113,18 +111,10 @@ public class Status implements Comparable<Status> {
         return urls;
     }
 
-    public void setUrls(URLs urls) {
-        this.urls = urls;
-    }
-
     public UserMentions getMentions() {
         return mentions;
     }
 
-
-    public void setMentions(UserMentions mentions) {
-        this.mentions = mentions;
-    }
 
     @Override
     public boolean equals(Object o) {

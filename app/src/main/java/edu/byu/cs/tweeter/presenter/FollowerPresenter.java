@@ -10,7 +10,10 @@ public class FollowerPresenter extends Presenter {
 
     private final View view;
 
+    private static int numberOfFollowers = 0;
+
     public interface View{
+        void displayNoData(int visibility);
         // If needed, Specify methods here that will be called on the view in response to model updates
     }
 
@@ -18,6 +21,15 @@ public class FollowerPresenter extends Presenter {
 
     public FollowerResponse getFollowers(FollowerRequest request){
         return FollowerService.getInstance().getFollowers(request);
+    }
+
+    public void updateNumFollowers(int num){
+        numberOfFollowers = num;
+        if(numberOfFollowers == 0){
+            view.displayNoData(0);
+        } else {
+            view.displayNoData(8);
+        }
     }
 
 }

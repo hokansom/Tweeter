@@ -23,7 +23,6 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
-import edu.byu.cs.tweeter.presenter.ActivityPresenter;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowingTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
@@ -35,6 +34,8 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
     private static final int ITEM_VIEW = 1;
 
     private static final int PAGE_SIZE = 10;
+
+    private TextView noData;
 
 
     private FollowingPresenter presenter;
@@ -58,7 +59,14 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
         followingRecyclerView.addOnScrollListener(new FollowRecyclerViewPaginationScrollListener(layoutManager));
 
+        noData = view.findViewById(R.id.noData);
+
         return view;
+    }
+
+    @Override
+    public void displayNoData(int visibility) {
+        noData.setVisibility(visibility);
     }
 
     private class FollowingHolder extends RecyclerView.ViewHolder {
@@ -177,6 +185,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         @Override
         public void followeesRetrieved(FollowingResponse followingResponse) {
             List<User> followees = followingResponse.getFollowees();
+            presenter.updateNumFollowees(followingResponse.getNumOffollowees());
 
             lastFollowee = (followees.size() > 0) ? followees.get(followees.size() -1) : null;
             hasMorePages = followingResponse.hasMorePages();

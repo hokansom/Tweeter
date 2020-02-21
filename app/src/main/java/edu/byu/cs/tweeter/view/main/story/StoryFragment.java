@@ -45,6 +45,8 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
     private StoryRecyclerViewAdapter storyRecyclerViewAdapter;
 
+    private TextView noData;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +65,15 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
         storyRecyclerView.addOnScrollListener(new StoryRecyclerViewPaginationScrollListener(layoutManager));
 
+        noData = view.findViewById(R.id.noData);
+
         return view;
+    }
+
+    @Override
+    public void displayNoData(int visible) {
+        noData.setVisibility(visible);
+
     }
 
     private class StoryHolder extends RecyclerView.ViewHolder {
@@ -257,7 +267,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
         @Override
         public void storyRetrieved(StoryResponse storyResponse) {
             List<Status> statuses = storyResponse.getStory().getStory();
-
+            presenter.updateNumStatuses(statuses.size());
             lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() -1) : null;
             hasMorePages = storyResponse.hasMorePages();
 

@@ -30,11 +30,14 @@ import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 public class FollowerFragment extends Fragment implements FollowerPresenter.View {
 
     private static final int LOADING_DATA_VIEW = 0;
+
     private static final int ITEM_VIEW = 1;
 
     private static final int PAGE_SIZE = 10;
 
     private FollowerPresenter presenter;
+
+    private TextView noData;
 
 
     private FollowerRecyclerViewAdapter followerRecyclerViewAdapter;
@@ -56,10 +59,15 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
         followerRecyclerView.addOnScrollListener(new FollowerRecyclerViewPaginationScrollListener(layoutManager));
 
+        noData = view.findViewById(R.id.noData);
+
         return view;
     }
 
-
+    @Override
+    public void displayNoData(int visibility) {
+        noData.setVisibility(visibility);
+    }
 
 
     private class FollowerHolder extends RecyclerView.ViewHolder{
@@ -172,6 +180,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         @Override
         public void followersRetrieved(FollowerResponse followerResponse){
             List<User> followers = followerResponse.getFollowers();
+            presenter.updateNumFollowers(followerResponse.getNumOfFolllowers());
 
             lastFollower = (followers.size() > 0) ? followers.get(followers.size() - 1) : null;
             hasMorePages = followerResponse.hasMorePages();

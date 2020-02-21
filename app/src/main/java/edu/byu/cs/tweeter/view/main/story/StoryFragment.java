@@ -1,6 +1,8 @@
 package edu.byu.cs.tweeter.view.main.story;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -104,7 +106,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
             }
 
 
-            List<String> urls = status.getUris().getUris();
+            List<String> urls = status.getUrls().getUris();
             for(String s: urls){
                 int start = findStartingIndex(message, s);
                 if(start != -1){
@@ -152,9 +154,26 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
         @Override
         public void onClick(View widget) {
-           //FIXME:
+            try{
+                Uri uri = Uri.parse(text);
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(launchBrowser);
+            } catch (ActivityNotFoundException ex){
+                /*If it fails at first, try prepending http:// to the call*/
+                String updated = "http://" + text;
+                try{
+                    Intent launchBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse(updated));
+                    startActivity(launchBrowser);
+                } catch (ActivityNotFoundException exception){
+                    String message = String.format("Could not open url $s", text);
+                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                }
+
+            }
+
         }
     }
+
 
 
 

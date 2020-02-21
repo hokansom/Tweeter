@@ -6,50 +6,52 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Status implements Comparable<Status> {
     private String publishDate;
     private String message;
     private User author;
-    private URLs uris;
+    private URLs urls;
     private UserMentions mentions;
 
-    public Status(User author, String message, URLs uris, UserMentions mentions, Date date){
+    public Status(User author, String message, URLs urls, UserMentions mentions, Date date){
         this.author = author;
         this.message = message;
-        this.uris = uris;
+        this.urls = urls;
         this.mentions = mentions;
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         this.publishDate =  c.getTime().toString();
-        parseMessage(message);
     }
 
     public Status(User author, String message, Date date){
         this.author = author;
         this.message = message;
-        this.uris = new URLs();
+        this.urls = new URLs();
         this.mentions = new UserMentions();
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         this.publishDate =  c.getTime().toString();
-        parseMessage(message);
+        parseAliases(message);
+        parseUrls(message);
     }
 
     public Status(User author, String message){
         this.author = author;
         this.message = message;
-        this.uris = new URLs();
-        this.mentions = new UserMentions();
+        this.urls = new URLs();
         this.publishDate = Calendar.getInstance().getTime().toString();
-        parseMessage(message);
+        parseAliases(message);
+        parseUrls(message);
     }
 
     public Status(User author) {
         this.author = author;
     }
 
-    private void parseMessage(String message){
+    private void parseAliases(String message){
         String copy = message;
         List<String> aliases = new ArrayList<>();
         if(message.contains("@")){
@@ -62,9 +64,24 @@ public class Status implements Comparable<Status> {
                 }
                 aliases.add(mention);
             }
-
-            this.mentions = new UserMentions(aliases);
         }
+        this.mentions = new UserMentions(aliases);
+    }
+
+    private void parseUrls(String message){
+        List<String> urls = new ArrayList<>();
+        String urlRegex = "\\(?\\b(http://|www[.])[-A-Za-z0-9+&amp;@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&amp;@#/%=~_()|]";
+        Pattern pattern = Pattern.compile(urlRegex, Pattern.CASE_INSENSITIVE);
+        Matcher urlMatcher = pattern.matcher(message);
+
+        while (urlMatcher.find())
+        {
+            urls.add(message.substring(urlMatcher.start(0),
+                    urlMatcher.end(0)));
+        }
+
+        this.urls = new URLs(urls);
+
     }
 
     public String getPublishDate() {
@@ -85,12 +102,12 @@ public class Status implements Comparable<Status> {
         return author;
     }
 
-    public URLs getUris() {
-        return uris;
+    public URLs getUrls() {
+        return urls;
     }
 
-    public void setUris(URLs uris) {
-        this.uris = uris;
+    public void setUrls(URLs urls) {
+        this.urls = urls;
     }
 
     public UserMentions getMentions() {

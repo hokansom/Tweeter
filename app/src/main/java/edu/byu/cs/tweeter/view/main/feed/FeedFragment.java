@@ -1,8 +1,9 @@
 package edu.byu.cs.tweeter.view.main.feed;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -27,18 +28,12 @@ import java.util.List;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.domain.UserMentions;
 import edu.byu.cs.tweeter.net.request.FeedRequest;
-import edu.byu.cs.tweeter.net.request.StoryRequest;
 import edu.byu.cs.tweeter.net.response.FeedResponse;
-import edu.byu.cs.tweeter.net.response.StoryResponse;
 import edu.byu.cs.tweeter.presenter.FeedPresenter;
-import edu.byu.cs.tweeter.presenter.StoryPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFeedTask;
-import edu.byu.cs.tweeter.view.asyncTasks.GetStoryTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
-import edu.byu.cs.tweeter.view.main.story.StoryFragment;
 
 public class FeedFragment extends Fragment implements FeedPresenter.View {
     private static final int LOADING_DATA_VIEW = 0;
@@ -112,7 +107,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             }
 
 
-            List<String> urls = status.getUris().getUris();
+            List<String> urls = status.getUrls().getUris();
             for(String s: urls){
                 int start = findStartingIndex(message, s);
                 if(start != -1){
@@ -162,7 +157,23 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
         @Override
         public void onClick(View widget) {
-            //FIXME:
+            try{
+                Uri uri = Uri.parse(text);
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(launchBrowser);
+            } catch (ActivityNotFoundException ex){
+                /*If it fails at first, try prepending http:// to the call*/
+                String updated = "http://" + text;
+                try{
+                    Intent launchBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse(updated));
+                    startActivity(launchBrowser);
+                } catch (ActivityNotFoundException exception){
+                    String message = String.format("Could not open url $s", text);
+                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                }
+
+            }
+
         }
     }
 

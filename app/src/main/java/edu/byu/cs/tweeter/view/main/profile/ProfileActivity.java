@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.view.main.profile;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +21,6 @@ import edu.byu.cs.tweeter.view.asyncTasks.GetUserTask;
 import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.follow.FollowFragment;
-import edu.byu.cs.tweeter.view.main.status.StatusActivity;
 
 public class ProfileActivity extends AppCompatActivity implements ProfilePresenter.View, LoadImageTask.LoadImageObserver, SearchPresenter.View, GetUserTask.GetUserObserver {
 
@@ -66,24 +63,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
             updateUserData();
         }
 
-
-//        if(presenter.getViewingUser() == null){
-//            Bundle extras = getIntent().getExtras();
-//            String alias = extras.getString("ALIAS");
-//            search(alias);
-//        } else {
-//            user = presenter.getViewingUser();
-//            updateUserData();
-//        }
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createNewStatus();
-            }
-        });
-
         ImageView back = findViewById(R.id.backButton);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,20 +74,14 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
     }
 
     private void goBack(){
-        presenter.setViewingUser(null);
-        finish();
-    }
-
-
-
-    private void createNewStatus(){
-        if(presenter.getCurrentUser() != null){
-            Intent intent = new Intent(this, StatusActivity.class);
-            startActivity(intent);
-        } else{
-            Toast.makeText(getBaseContext(), R.string.mustLogIn, Toast.LENGTH_LONG).show();
+        try{
+            User prevUser = (User) getIntent().getExtras().get("PREV_USER");
+            presenter.setViewingUser(prevUser);
+        } catch (Exception e){
+            presenter.setViewingUser(null);
         }
 
+        finish();
     }
 
     private void search(String alias){

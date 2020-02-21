@@ -42,6 +42,8 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
     private static final int PAGE_SIZE = 10;
 
+    private User user;
+
     private StoryPresenter presenter;
 
     private StoryRecyclerViewAdapter storyRecyclerViewAdapter;
@@ -57,6 +59,8 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
         View view = inflater.inflate(R.layout.fragment_story, container, false);
 
         presenter = new StoryPresenter(this);
+
+        user = presenter.getViewingUser();
 
         final RecyclerView storyRecyclerView = view.findViewById(R.id.storyRecyclerView);
 
@@ -87,7 +91,6 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
         noData.setVisibility(visible);
 
     }
-
 
     private class StoryHolder extends RecyclerView.ViewHolder {
 
@@ -276,7 +279,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
             isLoading = true;
             addLoadingFooter();
             GetStoryTask getStoryTask = new GetStoryTask(presenter, this);
-            StoryRequest request = new StoryRequest(presenter.getViewingUser(), PAGE_SIZE, lastStatus);
+            StoryRequest request = new StoryRequest(user, PAGE_SIZE, lastStatus);
             getStoryTask.execute(request);
         }
 

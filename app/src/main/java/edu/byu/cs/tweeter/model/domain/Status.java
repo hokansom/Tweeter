@@ -2,8 +2,6 @@ package edu.byu.cs.tweeter.model.domain;
 
 import androidx.annotation.NonNull;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,10 +11,10 @@ public class Status implements Comparable<Status> {
     private String publishDate;
     private String message;
     private User author;
-    private URIs uris;
+    private URLs uris;
     private UserMentions mentions;
 
-    public Status(User author, String message, URIs uris, UserMentions mentions, Date date){
+    public Status(User author, String message, URLs uris, UserMentions mentions, Date date){
         this.author = author;
         this.message = message;
         this.uris = uris;
@@ -30,7 +28,8 @@ public class Status implements Comparable<Status> {
     public Status(User author, String message, Date date){
         this.author = author;
         this.message = message;
-        this.uris = new URIs();
+        this.uris = new URLs();
+        this.mentions = new UserMentions();
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         this.publishDate =  c.getTime().toString();
@@ -40,7 +39,8 @@ public class Status implements Comparable<Status> {
     public Status(User author, String message){
         this.author = author;
         this.message = message;
-        this.uris = new URIs();
+        this.uris = new URLs();
+        this.mentions = new UserMentions();
         this.publishDate = Calendar.getInstance().getTime().toString();
         parseMessage(message);
     }
@@ -85,11 +85,11 @@ public class Status implements Comparable<Status> {
         return author;
     }
 
-    public URIs getUris() {
+    public URLs getUris() {
         return uris;
     }
 
-    public void setUris(URIs uris) {
+    public void setUris(URLs uris) {
         this.uris = uris;
     }
 

@@ -26,7 +26,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 public class StatusGenerator {
     private static final String STATUS_PATH = "C:\\Users\\morga\\Documents\\BYU\\Winter-2020\\CS-340\\Tweeter\\tweeter-1\\app\\src\\main\\res\\Statuses.json";
 
-    private static List<String>  samples = new ArrayList<String>(Arrays.asList("Status 1", "Status 2", "Status 3", "Status 4", "Status 5"));
+    private static List<String>  samples = new ArrayList<String>(Arrays.asList("Status 1 @TestUser", "Status 2  @TestUser", "Status 3 @TestUser", "Status 4  @TestUser", "Status 5 @TestUser"));
 
 
     private static StatusGenerator statusGenerator;

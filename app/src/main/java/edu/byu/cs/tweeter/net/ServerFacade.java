@@ -26,7 +26,6 @@ import edu.byu.cs.tweeter.net.request.SignInRequest;
 import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.request.StatusRequest;
 import edu.byu.cs.tweeter.net.request.StoryRequest;
-import edu.byu.cs.tweeter.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.net.response.FeedResponse;
 import edu.byu.cs.tweeter.net.response.FollowResponse;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
@@ -36,7 +35,6 @@ import edu.byu.cs.tweeter.net.response.SignInResponse;
 import edu.byu.cs.tweeter.net.response.SignUpResponse;
 import edu.byu.cs.tweeter.net.response.StatusResponse;
 import edu.byu.cs.tweeter.net.response.StoryResponse;
-import edu.byu.cs.tweeter.net.response.UnfollowResponse;
 
 public class ServerFacade {
 
@@ -236,71 +234,75 @@ public class ServerFacade {
         }
 
         if(follower.equals(followee)){
-            return new FollowResponse(false, "User can't follow themself");
+            return new FollowResponse(false, "User can't follow or unfollow themself");
         }
 
+
+        if(request.getIsFollow()){
+            return addFollow(followee, follower);
+        } else {
+            return removeFollow(followee, follower);
+
+        }
+    }
+
+    private FollowResponse addFollow(User followee, User follower){
         List<User> followers = followersByFollowee.get(followee);
 
         if(followers == null){
-            followers = new ArrayList<User>();
+            followers = new ArrayList<>();
             followersByFollowee.put(followee, followers);
         }
 
         List<User> followees = followeesByFollower.get(follower);
         if(followees == null){
-            followees = new ArrayList<User>();
+            followees = new ArrayList<>();
             followeesByFollower.put(follower, followees);
         }
 
         if(followees.contains(followee)){
             return new FollowResponse(false, "Follow relationship already exists");
         }
+
         if(followers.contains(follower)){
             return new FollowResponse(false, "Follow relationship already exists");
         }
+
 
         followers.add(follower);
         followees.add(followee);
 
         return new FollowResponse(true, "Follow posted");
+
     }
 
-    public UnfollowResponse deleteFollow(UnfollowRequest request){
-        if(allUsers == null){
-            getAllUsers();
-        }
-
-        Follow follow = request.getFollow();
-        User follower = follow.getFollower();
-        User followee = follow.getFollowee();
-
-        /* Check to see if the follower and followee actually exist */
-        if(!allUsers.contains(followee)){
-            return new UnfollowResponse(false, "Followee doesn't exist");
-        }
-        if(!allUsers.contains(follower)){
-            return new UnfollowResponse(false, "Follower doesn't exist");
-        }
 
 
+    private FollowResponse removeFollow(User followee, User follower){
         List<User> followers = followersByFollowee.get(followee);
-
-
         List<User> followees = followeesByFollower.get(follower);
 
         if(followees == null || !followees.contains(followee)){
-            return new UnfollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
+            return new FollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
         }
         if(followers == null || !followers.contains(follower)){
-            return new UnfollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
+            return new FollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
         }
 
         followers.remove(follower);
         followees.remove(followee);
 
-        return new UnfollowResponse(true, "Follow deleted");
+        return new FollowResponse(true, "Follow deleted");
     }
 
+    private boolean searchFollow(User follower, User followee){
+        List<User> followees = followeesByFollower.get(follower);
+        if(followees == null){
+            return false;
+        } else {
+            return followees.contains(followee);
+        }
+    }
 
 
     /*------------------------------------------STATUS-------------------------------------*/
@@ -552,8 +554,9 @@ public class ServerFacade {
         else{
             message = String.format("Could not find user with given alias %s", request.getAlias());
         }
+        boolean isFollowing = searchFollow(request.getCurrentUser(), user);
 
-        return new SearchResponse(success, message, user);
+        return new SearchResponse(success, message, user, isFollowing);
     }
 
     private User searchUser(String alias){

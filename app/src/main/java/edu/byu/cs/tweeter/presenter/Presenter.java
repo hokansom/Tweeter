@@ -9,6 +9,8 @@ public abstract class Presenter {
 
     private static User viewingUser;
 
+    public static boolean following;
+
     public User getCurrentUser() {
         return SignInService.getInstance().getCurrentUser();
     }
@@ -22,5 +24,11 @@ public abstract class Presenter {
 
     public void setViewingUser(User user){
         viewingUser = user;
+    }
+
+    public boolean isFollowing(){ return following; }
+
+    public void setFollowing(boolean following){
+        following = following;
     }
 }

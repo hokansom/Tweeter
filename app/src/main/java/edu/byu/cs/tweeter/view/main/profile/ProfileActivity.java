@@ -13,22 +13,33 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.net.request.SearchRequest;
+import edu.byu.cs.tweeter.net.response.SearchResponse;
 import edu.byu.cs.tweeter.presenter.ActivityPresenter;
+import edu.byu.cs.tweeter.presenter.SearchPresenter;
+import edu.byu.cs.tweeter.view.asyncTasks.GetUserTask;
 import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
+import edu.byu.cs.tweeter.view.main.follow.FollowFragment;
 import edu.byu.cs.tweeter.view.main.status.StatusActivity;
 
-public class ProfileActivity extends AppCompatActivity implements ActivityPresenter.View, LoadImageTask.LoadImageObserver {
+public class ProfileActivity extends AppCompatActivity implements ActivityPresenter.View, LoadImageTask.LoadImageObserver, SearchPresenter.View, GetUserTask.GetUserObserver {
 
     private User user;
-    private ImageView back;
     private ImageView userImageView;
-    private Button followButton;
+    private TextView userName;
+    private TextView userAlias;
 
     private ActivityPresenter presenter;
+    private SearchPresenter searchPresenter;
+
+    private boolean isFollowing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -36,8 +47,8 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
         setContentView(R.layout.activity_profile);
 
         presenter = new ActivityPresenter(this);
+        searchPresenter = new SearchPresenter(this);
 
-        user = presenter.getViewingUser();
 
         ProfileSectionsPagerAdapter pagerAdapter = new ProfileSectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -46,18 +57,28 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
         tabs.setupWithViewPager(viewPager);
 
         userImageView = findViewById(R.id.userImage);
+        userName = findViewById(R.id.userName);
+        userAlias = findViewById(R.id.userAlias);
 
-        // Asynchronously load the user's image
-        LoadImageTask loadImageTask = new LoadImageTask(this);
-        loadImageTask.execute(presenter.getViewingUser().getImageUrl());
 
-        TextView userName = findViewById(R.id.userName);
-        userName.setText(user.getName());
+        try{
+            Bundle extras = getIntent().getExtras();
+            String alias = extras.getString("ALIAS");
+            search(alias);
+        }catch (Exception e){
+            user = presenter.getViewingUser();
+            updateUserData();
+        }
 
-        TextView userAlias = findViewById(R.id.userAlias);
-        userAlias.setText(user.getAlias());
 
-        updateNumbers();
+//        if(presenter.getViewingUser() == null){
+//            Bundle extras = getIntent().getExtras();
+//            String alias = extras.getString("ALIAS");
+//            search(alias);
+//        } else {
+//            user = presenter.getViewingUser();
+//            updateUserData();
+//        }
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,31 +88,71 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
             }
         });
 
-        followButton = findViewById(R.id.followButton);
-
-        //Don't show button if it is the current user or the user isn't signed in
-        if(presenter.getCurrentUser() == null || presenter.getCurrentUser().equals(user)){
-            followButton.setVisibility(View.INVISIBLE);
-        }else{
-            followButton.setVisibility(View.VISIBLE);
-            //TODO: change text to follow/unfollow;
-
-            followButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO: add functionality
-                    Toast.makeText(getBaseContext(), "Follow clicked", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-
-        back = findViewById(R.id.backButton);
+        ImageView back = findViewById(R.id.backButton);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goBack();
             }
         });
+
+        presenter.updateFragment();
+    }
+
+    private void goBack(){
+        presenter.setViewingUser(null);
+        finish();
+    }
+
+
+
+    private void createNewStatus(){
+        if(presenter.getCurrentUser() != null){
+            Intent intent = new Intent(this, StatusActivity.class);
+            startActivity(intent);
+        } else{
+            Toast.makeText(getBaseContext(), R.string.mustLogIn, Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void search(String alias){
+        GetUserTask getUserTask = new GetUserTask(searchPresenter, this);
+        SearchRequest request = new SearchRequest(alias, presenter.getCurrentUser());
+        getUserTask.execute(request);
+    }
+
+    public void updateUserData(){
+        loadImage();
+        userName.setText(user.getName());
+        userAlias.setText(user.getAlias());
+        updateNumbers();
+        presenter.updateFragment();
+        initializeFragment();
+    }
+
+    private void loadImage(){
+        // Asynchronously load the user's image
+        LoadImageTask loadImageTask = new LoadImageTask(this);
+        loadImageTask.execute(presenter.getViewingUser().getImageUrl());
+    }
+
+    public void updateNumbers(){
+        TextView numFolloweesText = findViewById(R.id.numFollowing);
+        int numfollowees = presenter.getNumOfFollowees();
+        numFolloweesText.setText(String.format("%d",numfollowees ));
+
+        TextView numFollowersText = findViewById(R.id.numFollowers);
+        int numFollowers = presenter.getNumOfFollowers();
+        numFollowersText.setText(String.format("%d",numFollowers ));
+    }
+
+
+    @Override
+    public void userRetrieved(SearchResponse response) {
+        user = response.getUser();
+        presenter.following = response.isFollowing();
+        updateUserData();
     }
 
     @Override
@@ -108,29 +169,15 @@ public class ProfileActivity extends AppCompatActivity implements ActivityPresen
         }
     }
 
-    private void goBack(){
-        presenter.setViewingUser(null);
-        finish();
+    public boolean  isFollowing() { return isFollowing; }
+
+    private void initializeFragment(){
+        FollowFragment fragment = new FollowFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, fragment).commit();
     }
-
-    public void updateNumbers(){
-        TextView numFolloweesText = findViewById(R.id.numFollowing);
-        int numfollowees = presenter.getNumOfFollowees();
-        numFolloweesText.setText(String.format("%d",numfollowees ));
-
-        TextView numFollowersText = findViewById(R.id.numFollowers);
-        int numFollowers = presenter.getNumOfFollowers();
-        numFollowersText.setText(String.format("%d",numFollowers ));
-    }
-
-    private void createNewStatus(){
-        if(presenter.getCurrentUser() != null){
-            Intent intent = new Intent(this, StatusActivity.class);
-            startActivity(intent);
-        } else{
-            Toast.makeText(getBaseContext(), R.string.mustLogIn, Toast.LENGTH_LONG).show();
-        }
+    @Override
+    public void refresh() {
 
     }
-
 }

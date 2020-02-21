@@ -19,7 +19,6 @@ import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.request.StatusRequest;
 import edu.byu.cs.tweeter.net.request.StoryRequest;
-import edu.byu.cs.tweeter.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.net.response.FeedResponse;
 import edu.byu.cs.tweeter.net.response.FollowResponse;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
@@ -28,7 +27,6 @@ import edu.byu.cs.tweeter.net.response.SearchResponse;
 import edu.byu.cs.tweeter.net.response.SignUpResponse;
 import edu.byu.cs.tweeter.net.response.StatusResponse;
 import edu.byu.cs.tweeter.net.response.StoryResponse;
-import edu.byu.cs.tweeter.net.response.UnfollowResponse;
 
 class ServerFacadeTest {
 
@@ -335,33 +333,6 @@ class ServerFacadeTest {
         Assertions.assertEquals("Follow relationship already exists", response.getMessage());
     }
 
-    /*--------------------------------- Unfollow test---------------------------------------*/
-
-    @Test
-    void testPostUnfollow(){
-        FollowerRequest followerRequest = new FollowerRequest(user17, 5,null);
-        FollowerResponse followerResponse = serverFacadeSpy.getFollowers(followerRequest);
-        Assertions.assertTrue(followerResponse.getFollowers().contains(user16));
-
-        Follow follow = new Follow(user16, user17);
-        UnfollowRequest request = new UnfollowRequest(follow);
-        UnfollowResponse response = serverFacadeSpy.deleteFollow(request);
-
-        Assertions.assertEquals("Follow deleted", response.getMessage());
-
-        followerRequest = new FollowerRequest(user17, 5,null);
-        followerResponse = serverFacadeSpy.getFollowers(followerRequest);
-        Assertions.assertFalse(followerResponse.getFollowers().contains(user16));
-    }
-
-    @Test
-    void testPostUnfollow_invalidFollow(){
-        Follow follow = new Follow(user17, user16);
-        UnfollowRequest request = new UnfollowRequest(follow);
-        UnfollowResponse response = serverFacadeSpy.deleteFollow(request);
-
-        Assertions.assertEquals("Can't remove a follow relationship that doesn't exist.", response.getMessage());
-    }
 
 
     /*---------------------------------Stories test---------------------------------------*/

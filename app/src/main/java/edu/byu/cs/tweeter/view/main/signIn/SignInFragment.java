@@ -98,6 +98,7 @@ public class SignInFragment extends Fragment implements SignInPresenter.View, Po
             Bundle extras = new Bundle();
             extras.putSerializable("USER", response.getUser());
             intent.putExtras(extras);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
         else{

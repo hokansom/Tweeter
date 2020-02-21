@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +40,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
     private TextView noData;
 
+    private SwipeRefreshLayout swipeContainer;
 
     private FollowerRecyclerViewAdapter followerRecyclerViewAdapter;
 
@@ -60,6 +62,16 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         followerRecyclerView.addOnScrollListener(new FollowerRecyclerViewPaginationScrollListener(layoutManager));
 
         noData = view.findViewById(R.id.noData);
+
+        swipeContainer = view.findViewById(R.id.swipe_container);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                followerRecyclerViewAdapter.lastFollower = null;
+                followerRecyclerViewAdapter.removeAll();
+                followerRecyclerViewAdapter.loadMoreItems();
+            }
+        });
 
         return view;
     }
@@ -134,6 +146,11 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             this.notifyItemRemoved(position);
         }
 
+        void removeAll(){
+            users.clear();
+            this.notifyDataSetChanged();
+        }
+
         @NonNull
         @Override
         public FollowerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
@@ -179,7 +196,9 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
         @Override
         public void followersRetrieved(FollowerResponse followerResponse){
+            swipeContainer.setRefreshing(false);
             List<User> followers = followerResponse.getFollowers();
+
             presenter.updateNumFollowers(followerResponse.getNumOfFolllowers());
 
             lastFollower = (followers.size() > 0) ? followers.get(followers.size() - 1) : null;

@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,6 +51,8 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
     private TextView noData;
 
+    private SwipeRefreshLayout swipeContainer;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +72,16 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
         feedRecyclerView.addOnScrollListener(new FeedRecyclerViewPaginationScrollListener(layoutManager));
 
         noData = view.findViewById(R.id.noData);
+
+        swipeContainer = view.findViewById(R.id.swipe_container);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                feedRecyclerViewAdapter.lastStatus = null;
+                feedRecyclerViewAdapter.removeAll();
+                feedRecyclerViewAdapter.loadMoreItems();
+            }
+        });
 
         return view;
     }
@@ -220,6 +233,11 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
             this.notifyItemRemoved(position);
         }
 
+        void removeAll(){
+            statuses.clear();
+            this.notifyDataSetChanged();
+        }
+
         @NonNull
         @Override
         public FeedHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -269,6 +287,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
         @Override
         public void feedRetrieved(FeedResponse feedResponse) {
+            swipeContainer.setRefreshing(false);
             List<Status> statuses = feedResponse.getFeed().getFeed();
             presenter.updateNumStatuses(statuses.size());
 

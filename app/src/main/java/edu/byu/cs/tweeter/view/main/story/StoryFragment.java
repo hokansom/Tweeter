@@ -73,7 +73,6 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Toast.makeText(getContext(), "testing", Toast.LENGTH_LONG).show();
                 storyRecyclerViewAdapter.lastStatus = null;
                 storyRecyclerViewAdapter.removeAll();
                 storyRecyclerViewAdapter.loadMoreItems();

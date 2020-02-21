@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -326,13 +325,7 @@ public class ServerFacade {
     }
 
     private List<Status> sortStatuses(List<Status> statuses){
-        Collections.sort(statuses, new Comparator<Status>() {
-            @Override
-            public int compare(Status status1, Status status2) {
-                int result = status1.compareTo(status2);
-                return result;
-            }
-        });
+        Collections.sort(statuses, Collections.<Status>reverseOrder());
         return statuses;
     }
 

@@ -68,13 +68,7 @@ public class StatusGenerator {
             statuses.add(generateStatus(user));
         }
 
-        Collections.sort(statuses, new Comparator<Status>() {
-            @Override
-            public int compare(Status status1, Status status2) {
-                int result = status1.compareTo(status2);
-                return result;
-            }
-        });
+        Collections.sort(statuses);
 
         return statuses;
     }

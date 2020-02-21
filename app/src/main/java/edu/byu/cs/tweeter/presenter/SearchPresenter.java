@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.presenter;
 
-import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.services.UserService;
 import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.response.SearchResponse;

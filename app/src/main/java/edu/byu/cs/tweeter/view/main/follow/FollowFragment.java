@@ -23,6 +23,8 @@ public class FollowFragment extends Fragment implements FollowPresenter.View, Po
     private FollowPresenter presenter;
     private User user;
 
+    private boolean isFollowing;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -47,7 +49,9 @@ public class FollowFragment extends Fragment implements FollowPresenter.View, Po
             }
         });
 
-        if(presenter.following){
+        isFollowing = presenter.following;
+
+        if(isFollowing){
             followButton.setText(R.string.unfollow);
         } else{
             followButton.setText(R.string.follow);

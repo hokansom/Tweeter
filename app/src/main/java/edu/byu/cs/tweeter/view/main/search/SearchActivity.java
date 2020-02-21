@@ -65,6 +65,7 @@ public class SearchActivity extends Activity implements GetUserTask.GetUserObser
         if(response.getUser() != null){
 //            presenter.setViewingUser(response.getUser());
             Intent intent = new Intent(this, ProfileActivity.class );
+            presenter.setFollowing(response.isFollowing());
             startActivity(intent);
         } else{
             Toast.makeText(getBaseContext(), response.getMessage(), Toast.LENGTH_LONG ).show();

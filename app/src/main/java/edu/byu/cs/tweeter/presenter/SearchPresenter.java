@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.presenter;
 
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.services.UserService;
 import edu.byu.cs.tweeter.net.request.SearchRequest;
 import edu.byu.cs.tweeter.net.response.SearchResponse;
@@ -17,6 +18,9 @@ public class SearchPresenter extends Presenter {
     public SearchPresenter(View view) { this.view = view; }
 
     public SearchResponse searchAlias(SearchRequest request){
-        return UserService.getInstance().searchUser(request);
+        SearchResponse response = UserService.getInstance().searchUser(request);
+        setViewingUser(response.getUser());
+        setFollowing(response.isFollowing());
+        return response;
     }
 }

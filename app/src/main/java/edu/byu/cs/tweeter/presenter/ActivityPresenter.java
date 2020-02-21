@@ -30,4 +30,5 @@ public class ActivityPresenter extends Presenter {
     public int getNumOfFollowees(){
         return numOfFollowees;
     }
+
 }

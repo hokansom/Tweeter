@@ -22,14 +22,12 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FollowerRequest;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
-import edu.byu.cs.tweeter.presenter.ActivityPresenter;
 import edu.byu.cs.tweeter.presenter.FollowerPresenter;
-import edu.byu.cs.tweeter.presenter.SearchPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowerTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 
-public class FollowerFragment extends Fragment implements FollowerPresenter.View, SearchPresenter.View, ActivityPresenter.View {
+public class FollowerFragment extends Fragment implements FollowerPresenter.View {
 
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
@@ -37,7 +35,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
     private static final int PAGE_SIZE = 10;
 
     private FollowerPresenter presenter;
-    private ActivityPresenter activityPresenter;
+
 
     private FollowerRecyclerViewAdapter followerRecyclerViewAdapter;
 
@@ -46,7 +44,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         View view = inflater.inflate(R.layout.fragment_follower, container, false);
 
         presenter = new FollowerPresenter(this);
-        activityPresenter = new ActivityPresenter(this);
+//        activityPresenter = new ActivityPresenter(this);
 
         RecyclerView followerRecyclerView = view.findViewById(R.id.followerRecyclerView);
 
@@ -61,10 +59,8 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         return view;
     }
 
-    @Override
-    public void updateNumbers() {
 
-    }
+
 
     private class FollowerHolder extends RecyclerView.ViewHolder{
         private final ImageView userImage;
@@ -96,8 +92,8 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
 
         private void switchToProfile(){
-            presenter.setViewingUser(tempUser);
             Intent intent = new Intent(getContext(), ProfileActivity.class);
+            intent.putExtra("ALIAS", userAlias.getText().toString());
             startActivity(intent);
         }
 
@@ -183,7 +179,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             isLoading = false;
             removeLoadingFooter();
             followerRecyclerViewAdapter.addItems(followers);
-            activityPresenter.updateFollowers(followerResponse.getNumOfFolllowers());
+//            activityPresenter.updateFollowers(followerResponse.getNumOfFolllowers());
 
         }
         private void addLoadingFooter() {

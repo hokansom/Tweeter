@@ -26,7 +26,6 @@ import edu.byu.cs.tweeter.net.request.SignInRequest;
 import edu.byu.cs.tweeter.net.request.SignUpRequest;
 import edu.byu.cs.tweeter.net.request.StatusRequest;
 import edu.byu.cs.tweeter.net.request.StoryRequest;
-import edu.byu.cs.tweeter.net.request.UnfollowRequest;
 import edu.byu.cs.tweeter.net.response.FeedResponse;
 import edu.byu.cs.tweeter.net.response.FollowResponse;
 import edu.byu.cs.tweeter.net.response.FollowerResponse;
@@ -36,7 +35,6 @@ import edu.byu.cs.tweeter.net.response.SignInResponse;
 import edu.byu.cs.tweeter.net.response.SignUpResponse;
 import edu.byu.cs.tweeter.net.response.StatusResponse;
 import edu.byu.cs.tweeter.net.response.StoryResponse;
-import edu.byu.cs.tweeter.net.response.UnfollowResponse;
 
 public class ServerFacade {
 
@@ -58,7 +56,7 @@ public class ServerFacade {
         assert request.getFollower() != null;
 
         if(followeesByFollower == null) {
-            followeesByFollower = initializeFollowees();
+            initializeAllFollows();
         }
 
         List<User> allFollowees = followeesByFollower.get(request.getFollower());
@@ -103,32 +101,6 @@ public class ServerFacade {
         return followeesIndex;
     }
 
-
-    /**
-     * Generates the followee data.
-     */
-    private Map<User, List<User>> initializeFollowees() {
-
-        Map<User, List<User>> followeesByFollower = new HashMap<>();
-
-        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
-                0, 50, FollowGenerator.Sort.FOLLOWER_FOLLOWEE);
-
-        // Populate a map of followees, keyed by follower so we can easily handle followee requests
-        for(Follow follow : follows) {
-            List<User> followees = followeesByFollower.get(follow.getFollower());
-
-            if(followees == null) {
-                followees = new ArrayList<>();
-                followeesByFollower.put(follow.getFollower(), followees);
-            }
-
-            followees.add(follow.getFollowee());
-        }
-
-        return followeesByFollower;
-    }
-
     /**
      * Returns an instance of FollowGenerator that can be used to generate Follow data. This is
      * written as a separate method to allow mocking of the generator.
@@ -139,6 +111,47 @@ public class ServerFacade {
         return FollowGenerator.getInstance();
     }
 
+    /**
+     * Generates all of the follow data including followees and followers.
+     */
+    private void initializeAllFollows(){
+        Map<User, List<User>> followeesByFlr = new HashMap<>();
+        Map<User, List<User>> followersByFle = new HashMap<>();
+
+        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
+                0, 50, FollowGenerator.Sort.FOLLOWER_FOLLOWEE);
+
+        // Populate a map of followees, keyed by follower so we can easily handle followee requests
+        for(Follow follow : follows) {
+            List<User> followees = followeesByFlr.get(follow.getFollower());
+
+            if(followees == null) {
+                followees = new ArrayList<>();
+                followeesByFlr.put(follow.getFollower(), followees);
+            }
+
+            followees.add(follow.getFollowee());
+        }
+
+
+        // Populate a map of followers, keyed by followee so we can easily handle follower requests
+        for(Follow follow : follows) {
+            List<User> followers = followersByFle.get(follow.getFollowee());
+
+            if(followers == null) {
+                followers = new ArrayList<>();
+                followersByFle.put(follow.getFollowee(), followers);
+            }
+
+            followers.add(follow.getFollower());
+        }
+
+
+        followeesByFollower = followeesByFlr;
+        followersByFollowee = followersByFle;
+
+        getAllUsers();
+    }
 
     /*--------------------------------------FOLLOWER-----------------------------------------------------*/
 
@@ -149,7 +162,7 @@ public class ServerFacade {
         assert request.getFollowee() != null;
 
         if(followersByFollowee == null) {
-            followersByFollowee = initializeFollowers();
+            initializeAllFollows();
         }
 
         List<User> allFollowers = followersByFollowee.get(request.getFollowee());
@@ -194,27 +207,6 @@ public class ServerFacade {
         return followersIndex;
     }
 
-    /* Generate follower data */
-    private Map<User, List<User>> initializeFollowers() {
-        Map<User, List<User>> followersByFollowee = new HashMap<>();
-        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
-                0, 50, FollowGenerator.Sort.FOLLOWEE_FOLLOWER);
-
-        // Populate a map of followers, keyed by followee so we can easily handle follower requests
-        for(Follow follow : follows) {
-            List<User> followers = followersByFollowee.get(follow.getFollowee());
-
-            if(followers == null) {
-                followers = new ArrayList<>();
-                followersByFollowee.put(follow.getFollowee(), followers);
-            }
-
-            followers.add(follow.getFollower());
-        }
-        return followersByFollowee;
-    }
-
-
     /*------------------------------------------FOLLOW RELATED-------------------------------------*/
 
 
@@ -236,71 +228,75 @@ public class ServerFacade {
         }
 
         if(follower.equals(followee)){
-            return new FollowResponse(false, "User can't follow themself");
+            return new FollowResponse(false, "User can't follow or unfollow themself");
         }
 
+
+        if(request.getIsFollow()){
+            return addFollow(followee, follower);
+        } else {
+            return removeFollow(followee, follower);
+
+        }
+    }
+
+    private FollowResponse addFollow(User followee, User follower){
         List<User> followers = followersByFollowee.get(followee);
 
         if(followers == null){
-            followers = new ArrayList<User>();
+            followers = new ArrayList<>();
             followersByFollowee.put(followee, followers);
         }
 
         List<User> followees = followeesByFollower.get(follower);
         if(followees == null){
-            followees = new ArrayList<User>();
+            followees = new ArrayList<>();
             followeesByFollower.put(follower, followees);
         }
 
         if(followees.contains(followee)){
             return new FollowResponse(false, "Follow relationship already exists");
         }
+
         if(followers.contains(follower)){
             return new FollowResponse(false, "Follow relationship already exists");
         }
+
 
         followers.add(follower);
         followees.add(followee);
 
         return new FollowResponse(true, "Follow posted");
+
     }
 
-    public UnfollowResponse deleteFollow(UnfollowRequest request){
-        if(allUsers == null){
-            getAllUsers();
-        }
-
-        Follow follow = request.getFollow();
-        User follower = follow.getFollower();
-        User followee = follow.getFollowee();
-
-        /* Check to see if the follower and followee actually exist */
-        if(!allUsers.contains(followee)){
-            return new UnfollowResponse(false, "Followee doesn't exist");
-        }
-        if(!allUsers.contains(follower)){
-            return new UnfollowResponse(false, "Follower doesn't exist");
-        }
 
 
+    private FollowResponse removeFollow(User followee, User follower){
         List<User> followers = followersByFollowee.get(followee);
-
-
         List<User> followees = followeesByFollower.get(follower);
 
         if(followees == null || !followees.contains(followee)){
-            return new UnfollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
+            return new FollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
         }
         if(followers == null || !followers.contains(follower)){
-            return new UnfollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
+            return new FollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
         }
 
         followers.remove(follower);
         followees.remove(followee);
 
-        return new UnfollowResponse(true, "Follow deleted");
+        return new FollowResponse(true, "Follow deleted");
     }
 
+    private boolean searchFollow(User follower, User followee){
+        List<User> followees = followeesByFollower.get(follower);
+        if(followees == null){
+            return false;
+        } else {
+            return followees.contains(followee);
+        }
+    }
 
 
     /*------------------------------------------STATUS-------------------------------------*/
@@ -463,12 +459,10 @@ public class ServerFacade {
     /*------------------------------------------USER-RELATED-------------------------------------*/
 
     private void getAllUsers(){
-        if(followeesByFollower == null) {
-            followeesByFollower = initializeFollowees();
+        if(followeesByFollower == null || followersByFollowee == null) {
+           initializeAllFollows();
         }
-        if(followersByFollowee == null){
-            followersByFollowee = initializeFollowers();
-        }
+
         Set<User> users1 = followeesByFollower.keySet();
         Set<User> users2 = followersByFollowee.keySet();
 
@@ -552,8 +546,9 @@ public class ServerFacade {
         else{
             message = String.format("Could not find user with given alias %s", request.getAlias());
         }
+        boolean isFollowing = searchFollow(request.getCurrentUser(), user);
 
-        return new SearchResponse(success, message, user);
+        return new SearchResponse(success, message, user, isFollowing);
     }
 
     private User searchUser(String alias){

@@ -11,7 +11,7 @@ public class FollowPresenter extends Presenter {
      * The interface by which this presenter communicates with it's view.
      */
     public interface View {
-        // If needed, Specify methods here that will be called on the view in response to model updates
+        void updateFollowButton(String text);
     }
 
     public FollowPresenter(View view){ this.view = view; }
@@ -20,4 +20,15 @@ public class FollowPresenter extends Presenter {
         return FollowService.getInstance().postFollow(request);
     }
 
+    public boolean isFollowingRequest(){ return !following;  }
+
+
+    public void updateFollowing(){
+        following = !following;
+        if(following){
+            view.updateFollowButton("Unfollow");
+        } else {
+            view.updateFollowButton("Follow");
+        }
+    }
 }

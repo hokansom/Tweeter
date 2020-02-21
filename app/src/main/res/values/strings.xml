@@ -50,4 +50,7 @@
     <string name="search_term">Search by Alias</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
 </resources>

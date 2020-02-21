@@ -63,7 +63,7 @@ public class SearchActivity extends Activity implements GetUserTask.GetUserObser
     public void userRetrieved(SearchResponse response) {
         finish();
         if(response.getUser() != null){
-            presenter.setViewingUser(response.getUser());
+//            presenter.setViewingUser(response.getUser());
             Intent intent = new Intent(this, ProfileActivity.class );
             startActivity(intent);
         } else{
@@ -74,7 +74,7 @@ public class SearchActivity extends Activity implements GetUserTask.GetUserObser
     private void search(){
         String alias = searchText.getText().toString();
         GetUserTask getUserTask = new GetUserTask(presenter, this);
-        SearchRequest request = new SearchRequest(alias);
+        SearchRequest request = new SearchRequest(alias, presenter.getCurrentUser());
         getUserTask.execute(request);
     }
 }

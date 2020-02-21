@@ -25,20 +25,19 @@ import edu.byu.cs.tweeter.net.request.FollowingRequest;
 import edu.byu.cs.tweeter.net.response.FollowingResponse;
 import edu.byu.cs.tweeter.presenter.ActivityPresenter;
 import edu.byu.cs.tweeter.presenter.FollowingPresenter;
-import edu.byu.cs.tweeter.presenter.SearchPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowingTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 
-public class FollowingFragment extends Fragment implements FollowingPresenter.View, SearchPresenter.View, ActivityPresenter.View {
+public class FollowingFragment extends Fragment implements FollowingPresenter.View {
 
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
 
     private static final int PAGE_SIZE = 10;
 
+
     private FollowingPresenter presenter;
-    private ActivityPresenter activityPresenter;
 
     private FollowingRecyclerViewAdapter followingRecyclerViewAdapter;
 
@@ -48,7 +47,6 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         View view = inflater.inflate(R.layout.fragment_following, container, false);
 
         presenter = new FollowingPresenter(this);
-        activityPresenter = new ActivityPresenter(this);
 
         RecyclerView followingRecyclerView = view.findViewById(R.id.followingRecyclerView);
 
@@ -61,11 +59,6 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         followingRecyclerView.addOnScrollListener(new FollowRecyclerViewPaginationScrollListener(layoutManager));
 
         return view;
-    }
-
-    @Override
-    public void updateNumbers() {
-
     }
 
     private class FollowingHolder extends RecyclerView.ViewHolder {
@@ -98,8 +91,8 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         }
 
         private void switchToProfile(){
-            presenter.setViewingUser(tempUser);
             Intent intent = new Intent(getContext(), ProfileActivity.class);
+            intent.putExtra("ALIAS", userAlias.getText().toString());
             startActivity(intent);
         }
 
@@ -191,7 +184,6 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             isLoading = false;
             removeLoadingFooter();
             followingRecyclerViewAdapter.addItems(followees);
-            activityPresenter.updateFollowees(followingResponse.getNumOffollowees());
         }
 
         private void addLoadingFooter() {

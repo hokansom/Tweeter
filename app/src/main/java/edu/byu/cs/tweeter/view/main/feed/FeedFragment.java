@@ -43,6 +43,8 @@ public class FeedFragment extends Fragment implements FeedPresenter.View{
 
     private static final int PAGE_SIZE = 10;
 
+    private User user;
+
     private FeedPresenter presenter;
 
     private FeedRecyclerViewAdapter feedRecyclerViewAdapter;
@@ -58,6 +60,8 @@ public class FeedFragment extends Fragment implements FeedPresenter.View{
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
         presenter = new FeedPresenter(this);
+
+        user = presenter.getViewingUser();
 
         RecyclerView feedRecyclerView = view.findViewById(R.id.feedRecyclerView);
 
@@ -278,7 +282,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View{
             addLoadingFooter();
 
             GetFeedTask getFeedTask = new GetFeedTask(presenter, this);
-            FeedRequest request = new FeedRequest(presenter.getViewingUser(), PAGE_SIZE, lastStatus);
+            FeedRequest request = new FeedRequest(user, PAGE_SIZE, lastStatus);
             getFeedTask.execute(request);
         }
 

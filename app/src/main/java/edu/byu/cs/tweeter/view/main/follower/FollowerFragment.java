@@ -36,6 +36,8 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
     private static final int PAGE_SIZE = 10;
 
+    private User user;
+
     private FollowerPresenter presenter;
 
     private TextView noData;
@@ -49,7 +51,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         View view = inflater.inflate(R.layout.fragment_follower, container, false);
 
         presenter = new FollowerPresenter(this);
-//        activityPresenter = new ProfilePresenter(this);
+        user = presenter.getViewingUser();
 
         RecyclerView followerRecyclerView = view.findViewById(R.id.followerRecyclerView);
 
@@ -114,6 +116,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         private void switchToProfile(){
             Intent intent = new Intent(getContext(), ProfileActivity.class);
             intent.putExtra("ALIAS", userAlias.getText().toString());
+            intent.putExtra("PREV_USER", user);
             startActivity(intent);
         }
 
@@ -190,7 +193,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             addLoadingFooter();
 
             GetFollowerTask getFollowerTask = new GetFollowerTask(presenter, this);
-            FollowerRequest request = new FollowerRequest(presenter.getViewingUser(), PAGE_SIZE, lastFollower);
+            FollowerRequest request = new FollowerRequest(user, PAGE_SIZE, lastFollower);
             getFollowerTask.execute(request);
         }
 
@@ -207,7 +210,6 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             isLoading = false;
             removeLoadingFooter();
             followerRecyclerViewAdapter.addItems(followers);
-//            activityPresenter.updateFollowers(followerResponse.getNumOfFolllowers());
 
         }
         private void addLoadingFooter() {

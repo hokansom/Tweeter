@@ -44,12 +44,16 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
     private FollowingRecyclerViewAdapter followingRecyclerViewAdapter;
 
+    private User user;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_following, container, false);
 
         presenter = new FollowingPresenter(this);
+
+        user = presenter.getViewingUser();
 
         RecyclerView followingRecyclerView = view.findViewById(R.id.followingRecyclerView);
 
@@ -113,6 +117,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         private void switchToProfile(){
             Intent intent = new Intent(getContext(), ProfileActivity.class);
             intent.putExtra("ALIAS", userAlias.getText().toString());
+            intent.putExtra("PREV_USER", tempUser);
             startActivity(intent);
         }
 
@@ -195,7 +200,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
             addLoadingFooter();
 
             GetFollowingTask getFollowingTask = new GetFollowingTask(presenter, this);
-            FollowingRequest request = new FollowingRequest(presenter.getViewingUser(), PAGE_SIZE, lastFollowee);
+            FollowingRequest request = new FollowingRequest(user, PAGE_SIZE, lastFollowee);
             getFollowingTask.execute(request);
         }
 

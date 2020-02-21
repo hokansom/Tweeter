@@ -17,8 +17,8 @@ public class UserMentions {
         this.mentions = new ArrayList<>();
     }
 
-    public UserMentions getUserMentions(){
-        return (UserMentions) this.mentions;
+    public List<String> getUserMentions(){
+        return this.mentions;
     }
 
     public boolean checkValidity(){

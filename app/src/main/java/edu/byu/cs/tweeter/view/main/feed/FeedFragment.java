@@ -1,6 +1,13 @@
 package edu.byu.cs.tweeter.view.main.feed;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +29,11 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.net.request.FeedRequest;
-import edu.byu.cs.tweeter.net.request.StoryRequest;
 import edu.byu.cs.tweeter.net.response.FeedResponse;
-import edu.byu.cs.tweeter.net.response.StoryResponse;
 import edu.byu.cs.tweeter.presenter.FeedPresenter;
-import edu.byu.cs.tweeter.presenter.StoryPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFeedTask;
-import edu.byu.cs.tweeter.view.asyncTasks.GetStoryTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
+import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 
 public class FeedFragment extends Fragment implements FeedPresenter.View {
     private static final int LOADING_DATA_VIEW = 0;
@@ -82,10 +86,94 @@ public class FeedFragment extends Fragment implements FeedPresenter.View {
 
         void bindStatus(Status status) {
             userImage.setImageDrawable(ImageCache.getInstance().getImageDrawable(status.getAuthor()));
-            userAlias.setText(status.getAuthor().getAlias());
+            userAlias.setText(addSingleSpan(status.getAuthor().getAlias()));
+            userAlias.setMovementMethod(LinkMovementMethod.getInstance());
             userName.setText(status.getAuthor().getName());
-            statusMessage.setText(status.getMessage());
             statusDate.setText(status.getPublishDate());
+            statusMessage.setText(addSpans(status.getMessage(), status));
+            statusMessage.setMovementMethod(LinkMovementMethod.getInstance());
+
+        }
+
+        SpannableString addSpans(String message, Status status){
+            SpannableString string = new SpannableString(message);
+            List<String> aliases =  status.getMentions().getUserMentions();
+            for(String s: aliases){
+                int start = findStartingIndex(message, s);
+                if(start != -1){
+                    int end = start + s.length();
+                    string.setSpan(new AliasClickableSpan(s), start, end , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+
+
+            List<String> urls = status.getUrls().getUris();
+            for(String s: urls){
+                int start = findStartingIndex(message, s);
+                if(start != -1){
+                    int end = start + s.length();
+                    string.setSpan( new UrlClickableSpan(s), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+            return string;
+        }
+
+        SpannableString addSingleSpan(String s){
+            SpannableString string = new SpannableString(s);
+            string.setSpan(new AliasClickableSpan(s), 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return string;
+        }
+
+        int findStartingIndex(String s, String substring){
+            return s.indexOf(substring);
+        }
+
+    }
+
+
+    private class AliasClickableSpan extends ClickableSpan{
+        String text;
+
+        public AliasClickableSpan(String text){
+            super();
+            this.text = text;
+        }
+
+        @Override
+        public void onClick(View widget) {
+            Intent intent = new Intent(getContext(), ProfileActivity.class);
+            intent.putExtra("ALIAS", text);
+            startActivity(intent);
+        }
+    }
+
+    private class UrlClickableSpan extends ClickableSpan{
+        String text;
+
+        public UrlClickableSpan(String text){
+            super();
+            this.text = text;
+        }
+
+        @Override
+        public void onClick(View widget) {
+            try{
+                Uri uri = Uri.parse(text);
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(launchBrowser);
+            } catch (ActivityNotFoundException ex){
+                /*If it fails at first, try prepending http:// to the call*/
+                String updated = "http://" + text;
+                try{
+                    Intent launchBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse(updated));
+                    startActivity(launchBrowser);
+                } catch (ActivityNotFoundException exception){
+                    String message = String.format("Could not open url $s", text);
+                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                }
+
+            }
+
         }
     }
 

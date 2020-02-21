@@ -7,15 +7,15 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class URIs {
+public class URLs {
     private Logger logger;
-    private Set<String> uris;
+    private List<String> uris;
 
-    public URIs(){
-        this.uris = new HashSet<>();
+    public URLs(){
+        this.uris = new ArrayList<>();
     }
 
-    public URIs(Set<String> uris){
+    public URLs(List<String> uris){
         this.uris = uris;
     }
 
@@ -28,8 +28,8 @@ public class URIs {
         }
     }
 
-    public URIs getUris(){
-        return (URIs) this.uris;
+    public List<String> getUris(){
+        return this.uris;
     }
 
 }

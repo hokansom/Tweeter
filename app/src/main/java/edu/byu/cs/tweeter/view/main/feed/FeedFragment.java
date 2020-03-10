@@ -29,8 +29,8 @@ import java.util.List;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.net.request.FeedRequest;
-import edu.byu.cs.tweeter.net.response.FeedResponse;
+import edu.byu.cs.tweeter.model.service.request.FeedRequest;
+import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 import edu.byu.cs.tweeter.presenter.feed.FeedPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFeedTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
@@ -290,7 +290,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View{
             presenter.updateNumStatuses(statuses.size());
 
             lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() -1) : null;
-            hasMorePages = feedResponse.hasMorePages();
+            hasMorePages = feedResponse.getHasMorePages();
 
             isLoading = false;
             removeLoadingFooter();

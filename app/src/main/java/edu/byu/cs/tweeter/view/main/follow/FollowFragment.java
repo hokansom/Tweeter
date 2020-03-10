@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.net.request.FollowRequest;
-import edu.byu.cs.tweeter.net.response.FollowResponse;
+import edu.byu.cs.tweeter.model.service.request.FollowRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 import edu.byu.cs.tweeter.presenter.follow.FollowPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.PostFollowTask;
 

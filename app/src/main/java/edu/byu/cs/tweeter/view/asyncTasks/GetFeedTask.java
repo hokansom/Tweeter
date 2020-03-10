@@ -6,8 +6,8 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import edu.byu.cs.tweeter.net.request.FeedRequest;
-import edu.byu.cs.tweeter.net.response.FeedResponse;
+import edu.byu.cs.tweeter.model.service.request.FeedRequest;
+import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 import edu.byu.cs.tweeter.presenter.feed.AbstractFeedPresenter;
 import edu.byu.cs.tweeter.presenter.feed.FeedPresenter;
 import edu.byu.cs.tweeter.view.cache.ImageCache;

@@ -14,8 +14,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.net.request.SignInRequest;
-import edu.byu.cs.tweeter.net.response.SignInResponse;
+import edu.byu.cs.tweeter.model.service.request.SignInRequest;
+import edu.byu.cs.tweeter.model.service.response.SignInResponse;
 import edu.byu.cs.tweeter.presenter.signIn.SignInPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.PostSignInTask;
 import edu.byu.cs.tweeter.view.main.MainActivity;

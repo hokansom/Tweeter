@@ -2,8 +2,8 @@ package edu.byu.cs.tweeter.presenter.follow;
 
 import edu.byu.cs.tweeter.model.services.FollowService;
 import edu.byu.cs.tweeter.net.ServerFacade;
-import edu.byu.cs.tweeter.net.request.FollowRequest;
-import edu.byu.cs.tweeter.net.response.FollowResponse;
+import edu.byu.cs.tweeter.model.service.request.FollowRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 
 public class MockFollowPresenter extends AbstractFollowPresenter {
 

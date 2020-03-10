@@ -1,8 +1,8 @@
 package edu.byu.cs.tweeter.presenter.signIn;
 
 import edu.byu.cs.tweeter.model.services.SignInService;
-import edu.byu.cs.tweeter.net.request.SignInRequest;
-import edu.byu.cs.tweeter.net.response.SignInResponse;
+import edu.byu.cs.tweeter.model.service.request.SignInRequest;
+import edu.byu.cs.tweeter.model.service.response.SignInResponse;
 
 public class SignInPresenter extends AbstractSignInPresenter {
     private final View view;

@@ -21,8 +21,8 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.net.request.FollowerRequest;
-import edu.byu.cs.tweeter.net.response.FollowerResponse;
+import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 import edu.byu.cs.tweeter.presenter.follower.FollowerPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetFollowerTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
@@ -202,7 +202,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             presenter.updateNumFollowers(followerResponse.getNumOfFolllowers());
 
             lastFollower = (followers.size() > 0) ? followers.get(followers.size() - 1) : null;
-            hasMorePages = followerResponse.hasMorePages();
+            hasMorePages = followerResponse.getHasMorePages();
 
             isLoading = false;
             removeLoadingFooter();

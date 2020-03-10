@@ -1,8 +1,8 @@
 package edu.byu.cs.tweeter.model.services;
 
 import edu.byu.cs.tweeter.net.ServerFacade;
-import edu.byu.cs.tweeter.net.request.FeedRequest;
-import edu.byu.cs.tweeter.net.response.FeedResponse;
+import edu.byu.cs.tweeter.model.service.request.FeedRequest;
+import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 
 public class FeedService {
 

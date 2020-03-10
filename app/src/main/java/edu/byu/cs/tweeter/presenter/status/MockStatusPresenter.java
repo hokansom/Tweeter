@@ -2,8 +2,8 @@ package edu.byu.cs.tweeter.presenter.status;
 
 import edu.byu.cs.tweeter.model.services.StatusService;
 import edu.byu.cs.tweeter.net.ServerFacade;
-import edu.byu.cs.tweeter.net.request.StatusRequest;
-import edu.byu.cs.tweeter.net.response.StatusResponse;
+import edu.byu.cs.tweeter.model.service.request.StatusRequest;
+import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 
 public class MockStatusPresenter extends AbstractStatusPresenter {
     private final StatusPresenter.View view;

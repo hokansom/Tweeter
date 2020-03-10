@@ -2,8 +2,8 @@ package edu.byu.cs.tweeter.view.asyncTasks;
 
 import android.os.AsyncTask;
 
-import edu.byu.cs.tweeter.net.request.SignUpRequest;
-import edu.byu.cs.tweeter.net.response.SignUpResponse;
+import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
+import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
 import edu.byu.cs.tweeter.presenter.signUp.AbstractSignUpPresenter;
 import edu.byu.cs.tweeter.presenter.signUp.SignUpPresenter;
 

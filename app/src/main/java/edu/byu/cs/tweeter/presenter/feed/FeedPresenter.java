@@ -1,8 +1,8 @@
 package edu.byu.cs.tweeter.presenter.feed;
 
 import edu.byu.cs.tweeter.model.services.FeedService;
-import edu.byu.cs.tweeter.net.request.FeedRequest;
-import edu.byu.cs.tweeter.net.response.FeedResponse;
+import edu.byu.cs.tweeter.model.service.request.FeedRequest;
+import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 
 public class FeedPresenter extends AbstractFeedPresenter {
     private final View view;

@@ -7,8 +7,8 @@ import android.util.Log;
 import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.net.request.FollowingRequest;
-import edu.byu.cs.tweeter.net.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.presenter.following.AbstractFollowingPresenter;
 import edu.byu.cs.tweeter.presenter.following.FollowingPresenter;
 import edu.byu.cs.tweeter.view.cache.ImageCache;

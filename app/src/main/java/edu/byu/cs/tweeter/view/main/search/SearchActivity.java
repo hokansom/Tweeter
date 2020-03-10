@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import edu.byu.cs.tweeter.R;
-import edu.byu.cs.tweeter.net.request.SearchRequest;
-import edu.byu.cs.tweeter.net.response.SearchResponse;
+import edu.byu.cs.tweeter.model.service.request.SearchRequest;
+import edu.byu.cs.tweeter.model.service.response.SearchResponse;
 import edu.byu.cs.tweeter.presenter.search.SearchPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetUserTask;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;

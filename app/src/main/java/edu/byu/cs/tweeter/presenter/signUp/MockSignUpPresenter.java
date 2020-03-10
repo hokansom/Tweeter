@@ -2,8 +2,8 @@ package edu.byu.cs.tweeter.presenter.signUp;
 
 import edu.byu.cs.tweeter.model.services.SignUpService;
 import edu.byu.cs.tweeter.net.ServerFacade;
-import edu.byu.cs.tweeter.net.request.SignUpRequest;
-import edu.byu.cs.tweeter.net.response.SignUpResponse;
+import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
+import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
 
 public class MockSignUpPresenter extends AbstractSignUpPresenter {
     private final SignUpPresenter.View view;

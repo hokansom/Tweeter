@@ -2,8 +2,6 @@ package edu.byu.cs.tweeter.presenter;
 
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.services.SignInService;
-import edu.byu.cs.tweeter.net.request.SearchRequest;
-import edu.byu.cs.tweeter.view.asyncTasks.GetUserTask;
 
 public abstract class Presenter {
 

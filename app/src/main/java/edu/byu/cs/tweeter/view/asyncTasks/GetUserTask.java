@@ -2,8 +2,8 @@ package edu.byu.cs.tweeter.view.asyncTasks;
 
 import android.os.AsyncTask;
 
-import edu.byu.cs.tweeter.net.request.SearchRequest;
-import edu.byu.cs.tweeter.net.response.SearchResponse;
+import edu.byu.cs.tweeter.model.service.request.SearchRequest;
+import edu.byu.cs.tweeter.model.service.response.SearchResponse;
 import edu.byu.cs.tweeter.presenter.search.AbstractSearchPresenter;
 import edu.byu.cs.tweeter.presenter.search.SearchPresenter;
 

@@ -15,25 +15,50 @@ import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.Story;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.request.FeedRequest;
+import edu.byu.cs.tweeter.model.service.request.FollowRequest;
+import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
+import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+import edu.byu.cs.tweeter.model.service.request.SearchRequest;
+import edu.byu.cs.tweeter.model.service.request.SignInRequest;
+import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
+import edu.byu.cs.tweeter.model.service.request.StatusRequest;
+import edu.byu.cs.tweeter.model.service.request.StoryRequest;
+import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 import edu.byu.cs.tweeter.model.services.SignInService;
-import edu.byu.cs.tweeter.net.request.FeedRequest;
-import edu.byu.cs.tweeter.net.request.FollowRequest;
-import edu.byu.cs.tweeter.net.request.FollowerRequest;
-import edu.byu.cs.tweeter.net.request.FollowingRequest;
-import edu.byu.cs.tweeter.net.request.SearchRequest;
-import edu.byu.cs.tweeter.net.request.SignInRequest;
-import edu.byu.cs.tweeter.net.request.SignUpRequest;
-import edu.byu.cs.tweeter.net.request.StatusRequest;
-import edu.byu.cs.tweeter.net.request.StoryRequest;
-import edu.byu.cs.tweeter.net.response.FeedResponse;
-import edu.byu.cs.tweeter.net.response.FollowResponse;
-import edu.byu.cs.tweeter.net.response.FollowerResponse;
-import edu.byu.cs.tweeter.net.response.FollowingResponse;
-import edu.byu.cs.tweeter.net.response.SearchResponse;
-import edu.byu.cs.tweeter.net.response.SignInResponse;
-import edu.byu.cs.tweeter.net.response.SignUpResponse;
-import edu.byu.cs.tweeter.net.response.StatusResponse;
-import edu.byu.cs.tweeter.net.response.StoryResponse;
+import edu.byu.cs.tweeter.model.service.response.FeedResponse;
+import edu.byu.cs.tweeter.model.service.response.FollowResponse;
+import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
+import edu.byu.cs.tweeter.model.service.response.SearchResponse;
+import edu.byu.cs.tweeter.model.service.response.SignInResponse;
+import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
+import edu.byu.cs.tweeter.model.service.response.StatusResponse;
+import edu.byu.cs.tweeter.model.service.response.StoryResponse;
+
+//import edu.byu.cs.tweeter.model.domain.Feed;
+//import edu.byu.cs.tweeter.model.domain.Follow;
+//import edu.byu.cs.tweeter.model.domain.Status;
+//import edu.byu.cs.tweeter.model.domain.Story;
+//import edu.byu.cs.tweeter.model.domain.User;
+//import edu.byu.cs.tweeter.model.services.SignInService;
+//import edu.byu.cs.tweeter.model.service.request.FeedRequest;
+//import edu.byu.cs.tweeter.model.service.request.FollowRequest;
+//import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
+//import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
+//import edu.byu.cs.tweeter.model.service.request.SearchRequest;
+//import edu.byu.cs.tweeter.model.service.request.SignInRequest;
+//import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
+//import edu.byu.cs.tweeter.model.service.request.StatusRequest;
+//import edu.byu.cs.tweeter.model.service.request.StoryRequest;
+//import edu.byu.cs.tweeter.model.service.response.FeedResponse;
+//import edu.byu.cs.tweeter.model.service.response.FollowResponse;
+//import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
+//import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
+//import edu.byu.cs.tweeter.model.service.response.SearchResponse;
+//import edu.byu.cs.tweeter.model.service.response.SignInResponse;
+//import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
+//import edu.byu.cs.tweeter.model.service.response.StatusResponse;
+//import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
 public class ServerFacade {
 
@@ -74,11 +99,11 @@ public class ServerFacade {
                 hasMorePages = followeesIndex < allFollowees.size();
             }
             else{
-                return new FollowingResponse(responseFollowees, false, 0);
+                return new FollowingResponse(responseFollowees, false);
             }
         }
 
-        return new FollowingResponse(responseFollowees, hasMorePages, allFollowees.size());
+        return new FollowingResponse(responseFollowees, hasMorePages);
     }
 
     private int getFolloweesStartingIndex(User lastFollowee, List<User> allFollowees) {

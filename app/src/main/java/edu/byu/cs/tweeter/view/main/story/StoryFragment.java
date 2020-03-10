@@ -29,8 +29,8 @@ import java.util.List;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.net.request.StoryRequest;
-import edu.byu.cs.tweeter.net.response.StoryResponse;
+import edu.byu.cs.tweeter.model.service.request.StoryRequest;
+import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 import edu.byu.cs.tweeter.presenter.story.StoryPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.GetStoryTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
@@ -287,7 +287,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
             List<Status> statuses = storyResponse.getStory().getStory();
             presenter.updateNumStatuses(statuses.size());
             lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() -1) : null;
-            hasMorePages = storyResponse.hasMorePages();
+            hasMorePages = storyResponse.getHasMorePages();
 
             isLoading = false;
             removeLoadingFooter();

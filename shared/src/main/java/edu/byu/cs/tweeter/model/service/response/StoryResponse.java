@@ -7,7 +7,7 @@ import edu.byu.cs.tweeter.model.domain.Story;
 
 public class StoryResponse extends PagedResponse {
 
-    private Story story;
+    public Story story;
 
     public StoryResponse(String message) {
         super(false, message, false);

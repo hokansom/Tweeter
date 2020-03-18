@@ -5,8 +5,8 @@ import java.util.List;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowerResponse extends PagedResponse {
-    private List<User> followers;
-    private int numOfFolllowers;
+    public List<User> followers;
+    public int numOfFolllowers;
 
     public FollowerResponse(String message){
         super(false, message,false);

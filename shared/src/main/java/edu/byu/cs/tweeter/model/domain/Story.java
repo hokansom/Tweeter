@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Story {
 
-    private List<Status> story;
-    private User user;
+    public List<Status> story;
+    public User user;
 
     public Story(List<Status> story, User user) {
         this.story = story;

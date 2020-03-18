@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserMentions {
-    private List<String> mentions; // Using set so no duplication
+    public List<String> mentions; // Using set so no duplication
 
     public UserMentions(List<String> mentions){
         this.mentions = mentions;

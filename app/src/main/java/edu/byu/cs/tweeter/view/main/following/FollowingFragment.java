@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -218,6 +220,12 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
         private void removeLoadingFooter() {
             removeItem(users.get(users.size() - 1));
+        }
+
+        @Override
+        public void handleException(Exception throwable) {
+            Log.e("", throwable.getMessage(), throwable);
+            Toast.makeText(getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

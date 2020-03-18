@@ -4,7 +4,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class SignInResponse extends Response {
 
-    private User user;
+    public User user;
 
     public SignInResponse(boolean success, String message){ super(success, message);}
 

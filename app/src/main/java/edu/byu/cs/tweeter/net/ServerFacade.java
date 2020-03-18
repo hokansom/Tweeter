@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.net;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -35,32 +36,9 @@ import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
-//import edu.byu.cs.tweeter.model.domain.Feed;
-//import edu.byu.cs.tweeter.model.domain.Follow;
-//import edu.byu.cs.tweeter.model.domain.Status;
-//import edu.byu.cs.tweeter.model.domain.Story;
-//import edu.byu.cs.tweeter.model.domain.User;
-//import edu.byu.cs.tweeter.model.services.SignInService;
-//import edu.byu.cs.tweeter.model.service.request.FeedRequest;
-//import edu.byu.cs.tweeter.model.service.request.FollowRequest;
-//import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
-//import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
-//import edu.byu.cs.tweeter.model.service.request.SearchRequest;
-//import edu.byu.cs.tweeter.model.service.request.SignInRequest;
-//import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
-//import edu.byu.cs.tweeter.model.service.request.StatusRequest;
-//import edu.byu.cs.tweeter.model.service.request.StoryRequest;
-//import edu.byu.cs.tweeter.model.service.response.FeedResponse;
-//import edu.byu.cs.tweeter.model.service.response.FollowResponse;
-//import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
-//import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
-//import edu.byu.cs.tweeter.model.service.response.SearchResponse;
-//import edu.byu.cs.tweeter.model.service.response.SignInResponse;
-//import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
-//import edu.byu.cs.tweeter.model.service.response.StatusResponse;
-//import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
 public class ServerFacade {
+    private static final String SERVER_URL = "https://ikjts5ql4e.execute-api.us-west-2.amazonaws.com/Test";
 
     private static Map<User, List<User>> followeesByFollower;
 
@@ -74,37 +52,51 @@ public class ServerFacade {
 
     /*--------------------------------FOLLOWEE-----------------------------------------------------*/
 
-    public FollowingResponse getFollowees(FollowingRequest request) {
-
-        assert request.getLimit() >= 0;
-        assert request.getFollower() != null;
-
-        if(followeesByFollower == null) {
-            initializeAllFollows();
-        }
-
-        List<User> allFollowees = followeesByFollower.get(request.getFollower());
-        List<User> responseFollowees = new ArrayList<>(request.getLimit());
-
-        boolean hasMorePages = false;
-
-        if(request.getLimit() > 0) {
-            if (allFollowees != null) {
-                int followeesIndex = getFolloweesStartingIndex(request.getLastFollowee(), allFollowees);
-
-                for(int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
-                    responseFollowees.add(allFollowees.get(followeesIndex));
-                }
-
-                hasMorePages = followeesIndex < allFollowees.size();
-            }
-            else{
-                return new FollowingResponse(responseFollowees, false);
-            }
-        }
-
-        return new FollowingResponse(responseFollowees, hasMorePages);
+    /**
+     * Returns the users that the user specified in the request is following. Uses information in
+     * the request object to limit the number of followees returned and to return the next set of
+     * followees after any that were returned in a previous request.
+     *
+     * @param request contains information about the user whose followees are to be returned and any
+     *                other information required to satisfy the request.
+     * @return the followees.
+     */
+    public FollowingResponse getFollowees(FollowingRequest request, String urlPath) throws IOException {
+        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+        return clientCommunicator.doPost(urlPath, request, null, FollowingResponse.class);
     }
+
+//    public FollowingResponse getFollowees(FollowingRequest request) {
+//
+//        assert request.getLimit() >= 0;
+//        assert request.getFollower() != null;
+//
+//        if(followeesByFollower == null) {
+//            initializeAllFollows();
+//        }
+//
+//        List<User> allFollowees = followeesByFollower.get(request.getFollower());
+//        List<User> responseFollowees = new ArrayList<>(request.getLimit());
+//
+//        boolean hasMorePages = false;
+//
+//        if(request.getLimit() > 0) {
+//            if (allFollowees != null) {
+//                int followeesIndex = getFolloweesStartingIndex(request.getLastFollowee(), allFollowees);
+//
+//                for(int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
+//                    responseFollowees.add(allFollowees.get(followeesIndex));
+//                }
+//
+//                hasMorePages = followeesIndex < allFollowees.size();
+//            }
+//            else{
+//                return new FollowingResponse(responseFollowees, false);
+//            }
+//        }
+//
+//        return new FollowingResponse(responseFollowees, hasMorePages);
+//    }
 
     private int getFolloweesStartingIndex(User lastFollowee, List<User> allFollowees) {
 

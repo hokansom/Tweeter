@@ -6,9 +6,9 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class StoryRequest {
 
-    private final User request_user;
-    private final int limit;
-    private final Status last_status;
+    public final User request_user;
+    public final int limit;
+    public final Status last_status;
 
 
 

@@ -9,7 +9,7 @@ import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
  * A paged response for a {@link FollowingRequest}.
  */
 public class FollowingResponse extends PagedResponse {
-    private List<User> followees;
+    public List<User> followees;
 
     /**
      * Creates a response indicating that the corresponding request was unsuccessful. Sets the

@@ -1,9 +1,9 @@
 package edu.byu.cs.tweeter.model.service.request;
 
 public class SignInRequest {
-    private final String alias;
+    public final String alias;
 
-    private final String password;
+    public final String password;
 
     public SignInRequest(String alias, String password) {
         this.alias = alias;

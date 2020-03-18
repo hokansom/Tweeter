@@ -4,9 +4,9 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class SearchResponse extends Response {
 
-    private User user;
+    public User user;
 
-    private boolean isFollowing;
+    public boolean isFollowing;
 
     public SearchResponse(boolean success) {
         super(success);

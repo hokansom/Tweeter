@@ -6,7 +6,7 @@ import edu.byu.cs.tweeter.model.service.response.PagedResponse;
 
 public class FeedResponse extends PagedResponse {
 
-    private Feed feed;
+    public Feed feed;
 
     public FeedResponse(String message) {
         super(false, message, false);

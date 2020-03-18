@@ -8,8 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class URLs {
-    private Logger logger;
-    private List<String> uris;
+    public Logger logger;
+    public List<String> uris;
 
     public URLs(){
         this.uris = new ArrayList<>();

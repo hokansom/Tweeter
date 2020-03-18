@@ -3,8 +3,8 @@ package edu.byu.cs.tweeter.model.service.request;
 import edu.byu.cs.tweeter.model.domain.Follow;
 
 public class FollowRequest {
-    private final Follow follow;
-    private final boolean isFollow;
+    public final Follow follow;
+    public final boolean isFollow;
     //If isFollow is true then it is a follow request
     //If isFollow is false then it is an unfollow request
 

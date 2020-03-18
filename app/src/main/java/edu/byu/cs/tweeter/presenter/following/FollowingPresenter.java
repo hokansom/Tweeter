@@ -1,8 +1,12 @@
 package edu.byu.cs.tweeter.presenter.following;
 
-import edu.byu.cs.tweeter.model.services.FollowingService;
+
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.service.FollowingService;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.model.services.FollowingServiceProxy;
 
 public class FollowingPresenter extends AbstractFollowingPresenter {
 
@@ -22,8 +26,10 @@ public class FollowingPresenter extends AbstractFollowingPresenter {
         this.view = view;
     }
 
-    public FollowingResponse getFollowing(FollowingRequest request) {
-        return FollowingService.getInstance().getFollowees(request);
+
+    public FollowingResponse getFollowing(FollowingRequest request) throws IOException {
+        FollowingService service = new FollowingServiceProxy();
+        return service.getFollowees(request);
     }
 
     public void updateNumFollowees(int num){

@@ -3,9 +3,9 @@ package edu.byu.cs.tweeter.model.domain;
 import java.util.List;
 
 public class Feed {
-    private List<Status> feed;
+    public List<Status> feed;
 
-    private User user;
+    public User user;
 
     public Feed(List<Status> feed, User user) {
         this.feed = feed;

@@ -10,11 +10,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Status implements Comparable<Status> {
-    private String publishDate;
-    private String message;
-    private User author;
-    private URLs urls;
-    private UserMentions mentions;
+    public String publishDate;
+    public String message;
+    public User author;
+    public URLs urls;
+    public UserMentions mentions;
 
     public Status(User author, String message, URLs urls, UserMentions mentions, String date){
         this.author = author;

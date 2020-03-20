@@ -3,9 +3,11 @@ package edu.byu.cs.tweeter.model.service.request;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowerRequest {
-    public final User followee;
-    public final int limit;
-    public final User lastFollower;
+    public User followee;
+    public int limit;
+    public User lastFollower;
+
+    public FollowerRequest(){}
 
     public FollowerRequest(User following, int limit, User lastFollowing){
         this.followee = following;

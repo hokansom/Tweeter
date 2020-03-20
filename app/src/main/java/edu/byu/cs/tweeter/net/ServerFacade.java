@@ -65,58 +65,6 @@ public class ServerFacade {
         ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
         return clientCommunicator.doPost(urlPath, request, null, FollowingResponse.class);
     }
-
-//    public FollowingResponse getFollowees(FollowingRequest request) {
-//
-//        assert request.getLimit() >= 0;
-//        assert request.getFollower() != null;
-//
-//        if(followeesByFollower == null) {
-//            initializeAllFollows();
-//        }
-//
-//        List<User> allFollowees = followeesByFollower.get(request.getFollower());
-//        List<User> responseFollowees = new ArrayList<>(request.getLimit());
-//
-//        boolean hasMorePages = false;
-//
-//        if(request.getLimit() > 0) {
-//            if (allFollowees != null) {
-//                int followeesIndex = getFolloweesStartingIndex(request.getLastFollowee(), allFollowees);
-//
-//                for(int limitCounter = 0; followeesIndex < allFollowees.size() && limitCounter < request.getLimit(); followeesIndex++, limitCounter++) {
-//                    responseFollowees.add(allFollowees.get(followeesIndex));
-//                }
-//
-//                hasMorePages = followeesIndex < allFollowees.size();
-//            }
-//            else{
-//                return new FollowingResponse(responseFollowees, false);
-//            }
-//        }
-//
-//        return new FollowingResponse(responseFollowees, hasMorePages);
-//    }
-
-    private int getFolloweesStartingIndex(User lastFollowee, List<User> allFollowees) {
-
-        int followeesIndex = 0;
-
-        if(lastFollowee != null) {
-            // This is a paged request for something after the first page. Find the first item
-            // we should return
-            for (int i = 0; i < allFollowees.size(); i++) {
-                if(lastFollowee.equals(allFollowees.get(i))) {
-                    // We found the index of the last item returned last time. Increment to get
-                    // to the first one we should return
-                    followeesIndex = i + 1;
-                }
-            }
-        }
-
-        return followeesIndex;
-    }
-
     /**
      * Returns an instance of FollowGenerator that can be used to generate Follow data. This is
      * written as a separate method to allow mocking of the generator.
@@ -172,55 +120,18 @@ public class ServerFacade {
     /*--------------------------------------FOLLOWER-----------------------------------------------------*/
 
 
-    public FollowerResponse getFollowers(FollowerRequest request) {
-
-        assert request.getLimit() >= 0;
-        assert request.getFollowee() != null;
-
-        if(followersByFollowee == null) {
-            initializeAllFollows();
-        }
-
-        List<User> allFollowers = followersByFollowee.get(request.getFollowee());
-        List<User> responseFollowers = new ArrayList<>(request.getLimit());
-
-        boolean hasMorePages = false;
-
-        if(request.getLimit() > 0) {
-            if (allFollowers != null) {
-                int followersIndex = getFollowersStartingIndex(request.getLastFollower(), allFollowers);
-
-                for(int limitCounter = 0; followersIndex < allFollowers.size() && limitCounter < request.getLimit(); followersIndex++, limitCounter++) {
-                    responseFollowers.add(allFollowers.get(followersIndex));
-                }
-
-                hasMorePages = followersIndex < allFollowers.size();
-            }
-            else{
-                return new FollowerResponse(responseFollowers, false, 0);
-            }
-        }
-
-        return new FollowerResponse(responseFollowers, hasMorePages, allFollowers.size());
-    }
-
-    private int getFollowersStartingIndex(User lastFollower, List<User> allFollowers) {
-
-        int followersIndex = 0;
-
-        if(lastFollower != null) {
-            // This is a paged request for something after the first page. Find the first item
-            // we should return
-            for (int i = 0; i < allFollowers.size(); i++) {
-                if(lastFollower.equals(allFollowers.get(i))) {
-                    // We found the index of the last item returned last time. Increment to get
-                    // to the first one we should return
-                    followersIndex = i + 1;
-                }
-            }
-        }
-
-        return followersIndex;
+    /**
+     * Returns the users that are following the user specified in the request. Uses information in
+     * the request object to limit the number of followers returned and to return the next set of
+     * followers after any that were returned in a previous request.
+     *
+     * @param request contains information about the user whose followers are to be returned and any
+     *                other information required to satisfy the request.
+     * @return the followers.
+     */
+    public FollowerResponse getFollowers(FollowerRequest request, String urlPath) throws IOException {
+        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+        return clientCommunicator.doPost(urlPath, request, null, FollowerResponse.class);
     }
 
     /*------------------------------------------FOLLOW RELATED-------------------------------------*/

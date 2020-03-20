@@ -2,11 +2,13 @@ package edu.byu.cs.tweeter.view.main.follower;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -216,6 +218,12 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
         private void removeLoadingFooter() {
             removeItem(users.get(users.size() - 1));
+        }
+
+        @Override
+        public void handleException(Exception throwable) {
+            Log.e("", throwable.getMessage(), throwable);
+            Toast.makeText(getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

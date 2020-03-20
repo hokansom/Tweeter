@@ -18,8 +18,11 @@ public class GetFollowerTask extends AsyncTask<FollowerRequest, Void, FollowerRe
     private final AbstractFollowerPresenter presenter;
     private final GetFollowersObserver observer;
 
+    private Exception exception;
+
     public interface GetFollowersObserver{
         void followersRetrieved(FollowerResponse followerResponse);
+        void handleException(Exception ex);
     }
 
     public GetFollowerTask(FollowerPresenter presenter, GetFollowersObserver observer ){
@@ -29,8 +32,14 @@ public class GetFollowerTask extends AsyncTask<FollowerRequest, Void, FollowerRe
 
     @Override
     protected FollowerResponse doInBackground(FollowerRequest... followerRequests){
-        FollowerResponse response = presenter.getFollowers(followerRequests[0]);
-        loadImages(response);
+        FollowerResponse response = null;
+        try{
+            response = presenter.getFollowers(followerRequests[0]);
+            loadImages(response);
+        } catch (IOException e){
+            exception = e;
+        }
+
         return response;
     }
 
@@ -53,7 +62,12 @@ public class GetFollowerTask extends AsyncTask<FollowerRequest, Void, FollowerRe
     @Override
     protected void onPostExecute(FollowerResponse followerResponse){
         if(observer != null){
-            observer.followersRetrieved(followerResponse);
+            if(exception == null){
+                observer.followersRetrieved(followerResponse);
+            } else {
+                observer.handleException(exception);
+            }
+
         }
     }
 

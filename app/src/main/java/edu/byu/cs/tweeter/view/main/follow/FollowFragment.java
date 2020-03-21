@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.view.main.follow;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,5 +89,11 @@ public class FollowFragment extends Fragment implements FollowPresenter.View, Po
         PostFollowTask task = new PostFollowTask(presenter, this);
         FollowRequest request = new FollowRequest(follow, isFollowRequest);
         task.execute(request);
+    }
+
+    @Override
+    public void handleException(Exception throwable) {
+        Log.e("", throwable.getMessage(), throwable);
+        Toast.makeText(getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

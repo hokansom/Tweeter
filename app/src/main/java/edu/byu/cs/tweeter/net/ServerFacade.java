@@ -136,6 +136,20 @@ public class ServerFacade {
 
     /*------------------------------------------FOLLOW RELATED-------------------------------------*/
 
+    /**
+     * Updates a follow relationship. Uses information in
+     * the request object to either create the follow relationship between the followee and follower,
+     * or delete the follow relationship between the followee and follower.
+     *
+     * @param request contains the data required to fulfill the request.
+     * @return success
+     */
+    public FollowResponse postFollow(FollowRequest request, String urlPath) throws IOException{
+        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+        return clientCommunicator.doPost(urlPath, request, null, FollowResponse.class);
+    }
+
+
 
     public FollowResponse postFollow(FollowRequest request){
         if(allUsers == null){

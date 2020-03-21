@@ -9,8 +9,10 @@ public class Follow {
     *   B is the followee
     * */
 
-    public final User follower;
-    public final User followee;
+    public  User follower;
+    public User followee;
+
+    public Follow () {}
 
     public Follow(User follower, User followee) {
         this.follower = follower;

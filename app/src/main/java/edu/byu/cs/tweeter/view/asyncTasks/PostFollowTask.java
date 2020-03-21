@@ -2,6 +2,8 @@ package edu.byu.cs.tweeter.view.asyncTasks;
 
 import android.os.AsyncTask;
 
+import java.io.IOException;
+
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 import edu.byu.cs.tweeter.presenter.follow.AbstractFollowPresenter;
@@ -11,13 +13,21 @@ public class PostFollowTask extends AsyncTask<FollowRequest, Void, FollowRespons
     private final AbstractFollowPresenter presenter;
     private final PostFollowObserver observer;
 
+    private Exception exception;
+
     public interface PostFollowObserver{
         void followRetrieved(FollowResponse response);
+        void handleException(Exception ex);
     }
 
     @Override
     protected FollowResponse doInBackground(FollowRequest... followRequests) {
-        FollowResponse response = presenter.postFollow(followRequests[0]);
+        FollowResponse response = null;
+        try{
+            response = presenter.postFollow(followRequests[0]);
+        } catch (IOException e){
+            exception = e;
+        }
         return response;
     }
 

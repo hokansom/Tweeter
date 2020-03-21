@@ -1,6 +1,9 @@
 package edu.byu.cs.tweeter.presenter.follow;
 
-import edu.byu.cs.tweeter.model.services.FollowService;
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.service.FollowService;
+import edu.byu.cs.tweeter.model.services.FollowServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 
@@ -16,8 +19,9 @@ public class FollowPresenter extends AbstractFollowPresenter{
 
     public FollowPresenter(View view){ this.view = view; }
 
-    public FollowResponse postFollow(FollowRequest request){
-        return FollowService.getInstance().postFollow(request);
+    public FollowResponse postFollow(FollowRequest request) throws IOException {
+        FollowService service = new FollowServiceProxy();
+        return service.postFollow(request);
     }
 
     public boolean isFollowingRequest(){ return !following;  }

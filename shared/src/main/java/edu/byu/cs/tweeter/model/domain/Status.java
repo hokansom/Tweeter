@@ -16,6 +16,8 @@ public class Status implements Comparable<Status> {
     public URLs urls;
     public UserMentions mentions;
 
+    public Status() {}
+
     public Status(User author, String message, URLs urls, UserMentions mentions, String date){
         this.author = author;
         this.message = message;
@@ -82,7 +84,11 @@ public class Status implements Comparable<Status> {
     public String getPublishDate() {
        String date = publishDate;
        String [] parsed = date.split(" ");
-       return String.format("%s %s",parsed[1], parsed[2]);
+       if(parsed.length == 2){
+           return String.format("%s %s",parsed[0], parsed[1]);
+       } else {
+           return String.format("%s %s", parsed[1], parsed[2]);
+       }
     }
 
     private String getFullDate(){

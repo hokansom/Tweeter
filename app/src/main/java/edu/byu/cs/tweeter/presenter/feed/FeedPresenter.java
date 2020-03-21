@@ -1,6 +1,9 @@
 package edu.byu.cs.tweeter.presenter.feed;
 
-import edu.byu.cs.tweeter.model.services.FeedService;
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.service.FeedService;
+import edu.byu.cs.tweeter.model.services.FeedServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.FeedRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 
@@ -18,8 +21,9 @@ public class FeedPresenter extends AbstractFeedPresenter {
 
     public FeedPresenter(View view){ this.view = view; }
 
-    public FeedResponse getFeed(FeedRequest request){
-        return FeedService.getInstance().getFeed(request);
+    public FeedResponse getFeed(FeedRequest request) throws IOException {
+        FeedService service = new FeedServiceProxy();
+        return service.getFeed(request);
     }
 
     public void updateNumStatuses(int num){

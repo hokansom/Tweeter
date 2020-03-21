@@ -305,40 +305,55 @@ public class ServerFacade {
 
     /*------------------------------------------FEED-------------------------------------*/
 
-    public FeedResponse getFeed(FeedRequest request){
-        List<Status> all_statuses = new ArrayList<>();
-        List<Status> final_statuses = new ArrayList<>(request.getLimit());
-        assert request.getLimit() >= 0;
-        assert request.getUser() != null;
-        int endingIndex = 0;
+    /**
+     * Returns the feed for the user specified in the request. Uses information in
+     * the request object to limit the number of statuses returned and to return the next set of
+     * statuses after any that were returned in a previous request.
+     *
+     * @param request contains information about the user whose feed is to be returned and any
+     *                other information required to satisfy the request.
+     * @return the feed.
+     */
+    public FeedResponse getFeed(FeedRequest request, String urlPath) throws IOException{
+        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+        return clientCommunicator.doPost(urlPath, request, null, FeedResponse.class);
 
-        if(statusesByUser == null){
-            statusesByUser = initializeStatuses();
-        }
-
-        if(request.getLimit() > 0){
-            List<User> allFollowees = followeesByFollower.get(request.getUser());
-            if(allFollowees == null){
-                return new FeedResponse(new Feed(new ArrayList<Status>(), request.getUser()), false);
-            }
-            for(User user: allFollowees){
-                List<Status> temp_statuses = statusesByUser.get(user);
-                if(null != temp_statuses){
-                    for(Status status: temp_statuses){
-                        all_statuses.add(status);
-                    }
-                }
-            }
-            int statusIndex = getStatusStartingIndex(request.getLastStatus(), all_statuses);
-            final_statuses = getPagedStatuses(request.getLimit(), statusIndex, all_statuses);
-            endingIndex  = statusIndex + final_statuses.size();
-
-        }
-        Feed feed = new Feed(final_statuses, request.getUser());
-        boolean hasMorePages = endingIndex < all_statuses.size();
-
-        return new FeedResponse(feed, hasMorePages);
     }
+
+//    public FeedResponse getFeed(FeedRequest request){
+//        List<Status> all_statuses = new ArrayList<>();
+//        List<Status> final_statuses = new ArrayList<>(request.getLimit());
+//        assert request.getLimit() >= 0;
+//        assert request.getUser() != null;
+//        int endingIndex = 0;
+//
+//        if(statusesByUser == null){
+//            statusesByUser = initializeStatuses();
+//        }
+//
+//        if(request.getLimit() > 0){
+//            List<User> allFollowees = followeesByFollower.get(request.getUser());
+//            if(allFollowees == null){
+//                return new FeedResponse(new Feed(new ArrayList<Status>(), request.getUser()), false);
+//            }
+//            for(User user: allFollowees){
+//                List<Status> temp_statuses = statusesByUser.get(user);
+//                if(null != temp_statuses){
+//                    for(Status status: temp_statuses){
+//                        all_statuses.add(status);
+//                    }
+//                }
+//            }
+//            int statusIndex = getStatusStartingIndex(request.getLastStatus(), all_statuses);
+//            final_statuses = getPagedStatuses(request.getLimit(), statusIndex, all_statuses);
+//            endingIndex  = statusIndex + final_statuses.size();
+//
+//        }
+//        Feed feed = new Feed(final_statuses, request.getUser());
+//        boolean hasMorePages = endingIndex < all_statuses.size();
+//
+//        return new FeedResponse(feed, hasMorePages);
+//    }
 
 
 

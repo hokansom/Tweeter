@@ -5,9 +5,11 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class FeedRequest {
 
-    public final User request_user;
-    public final int limit;
-    public final Status last_status;
+    public  User request_user;
+    public  int limit;
+    public Status last_status;
+
+    public FeedRequest () {}
 
     public FeedRequest(User request_user, int limit, Status lastStatus){
         this.request_user = request_user;

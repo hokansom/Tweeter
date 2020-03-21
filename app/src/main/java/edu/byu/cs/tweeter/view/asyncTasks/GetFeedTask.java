@@ -18,8 +18,11 @@ public class GetFeedTask extends AsyncTask<FeedRequest, Void, FeedResponse> {
     private final AbstractFeedPresenter presenter;
     private final GetFeedObserver observer;
 
+    private Exception exception;
+
     public interface GetFeedObserver{
         void feedRetrieved(FeedResponse feedResponse);
+        void handleException(Exception ex);
     }
 
     public GetFeedTask(FeedPresenter presenter, GetFeedObserver observer){
@@ -29,8 +32,13 @@ public class GetFeedTask extends AsyncTask<FeedRequest, Void, FeedResponse> {
 
     @Override
     protected FeedResponse doInBackground(FeedRequest... feedRequests){
-        FeedResponse response = presenter.getFeed(feedRequests[0]);
-        loadImages(response);
+        FeedResponse response = null;
+        try{
+            response = presenter.getFeed(feedRequests[0]);
+            loadImages(response);
+        } catch (IOException e){
+            exception = e;
+        }
         return response;
     }
 
@@ -53,7 +61,12 @@ public class GetFeedTask extends AsyncTask<FeedRequest, Void, FeedResponse> {
     @Override
     protected void onPostExecute(FeedResponse feedResponse){
         if(observer != null){
-            observer.feedRetrieved(feedResponse);
+            if(exception == null){
+                observer.feedRetrieved(feedResponse);
+            } else{
+                observer.handleException(exception);
+            }
+
         }
     }
 }

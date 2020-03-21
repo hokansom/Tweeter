@@ -8,6 +8,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -301,6 +302,12 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
         private void removeLoadingFooter() {
             removeItem(statuses.get(statuses.size() - 1));
+        }
+
+        @Override
+        public void handleException(Exception throwable) {
+            Log.e("", throwable.getMessage(), throwable);
+            Toast.makeText(getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

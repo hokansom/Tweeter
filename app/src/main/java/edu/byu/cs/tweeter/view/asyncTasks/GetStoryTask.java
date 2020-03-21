@@ -18,8 +18,11 @@ public class GetStoryTask extends AsyncTask<StoryRequest, Void, StoryResponse> {
     private final AbstractStoryPresenter presenter;
     private final GetStoryObserver observer;
 
+    private Exception exception;
+
     public interface GetStoryObserver{
         void storyRetrieved(StoryResponse StoryResponse);
+        void handleException(Exception ex);
     }
 
     public GetStoryTask(StoryPresenter presenter, GetStoryObserver observer){
@@ -29,8 +32,14 @@ public class GetStoryTask extends AsyncTask<StoryRequest, Void, StoryResponse> {
 
     @Override
     protected StoryResponse doInBackground(StoryRequest... storyRequests){
-        StoryResponse response = presenter.getStory(storyRequests[0]);
-        loadImages(response);
+        StoryResponse response = null;
+        try{
+            response = presenter.getStory(storyRequests[0]);
+            loadImages(response);
+        } catch (IOException e){
+            exception = e;
+        }
+
         return response;
     }
 

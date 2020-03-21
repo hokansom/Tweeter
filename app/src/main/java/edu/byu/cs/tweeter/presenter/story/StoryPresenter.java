@@ -1,6 +1,10 @@
 package edu.byu.cs.tweeter.presenter.story;
 
-import edu.byu.cs.tweeter.model.services.StoryService;
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.domain.Story;
+import edu.byu.cs.tweeter.model.service.StoryService;
+import edu.byu.cs.tweeter.model.services.StoryServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.StoryRequest;
 import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
@@ -20,8 +24,9 @@ public class StoryPresenter extends AbstractStoryPresenter {
 
     public StoryPresenter(View view) { this.view = view; }
 
-    public StoryResponse getStory(StoryRequest request){
-        return StoryService.getInstance().getStory(request);
+    public StoryResponse getStory(StoryRequest request) throws IOException {
+        StoryService service = new StoryServiceProxy();
+        return service.getStory(request);
     }
 
     public void updateNumStatuses(int num){

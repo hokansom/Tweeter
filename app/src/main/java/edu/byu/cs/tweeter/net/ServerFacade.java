@@ -252,39 +252,39 @@ public class ServerFacade {
         return StatusGenerator.getInstance();
     }
 
-    private List<Status> sortStatuses(List<Status> statuses){
-        Collections.sort(statuses, Collections.<Status>reverseOrder());
-        return statuses;
-    }
+//    private List<Status> sortStatuses(List<Status> statuses){
+//        Collections.sort(statuses, Collections.<Status>reverseOrder());
+//        return statuses;
+//    }
 
-    private int getStatusStartingIndex(Status lastStatus, List<Status> allStatuses){
-        int statusIndex = 0;
-
-        if(lastStatus != null){
-            for(int i = 0; i < allStatuses.size(); i++){
-                if(lastStatus.equals(allStatuses.get(i))){
-                    statusIndex = i + 1;
-                    break;
-                }
-            }
-        }
-
-        return statusIndex;
-    }
-
-    private List<Status> getPagedStatuses(int limit, int statusIndex, List<Status> statuses){
-        statuses = sortStatuses(statuses);
-        List<Status> desiredStatuses = new ArrayList<>(limit);
-
-        if(null != statuses ){
-//            int statusIndex = getStatusStartingIndex(lastStatus, statuses);
-            for(int limitCounter = 0; statusIndex < statuses.size() && limitCounter < limit; limitCounter++, statusIndex++){
-                desiredStatuses.add(statuses.get(statusIndex));
-            }
-
-        }
-        return desiredStatuses;
-    }
+//    private int getStatusStartingIndex(Status lastStatus, List<Status> allStatuses){
+//        int statusIndex = 0;
+//
+//        if(lastStatus != null){
+//            for(int i = 0; i < allStatuses.size(); i++){
+//                if(lastStatus.equals(allStatuses.get(i))){
+//                    statusIndex = i + 1;
+//                    break;
+//                }
+//            }
+//        }
+//
+//        return statusIndex;
+//    }
+//
+//    private List<Status> getPagedStatuses(int limit, int statusIndex, List<Status> statuses){
+//        statuses = sortStatuses(statuses);
+//        List<Status> desiredStatuses = new ArrayList<>(limit);
+//
+//        if(null != statuses ){
+////            int statusIndex = getStatusStartingIndex(lastStatus, statuses);
+//            for(int limitCounter = 0; statusIndex < statuses.size() && limitCounter < limit; limitCounter++, statusIndex++){
+//                desiredStatuses.add(statuses.get(statusIndex));
+//            }
+//
+//        }
+//        return desiredStatuses;
+//    }
 
     /*------------------------------------------STATUS Related------------------------------*/
 
@@ -306,12 +306,11 @@ public class ServerFacade {
     /*------------------------------------------FEED-------------------------------------*/
 
     /**
-     * Returns the feed for the user specified in the request. Uses information in
+     * Returns the feed of the user specified in the request. Uses information in
      * the request object to limit the number of statuses returned and to return the next set of
      * statuses after any that were returned in a previous request.
      *
-     * @param request contains information about the user whose feed is to be returned and any
-     *                other information required to satisfy the request.
+     * @param request contains the data required to fulfill the request.
      * @return the feed.
      */
     public FeedResponse getFeed(FeedRequest request, String urlPath) throws IOException{
@@ -360,36 +359,48 @@ public class ServerFacade {
 
     /*------------------------------------------STORY-------------------------------------*/
 
-
-
-    public StoryResponse getStory(StoryRequest request){
-        List<Status> all_statuses = new ArrayList<>();
-        List<Status> final_statuses = new ArrayList<>(request.getLimit());
-        assert request.getLimit() >= 0;
-        assert request.getUser() != null;
-
-        int endingIndex = 0;
-
-        if(statusesByUser == null){
-            statusesByUser = initializeStatuses();
-        }
-
-        if(request.getLimit() > 0){
-           all_statuses = statusesByUser.get(request.getUser());
-           if(all_statuses == null){
-               return new StoryResponse(new Story(new ArrayList<Status>(), request.getUser()), false);
-           }
-           int statusIndex = getStatusStartingIndex(request.getLastStatus(), all_statuses);
-           final_statuses = getPagedStatuses(request.getLimit(), statusIndex, all_statuses);
-           endingIndex = statusIndex + final_statuses.size();
-        }
-
-        Story story = new Story(final_statuses, request.getUser());
-
-        boolean hasMorePages = endingIndex < all_statuses.size();
-
-        return new StoryResponse(story, hasMorePages);
+    /**
+     * Returns the feed of the user specified in the request. Uses information in
+     * the request object to limit the number of statuses returned and to return the next set of
+     * statuses after any that were returned in a previous request.
+     *
+     * @param request contains the data required to fulfill the request.
+     * @return the story.
+     */
+    public StoryResponse getStory(StoryRequest request, String urlPath) throws IOException {
+        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+        return clientCommunicator.doPost(urlPath, request, null, StoryResponse.class);
     }
+
+
+//    public StoryResponse getStory(StoryRequest request){
+//        List<Status> all_statuses = new ArrayList<>();
+//        List<Status> final_statuses = new ArrayList<>(request.getLimit());
+//        assert request.getLimit() >= 0;
+//        assert request.getUser() != null;
+//
+//        int endingIndex = 0;
+//
+//        if(statusesByUser == null){
+//            statusesByUser = initializeStatuses();
+//        }
+//
+//        if(request.getLimit() > 0){
+//           all_statuses = statusesByUser.get(request.getUser());
+//           if(all_statuses == null){
+//               return new StoryResponse(new Story(new ArrayList<Status>(), request.getUser()), false);
+//           }
+//           int statusIndex = getStatusStartingIndex(request.getLastStatus(), all_statuses);
+//           final_statuses = getPagedStatuses(request.getLimit(), statusIndex, all_statuses);
+//           endingIndex = statusIndex + final_statuses.size();
+//        }
+//
+//        Story story = new Story(final_statuses, request.getUser());
+//
+//        boolean hasMorePages = endingIndex < all_statuses.size();
+//
+//        return new StoryResponse(story, hasMorePages);
+//    }
 
 
 

@@ -39,7 +39,11 @@ public class PostStatusTask extends AsyncTask<StatusRequest, Void, StatusRespons
     @Override
     protected void onPostExecute(StatusResponse statusResponse){
         if(observer != null){
-            observer.statusRetrieved(statusResponse);
+            if(exception == null){
+                observer.statusRetrieved(statusResponse);
+            } else {
+                observer.handleException(exception);
+            }
         }
     }
 

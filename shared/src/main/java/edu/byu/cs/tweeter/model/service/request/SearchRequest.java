@@ -4,8 +4,10 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class SearchRequest {
 
-    public final String alias;
-    public final User currentUser;
+    public String alias;
+    public User currentUser;
+
+    public SearchRequest() {}
 
     public SearchRequest(String alias, User currentUser){
         this.alias = alias;

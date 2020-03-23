@@ -1,6 +1,9 @@
 package edu.byu.cs.tweeter.presenter.search;
 
-import edu.byu.cs.tweeter.model.services.UserService;
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.service.SearchUserService;
+import edu.byu.cs.tweeter.model.services.SearchUserServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.SearchRequest;
 import edu.byu.cs.tweeter.model.service.response.SearchResponse;
 
@@ -16,8 +19,9 @@ public class SearchPresenter extends AbstractSearchPresenter {
 
     public SearchPresenter(View view) { this.view = view; }
 
-    public SearchResponse searchAlias(SearchRequest request){
-        SearchResponse response = UserService.getInstance().searchUser(request);
+    public SearchResponse getUser(SearchRequest request) throws IOException {
+        SearchUserService service = new SearchUserServiceProxy();
+        SearchResponse response = service.getUser(request);
         setViewingUser(response.getUser());
         setFollowing(response.isFollowing());
         return response;

@@ -40,7 +40,12 @@ public class PostSignInTask extends AsyncTask<SignInRequest, Void, SignInRespons
     @Override
     protected void onPostExecute(SignInResponse signInResponse) {
         if(observer != null){
-            observer.signInPosted(signInResponse);
+            if(exception == null){
+                observer.signInPosted(signInResponse);
+            } else {
+                observer.handleException(exception);
+            }
+
         }
     }
 }

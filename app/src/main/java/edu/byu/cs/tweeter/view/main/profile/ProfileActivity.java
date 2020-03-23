@@ -3,6 +3,7 @@ package edu.byu.cs.tweeter.view.main.profile;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -178,5 +179,11 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
         FollowFragment fragment = new FollowFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, fragment).commit();
+    }
+
+    @Override
+    public void handleException(Exception throwable) {
+        Log.e("", throwable.getMessage(), throwable);
+        Toast.makeText(getBaseContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

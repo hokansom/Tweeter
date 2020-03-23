@@ -62,7 +62,12 @@ public class GetStoryTask extends AsyncTask<StoryRequest, Void, StoryResponse> {
     @Override
     protected void onPostExecute(StoryResponse StoryResponse){
         if(observer != null){
-            observer.storyRetrieved(StoryResponse);
+            if(exception == null){
+                observer.storyRetrieved(StoryResponse);
+            } else {
+                observer.handleException(exception);
+            }
+
         }
     }
 }

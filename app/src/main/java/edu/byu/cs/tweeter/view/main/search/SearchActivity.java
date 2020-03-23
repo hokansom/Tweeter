@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -77,5 +78,11 @@ public class SearchActivity extends Activity implements GetUserTask.GetUserObser
         GetUserTask getUserTask = new GetUserTask(presenter, this);
         SearchRequest request = new SearchRequest(alias, presenter.getCurrentUser());
         getUserTask.execute(request);
+    }
+
+    @Override
+    public void handleException(Exception throwable) {
+        Log.e("", throwable.getMessage(), throwable);
+        Toast.makeText(getBaseContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

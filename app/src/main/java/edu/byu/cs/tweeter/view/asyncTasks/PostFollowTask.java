@@ -39,7 +39,12 @@ public class PostFollowTask extends AsyncTask<FollowRequest, Void, FollowRespons
     @Override
     protected void onPostExecute(FollowResponse followResponse){
         if(observer != null){
-            observer.followRetrieved(followResponse);
+            if(exception == null){
+                observer.followRetrieved(followResponse);
+            } else {
+                observer.handleException(exception);
+            }
+
         }
     }
 

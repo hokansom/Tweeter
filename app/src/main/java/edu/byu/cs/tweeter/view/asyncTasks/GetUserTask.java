@@ -2,6 +2,8 @@ package edu.byu.cs.tweeter.view.asyncTasks;
 
 import android.os.AsyncTask;
 
+import java.io.IOException;
+
 import edu.byu.cs.tweeter.model.service.request.SearchRequest;
 import edu.byu.cs.tweeter.model.service.response.SearchResponse;
 import edu.byu.cs.tweeter.presenter.search.AbstractSearchPresenter;
@@ -11,8 +13,11 @@ public class GetUserTask extends AsyncTask<SearchRequest, Void, SearchResponse> 
    private final AbstractSearchPresenter presenter;
    private final GetUserObserver observer;
 
+    private Exception exception;
+
    public interface GetUserObserver{
        void userRetrieved(SearchResponse response);
+       void handleException(Exception ex);
    }
 
     public GetUserTask(SearchPresenter presenter, GetUserObserver observer) {
@@ -22,14 +27,23 @@ public class GetUserTask extends AsyncTask<SearchRequest, Void, SearchResponse> 
 
     @Override
     protected SearchResponse doInBackground(SearchRequest... searchRequests) {
-        SearchResponse response = presenter.searchAlias(searchRequests[0]);
+        SearchResponse response = null;
+        try{
+            response = presenter.getUser(searchRequests[0]);
+        } catch (IOException e){
+            exception = e;
+        }
         return response;
     }
 
     @Override
     protected void onPostExecute(SearchResponse searchResponse) {
         if(observer != null){
-            observer.userRetrieved(searchResponse);
+            if(exception == null){
+                observer.userRetrieved(searchResponse);
+            } else {
+                observer.handleException(exception);
+            }
         }
     }
 }

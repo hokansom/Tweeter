@@ -530,21 +530,37 @@ public class ServerFacade {
 //
 //        return response;
 //    }
+//
+//    public SearchResponse getUser(String urlPath) throws IOException{
+//        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+//        return clientCommunicator.doGet(urlPath,null, SearchResponse.class);
+//    }
 
-    public SearchResponse searchUser(SearchRequest request ){
-        User user = searchUser(request.getAlias());
-        Boolean success = user != null ? true : false;
-        String message;
-        if(success){
-            message = String.format("Found user with given alias %s", request.getAlias());
-        }
-        else{
-            message = String.format("Could not find user with given alias %s", request.getAlias());
-        }
-        boolean isFollowing = searchFollow(request.getCurrentUser(), user);
-
-        return new SearchResponse(success, message, user, isFollowing);
+    /**
+     * Returns the user with the given alias specified in the request.
+     *
+     * @param request contains the data required to fulfill the request.
+     * @return the user.
+     */
+    public SearchResponse getUser(SearchRequest request, String urlPath) throws IOException{
+        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+        return clientCommunicator.doPost(urlPath,request,null, SearchResponse.class);
     }
+
+//    public SearchResponse searchUser(SearchRequest request ){
+//        User user = searchUser(request.getAlias());
+//        Boolean success = user != null ? true : false;
+//        String message;
+//        if(success){
+//            message = String.format("Found user with given alias %s", request.getAlias());
+//        }
+//        else{
+//            message = String.format("Could not find user with given alias %s", request.getAlias());
+//        }
+//        boolean isFollowing = searchFollow(request.getCurrentUser(), user);
+//
+//        return new SearchResponse(success, message, user, isFollowing);
+//    }
 
     private User searchUser(String alias){
         if(allUsers == null){

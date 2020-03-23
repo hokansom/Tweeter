@@ -14,7 +14,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
 import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class SignUpDAOTest {
 

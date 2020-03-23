@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import edu.byu.cs.tweeter.R;
@@ -128,4 +130,6 @@ public class SignUpFragment extends Fragment implements SignUpPresenter.View {
     public void setHandleLast(String error) {
 
     }
+
+
 }

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -244,12 +245,20 @@ public class UserSettingsActivity extends AppCompatActivity implements SignUpPre
 
     @Override
     public void signUpPosted(SignUpResponse response) {
-        if(response.getUser() != null){
+        if(response != null && response.getUser() != null){
+            presenter.setCurrentUser(response.getUser());
+            presenter.setToken(response.getToken());
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         } else{
             Toast.makeText(getBaseContext(), response.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void handleException(Exception throwable) {
+        Log.e("", throwable.getMessage(), throwable);
+        Toast.makeText(getBaseContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

@@ -1,6 +1,12 @@
 package edu.byu.cs.tweeter.presenter.signIn;
 
-import edu.byu.cs.tweeter.model.services.SignInService;
+import android.util.Log;
+import android.widget.Toast;
+
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.service.SignInService;
+import edu.byu.cs.tweeter.model.services.SignInServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.SignInRequest;
 import edu.byu.cs.tweeter.model.service.response.SignInResponse;
 
@@ -72,8 +78,9 @@ public class SignInPresenter extends AbstractSignInPresenter {
 
     public SignInPresenter(View view){ this.view = view; }
 
-    public SignInResponse postSignIn(SignInRequest request){
-        return SignInService.getInstance().postSignIn(request);
+    public SignInResponse postSignIn(SignInRequest request) throws IOException {
+        SignInService service = new SignInServiceProxy();
+        return service.postSignIn(request);
     }
 
 }

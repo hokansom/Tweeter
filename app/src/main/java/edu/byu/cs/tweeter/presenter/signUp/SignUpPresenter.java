@@ -1,8 +1,11 @@
 package edu.byu.cs.tweeter.presenter.signUp;
 
-import edu.byu.cs.tweeter.model.services.SignUpService;
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.service.SignUpService;
 import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
 import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
+import edu.byu.cs.tweeter.model.services.SignUpServiceProxy;
 
 public class SignUpPresenter extends AbstractSignUpPresenter {
 
@@ -130,8 +133,10 @@ public class SignUpPresenter extends AbstractSignUpPresenter {
 
     public SignUpPresenter(View view) { this.view = view; }
 
-    public SignUpResponse postUser(SignUpRequest request){
-        return SignUpService.getInstance().postUser(request);
+    public SignUpResponse postSignUp(SignUpRequest request) throws IOException {
+        SignUpService service = new SignUpServiceProxy();
+        return service.postSignUp(request);
+
     }
 
     public String getHandle() {

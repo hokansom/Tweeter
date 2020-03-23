@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +93,9 @@ public class SignInFragment extends Fragment implements SignInPresenter.View, Po
 
     @Override
     public void signInPosted(SignInResponse response) {
-        if(response.getUser() != null){
+        if(response != null && response.getUser() != null){
+            presenter.setCurrentUser(response.getUser());
+            presenter.setToken(response.getToken());
             Intent intent = new Intent(getActivity(), MainActivity.class);
             Bundle extras = new Bundle();
             extras.putSerializable("USER", response.getUser());
@@ -100,7 +103,9 @@ public class SignInFragment extends Fragment implements SignInPresenter.View, Po
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
-        else{
+        else if(response == null){
+            Toast.makeText(getContext(), "Service currently unavailable. Please try again later.", Toast.LENGTH_LONG).show();
+        } else{
             Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
@@ -126,5 +131,11 @@ public class SignInFragment extends Fragment implements SignInPresenter.View, Po
     @Override
     public void setHandleError(String error) {
         editHandle.setError(error);
+    }
+
+    @Override
+    public void handleException(Exception throwable) {
+        Log.e("", throwable.getMessage(), throwable);
+        Toast.makeText(getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

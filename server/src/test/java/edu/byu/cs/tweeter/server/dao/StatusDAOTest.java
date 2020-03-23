@@ -56,7 +56,7 @@ class StatusDAOTest {
 
 
         StatusGenerator mockStatusGenerator = Mockito.mock(StatusGenerator.class);
-        Mockito.when(mockStatusGenerator.generateAllStatuses((List<User>) Mockito.anyList(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(statuses);
+        Mockito.when(mockStatusGenerator.generateAllStatuses( Mockito.anyListOf(User.class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(statuses);
 
         Mockito.when(statusDAOSpy.getStatusGenerator()).thenReturn(mockStatusGenerator);
 

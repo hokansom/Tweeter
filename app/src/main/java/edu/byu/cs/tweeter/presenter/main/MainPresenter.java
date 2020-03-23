@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.presenter.main;
 
-import edu.byu.cs.tweeter.model.services.SignInService;
 
 public class MainPresenter extends AbstractMainPresenter {
 
@@ -16,12 +15,12 @@ public class MainPresenter extends AbstractMainPresenter {
     }
 
     public void signOutUser(){
-        SignInService.getInstance().setCurrentUser(null);
+        setCurrentUser(null);
         view.clearData();
     }
 
     public void logOut(){
-        SignInService.getInstance().setCurrentUser(null);
+        setCurrentUser(null);
     }
 
     public MainPresenter(View view) {

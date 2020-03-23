@@ -4,17 +4,14 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.byu.cs.tweeter.model.domain.Feed;
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.Status;
-import edu.byu.cs.tweeter.model.domain.Story;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
@@ -26,7 +23,7 @@ import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.request.StoryRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
-import edu.byu.cs.tweeter.model.services.SignInService;
+import edu.byu.cs.tweeter.model.services.SignInServiceProxy;
 import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
@@ -151,84 +148,84 @@ public class ServerFacade {
 
 
 
-    public FollowResponse postFollow(FollowRequest request){
-        if(allUsers == null){
-            getAllUsers();
-        }
+//    public FollowResponse postFollow(FollowRequest request){
+//        if(allUsers == null){
+//            getAllUsers();
+//        }
+//
+//        Follow follow = request.getFollow();
+//        User follower = follow.getFollower();
+//        User followee = follow.getFollowee();
+//
+//        /* Check to see if the follower and followee actually exist */
+//        if(!allUsers.contains(followee)){
+//            return new FollowResponse(false, "Followee doesn't exist");
+//        }
+//        if(!allUsers.contains(follower)){
+//            return new FollowResponse(false, "Follower doesn't exist");
+//        }
+//
+//        if(follower.equals(followee)){
+//            return new FollowResponse(false, "User can't follow or unfollow themself");
+//        }
+//
+//
+//        if(request.getIsFollow()){
+//            return addFollow(followee, follower);
+//        } else {
+//            return removeFollow(followee, follower);
+//
+//        }
+//    }
 
-        Follow follow = request.getFollow();
-        User follower = follow.getFollower();
-        User followee = follow.getFollowee();
-
-        /* Check to see if the follower and followee actually exist */
-        if(!allUsers.contains(followee)){
-            return new FollowResponse(false, "Followee doesn't exist");
-        }
-        if(!allUsers.contains(follower)){
-            return new FollowResponse(false, "Follower doesn't exist");
-        }
-
-        if(follower.equals(followee)){
-            return new FollowResponse(false, "User can't follow or unfollow themself");
-        }
-
-
-        if(request.getIsFollow()){
-            return addFollow(followee, follower);
-        } else {
-            return removeFollow(followee, follower);
-
-        }
-    }
-
-    private FollowResponse addFollow(User followee, User follower){
-        List<User> followers = followersByFollowee.get(followee);
-
-        if(followers == null){
-            followers = new ArrayList<>();
-            followersByFollowee.put(followee, followers);
-        }
-
-        List<User> followees = followeesByFollower.get(follower);
-        if(followees == null){
-            followees = new ArrayList<>();
-            followeesByFollower.put(follower, followees);
-        }
-
-        if(followees.contains(followee)){
-            return new FollowResponse(false, "Follow relationship already exists");
-        }
-
-        if(followers.contains(follower)){
-            return new FollowResponse(false, "Follow relationship already exists");
-        }
-
-
-        followers.add(follower);
-        followees.add(followee);
-
-        return new FollowResponse(true, "Follow posted");
-
-    }
+//    private FollowResponse addFollow(User followee, User follower){
+//        List<User> followers = followersByFollowee.get(followee);
+//
+//        if(followers == null){
+//            followers = new ArrayList<>();
+//            followersByFollowee.put(followee, followers);
+//        }
+//
+//        List<User> followees = followeesByFollower.get(follower);
+//        if(followees == null){
+//            followees = new ArrayList<>();
+//            followeesByFollower.put(follower, followees);
+//        }
+//
+//        if(followees.contains(followee)){
+//            return new FollowResponse(false, "Follow relationship already exists");
+//        }
+//
+//        if(followers.contains(follower)){
+//            return new FollowResponse(false, "Follow relationship already exists");
+//        }
+//
+//
+//        followers.add(follower);
+//        followees.add(followee);
+//
+//        return new FollowResponse(true, "Follow posted");
+//
+//    }
 
 
 
-    private FollowResponse removeFollow(User followee, User follower){
-        List<User> followers = followersByFollowee.get(followee);
-        List<User> followees = followeesByFollower.get(follower);
-
-        if(followees == null || !followees.contains(followee)){
-            return new FollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
-        }
-        if(followers == null || !followers.contains(follower)){
-            return new FollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
-        }
-
-        followers.remove(follower);
-        followees.remove(followee);
-
-        return new FollowResponse(true, "Follow deleted");
-    }
+//    private FollowResponse removeFollow(User followee, User follower){
+//        List<User> followers = followersByFollowee.get(followee);
+//        List<User> followees = followeesByFollower.get(follower);
+//
+//        if(followees == null || !followees.contains(followee)){
+//            return new FollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
+//        }
+//        if(followers == null || !followers.contains(follower)){
+//            return new FollowResponse(false, "Can't remove a follow relationship that doesn't exist.");
+//        }
+//
+//        followers.remove(follower);
+//        followees.remove(followee);
+//
+//        return new FollowResponse(true, "Follow deleted");
+//    }
 
     private boolean searchFollow(User follower, User followee){
         List<User> followees = followeesByFollower.get(follower);
@@ -243,24 +240,24 @@ public class ServerFacade {
     /*------------------------------------------STATUS-------------------------------------*/
 
 
-    private Map<User, List<Status>> initializeStatuses() {
-        Map<User, List<Status>> statusesByUser = new HashMap<>();
-        if(allUsers == null){
-            getAllUsers();
-        }
-
-        List<Status> statuses = getStatusGenerator().generateAllStatuses(new ArrayList<>(allUsers), 0,5);
-        for(Status status: statuses){
-            List<Status> user_statuses = statusesByUser.get(status.getAuthor());
-            if(user_statuses == null){
-                user_statuses = new ArrayList<>();
-                statusesByUser.put(status.getAuthor(), user_statuses);
-            }
-            user_statuses.add(status);
-        }
-
-        return statusesByUser;
-    }
+//    private Map<User, List<Status>> initializeStatuses() {
+//        Map<User, List<Status>> statusesByUser = new HashMap<>();
+//        if(allUsers == null){
+//            getAllUsers();
+//        }
+//
+//        List<Status> statuses = getStatusGenerator().generateAllStatuses(new ArrayList<>(allUsers), 0,5);
+//        for(Status status: statuses){
+//            List<Status> user_statuses = statusesByUser.get(status.getAuthor());
+//            if(user_statuses == null){
+//                user_statuses = new ArrayList<>();
+//                statusesByUser.put(status.getAuthor(), user_statuses);
+//            }
+//            user_statuses.add(status);
+//        }
+//
+//        return statusesByUser;
+//    }
 
     StatusGenerator getStatusGenerator() {
         return StatusGenerator.getInstance();
@@ -448,68 +445,91 @@ public class ServerFacade {
 
     }
 
-    public SignInResponse postSignIn(SignInRequest request){
-        if(authentication == null){
-            initializeAuthentication();
-        }
-        String message;
-        if(!authentication.containsKey(request.getAlias())){
-            message = String.format("User with given alias (%s) does not exist.", request.getAlias());
-            return new SignInResponse(false, message);
-        }
-        String hashed = hashPassword(request.getPassword());
-        if(hashed == null){
-            message = "Error signing in.";
-            return new SignInResponse(false, message);
-        }
-        if(!hashed.equals(authentication.get(request.getAlias()))){
-            message = "Invalid alias or password";
-            return new SignInResponse(false, message);
-        }
-        User user = searchUser(request.getAlias());
-        if(user != null){
-            SignInService.getInstance().setCurrentUser(user);
-            return new SignInResponse(user);
-        }
-        else{
-            message = String.format("User with given alias (%s) does not exist.", request.getAlias());
-            return new SignInResponse(false, message);
-        }
-
+    /**
+     * Returns the user for the alias specified in the request.
+     *
+     * @param request contains the data required to fulfill the request.
+     * @return the user.
+     */
+    public SignInResponse postSignIn(SignInRequest request, String urlPath) throws IOException{
+        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+        return clientCommunicator.doPost(urlPath, request, null, SignInResponse.class);
     }
 
-    public SignUpResponse postUser(SignUpRequest request){
-        SignUpResponse response;
-        if(checkValidAlias(request.getNewUser().getAlias())){
-            /*Add new user to the existing list of users*/
-            followeesByFollower.put(request.getNewUser(), new ArrayList<User>());
-            followersByFollowee.put(request.getNewUser(), new ArrayList<User>());
-            allUsers.add(request.getNewUser());
+//    public SignInResponse postSignIn(SignInRequest request){
+//        if(authentication == null){
+//            initializeAuthentication();
+//        }
+//        String message;
+//        if(!authentication.containsKey(request.getAlias())){
+//            message = String.format("User with given alias (%s) does not exist.", request.getAlias());
+//            return new SignInResponse(false, message);
+//        }
+//        String hashed = hashPassword(request.getPassword());
+//        if(hashed == null){
+//            message = "Error signing in.";
+//            return new SignInResponse(false, message);
+//        }
+//        if(!hashed.equals(authentication.get(request.getAlias()))){
+//            message = "Invalid alias or password";
+//            return new SignInResponse(false, message);
+//        }
+//        User user = searchUser(request.getAlias());
+//        if(user != null){
+//            SignInServiceProxy.getInstance().setCurrentUser(user);
+//            return new SignInResponse(user);
+//        }
+//        else{
+//            message = String.format("User with given alias (%s) does not exist.", request.getAlias());
+//            return new SignInResponse(false, message);
+//        }
+//
+//    }
 
-            if(authentication == null){
-                initializeAuthentication();
-            }
-            String hashed = hashPassword(request.getPassword());
-            authentication.put(request.getNewUser().getAlias(), hashed);
-
-            //Will need to do something with the image base64 string.
-
-            /*Log the new user in*/
-            SignInRequest signInRequest = new SignInRequest(request.getNewUser().getAlias(), request.getPassword());
-            SignInResponse signInResponse = postSignIn(signInRequest);
-            if(signInResponse.getUser() != null){
-                response = new SignUpResponse(signInResponse.getUser());
-            }
-            else{
-                response = new SignUpResponse(false, signInResponse.getMessage());
-            }
-        }
-        else{
-            response = new SignUpResponse(false, "Alias is already taken");
-        }
-
-        return response;
+    /**
+     *
+     * Returns the new user object generated by the database using the specified information in the request.
+     *
+     * @param request contains the data required to fulfill the request.
+     * @return the user.
+     *             */
+    public SignUpResponse postSignUp(SignUpRequest request, String urlPath) throws IOException{
+        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+        return clientCommunicator.doPost(urlPath, request, null, SignUpResponse.class);
     }
+
+//    public SignUpResponse postUser(SignUpRequest request){
+//        SignUpResponse response;
+//        if(checkValidAlias(request.getNewUser().getAlias())){
+//            /*Add new user to the existing list of users*/
+//            followeesByFollower.put(request.getNewUser(), new ArrayList<User>());
+//            followersByFollowee.put(request.getNewUser(), new ArrayList<User>());
+//            allUsers.add(request.getNewUser());
+//
+//            if(authentication == null){
+//                initializeAuthentication();
+//            }
+//            String hashed = hashPassword(request.getPassword());
+//            authentication.put(request.getNewUser().getAlias(), hashed);
+//
+//            //Will need to do something with the image base64 string.
+//
+//            /*Log the new user in*/
+//            SignInRequest signInRequest = new SignInRequest(request.getNewUser().getAlias(), request.getPassword());
+//            SignInResponse signInResponse = postSignIn(signInRequest);
+//            if(signInResponse.getUser() != null){
+//                response = new SignUpResponse(signInResponse.getUser());
+//            }
+//            else{
+//                response = new SignUpResponse(false, signInResponse.getMessage());
+//            }
+//        }
+//        else{
+//            response = new SignUpResponse(false, "Alias is already taken");
+//        }
+//
+//        return response;
+//    }
 
     public SearchResponse searchUser(SearchRequest request ){
         User user = searchUser(request.getAlias());

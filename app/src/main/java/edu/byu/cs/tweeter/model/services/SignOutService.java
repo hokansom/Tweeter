@@ -11,7 +11,7 @@ public class SignOutService {
         return instance;
     }
 
-    private SignOutService(){
-        SignInService.getInstance().setCurrentUser(null);
-    }
+//    private SignOutService(){
+//        SignInServiceProxy.getInstance().setCurrentUser(null);
+//    }
 }

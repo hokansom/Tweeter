@@ -2,6 +2,8 @@ package edu.byu.cs.tweeter.view.asyncTasks;
 
 import android.os.AsyncTask;
 
+import java.io.IOException;
+
 import edu.byu.cs.tweeter.model.service.request.SignInRequest;
 import edu.byu.cs.tweeter.model.service.response.SignInResponse;
 import edu.byu.cs.tweeter.presenter.signIn.AbstractSignInPresenter;
@@ -12,8 +14,11 @@ public class PostSignInTask extends AsyncTask<SignInRequest, Void, SignInRespons
     private final AbstractSignInPresenter presenter;
     private final PostSignInObserver observer;
 
+    private Exception exception;
+
     public interface PostSignInObserver{
         void signInPosted(SignInResponse response);
+        void handleException(Exception ex);
     }
 
     public PostSignInTask(SignInPresenter presenter, PostSignInObserver observer) {
@@ -23,7 +28,12 @@ public class PostSignInTask extends AsyncTask<SignInRequest, Void, SignInRespons
 
     @Override
     protected SignInResponse doInBackground(SignInRequest... signInRequests) {
-        SignInResponse response = presenter.postSignIn(signInRequests[0]);
+        SignInResponse response = null;
+        try{
+            response = presenter.postSignIn(signInRequests[0]);
+        } catch (IOException e){
+            exception = e;
+        }
         return response;
     }
 

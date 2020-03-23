@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -142,7 +143,7 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
             finish();
         }
         else{
-            Toast.makeText(getBaseContext(), "Could not share post.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), response.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -163,5 +164,11 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
     @Override
     public void enableShare(boolean enable) {
         shareButton.setEnabled(enable);
+    }
+
+    @Override
+    public void handleException(Exception throwable) {
+        Log.e("", throwable.getMessage(), throwable);
+        Toast.makeText(getBaseContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

@@ -4,8 +4,10 @@ import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class StatusRequest {
-    public final User author;
-    public final Status status;
+    public User author;
+    public Status status;
+
+    public StatusRequest() {}
 
     public StatusRequest(User author, Status status){
         this.author = author;

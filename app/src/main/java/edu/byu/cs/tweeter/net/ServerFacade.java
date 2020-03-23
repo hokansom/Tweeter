@@ -302,18 +302,31 @@ public class ServerFacade {
 
     /*------------------------------------------STATUS Related------------------------------*/
 
-    public StatusResponse postStatus(StatusRequest request){
-        if(statusesByUser == null){
-            statusesByUser = initializeStatuses();
-        }
-        List<Status> userStatuses = statusesByUser.get(request.getAuthor());
-        if(userStatuses == null){
-            userStatuses = new ArrayList<Status>();
-        }
-        userStatuses.add(request.getStatus());
-        statusesByUser.put(request.getAuthor(), userStatuses);
-        return new StatusResponse(true, "Status posted");
+
+    /**
+     * Posts a new status to the database. Returns if the post succeeded or not
+     *
+     * @param request contains the data required to fulfill the request.
+     * @return a success boolean
+     *
+     */
+    public StatusResponse postStatus(StatusRequest request, String urlPath) throws IOException{
+        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+        return clientCommunicator.doPost(urlPath, request, null, StatusResponse.class);
     }
+
+//    public StatusResponse postStatus(StatusRequest request){
+//        if(statusesByUser == null){
+//            statusesByUser = initializeStatuses();
+//        }
+//        List<Status> userStatuses = statusesByUser.get(request.getAuthor());
+//        if(userStatuses == null){
+//            userStatuses = new ArrayList<Status>();
+//        }
+//        userStatuses.add(request.getStatus());
+//        statusesByUser.put(request.getAuthor(), userStatuses);
+//        return new StatusResponse(true, "Status posted");
+//    }
 
 
 

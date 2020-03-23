@@ -1,7 +1,10 @@
 package edu.byu.cs.tweeter.presenter.status;
 
 
-import edu.byu.cs.tweeter.model.services.StatusService;
+import java.io.IOException;
+
+import edu.byu.cs.tweeter.model.service.StatusService;
+import edu.byu.cs.tweeter.model.services.StatusServiceProxy;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 
@@ -39,8 +42,9 @@ public class StatusPresenter extends AbstractStatusPresenter {
 
     public StatusPresenter(View view) {this.view = view;}
 
-    public StatusResponse postStatus(StatusRequest request){
-        return StatusService.getInstance().postStatus(request);
+    public StatusResponse postStatus(StatusRequest request) throws IOException {
+        StatusService service = new StatusServiceProxy();
+        return service.postStatus(request);
     }
 
 }

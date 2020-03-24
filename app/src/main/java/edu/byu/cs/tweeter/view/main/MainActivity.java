@@ -23,12 +23,13 @@ import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.presenter.main.MainPresenter;
 import edu.byu.cs.tweeter.view.asyncTasks.LoadImageTask;
+import edu.byu.cs.tweeter.view.asyncTasks.PostSignOutTask;
 import edu.byu.cs.tweeter.view.cache.ImageCache;
 import edu.byu.cs.tweeter.view.main.profile.ProfileActivity;
 import edu.byu.cs.tweeter.view.main.search.SearchActivity;
 import edu.byu.cs.tweeter.view.main.status.StatusActivity;
 
-public class MainActivity extends AppCompatActivity implements LoadImageTask.LoadImageObserver, MainPresenter.View {
+public class MainActivity extends AppCompatActivity implements LoadImageTask.LoadImageObserver, MainPresenter.View, PostSignOutTask.SignOutObserver {
 
     private MainPresenter presenter;
     private User user;
@@ -132,7 +133,8 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
                         return true;
                     case R.id.menu_log:
                         if(presenter.getCurrentUser() != null){
-                            presenter.signOutUser();
+                            signOut();
+//                            presenter.signOutUser();
                         }
                         else{
                             switchToSignIn();
@@ -155,6 +157,11 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         } else{
             Toast.makeText(getBaseContext(), R.string.mustLogIn, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void signOut(){
+        PostSignOutTask task = new PostSignOutTask(presenter, this);
+        task.execute();
     }
 
     @Override
@@ -190,5 +197,10 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         userAlias.setText("");
         userName.setText("");
         userImageView.setImageResource(R.drawable.profile_default);
+    }
+
+    @Override
+    public void signOutRetrieved() {
+
     }
 }

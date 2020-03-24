@@ -227,14 +227,14 @@ public class ServerFacade {
 //        return new FollowResponse(true, "Follow deleted");
 //    }
 
-    private boolean searchFollow(User follower, User followee){
-        List<User> followees = followeesByFollower.get(follower);
-        if(followees == null){
-            return false;
-        } else {
-            return followees.contains(followee);
-        }
-    }
+//    private boolean searchFollow(User follower, User followee){
+//        List<User> followees = followeesByFollower.get(follower);
+//        if(followees == null){
+//            return false;
+//        } else {
+//            return followees.contains(followee);
+//        }
+//    }
 
 
     /*------------------------------------------STATUS-------------------------------------*/
@@ -535,6 +535,17 @@ public class ServerFacade {
 //        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
 //        return clientCommunicator.doGet(urlPath,null, SearchResponse.class);
 //    }
+
+    /**
+     * Signs out the current user
+     *
+     * @param urlPath
+     *
+     * */
+    public void signOut(String urlPath) throws IOException{
+        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+        clientCommunicator.doGet(urlPath, null, null);
+    }
 
     /**
      * Returns the user with the given alias specified in the request.

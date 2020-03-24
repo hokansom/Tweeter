@@ -83,6 +83,9 @@ class ClientCommunicator {
             requestStrategy.sendRequest(connection);
 
             String response = getResponse(connection);
+            if(returnType == null){
+                return null;
+            }
             return Serializer.deserialize(response, returnType);
         } finally {
             if(connection != null) {

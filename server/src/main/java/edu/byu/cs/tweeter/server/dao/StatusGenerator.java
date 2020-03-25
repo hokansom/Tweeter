@@ -34,9 +34,7 @@ public class StatusGenerator {
         List<Status> statuses = new ArrayList<>();
         for(User user: users){
             List<Status> temp = generateUserStatuses(user, minNumOfStatuses, maxNumOfStatuses);
-            for(Status status : temp){
-                statuses.add(status);
-            }
+            statuses.addAll(temp);
         }
         return statuses;
     }
@@ -68,43 +66,6 @@ public class StatusGenerator {
 
         return status;
     }
-
-//    private static String [] readInStatuses(){
-//        Statuses statuses = null;
-//
-//        JSONParser jsonParser = new JSONParser();
-//
-//
-//        try (FileReader reader = new FileReader(STATUS_PATH))
-//        {
-//            //Read JSON file
-//            Object obj = jsonParser.parse(reader);
-//
-//            JSONArray jsonArray = (JSONArray) obj;
-//            statuses = (new Gson()).fromJson(jsonArray.toString(), Statuses.class);
-//
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return statuses == null ? null : statuses.getStatuses();
-//    }
-
-//    public List<String> getSampleStatuses(){
-//        return samples;
-//    }
-//
-//    class Statuses {
-//
-//        public Statuses(){
-//        }
-//        private String [] data;
-//        private String [] getStatuses() { return data; }
-//    }
 }
 
 

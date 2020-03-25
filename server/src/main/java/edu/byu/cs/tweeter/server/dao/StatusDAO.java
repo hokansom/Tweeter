@@ -60,7 +60,8 @@ public class StatusDAO {
     private Map<User, List<Status>> initializeStatuses() {
         Map<User, List<Status>> statusesByUser = new HashMap<>();
         if(users == null){
-            users = getUserGenerator().generateUsers(50);
+            users = new ArrayList<>();
+            users.addAll(getUserGenerator().generateUsers(50));
             /*REMOVE FOR TESTING*/
             User testUser = new User("Test", "User", UserGenerator.MALE_IMAGE_URL);
             users.add(testUser);

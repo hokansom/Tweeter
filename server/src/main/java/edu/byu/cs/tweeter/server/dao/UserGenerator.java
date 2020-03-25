@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -112,7 +111,7 @@ public class UserGenerator {
     }
 
     /**
-     * Generates the specified number of users with names randomly selected from the json files.
+     * Generates the specified number of users with names selected from the json files.
      *
      * @param count the number of users to generate.
      * @return the generated users.
@@ -121,40 +120,61 @@ public class UserGenerator {
 
         List<User> users = new ArrayList<>(count);
 
-        Random random = new Random();
+        int personIndex = 0;
+        boolean isMale = true;
 
-        while(users.size() < count) {
-            // Randomly determine if the user will be male or female and generate a gender
-            // specific first name
+        while(users.size() < count - 1) {
             String firstName;
             String imageULR;
-            if(random.nextInt(2) == 0) {
-                firstName = maleNames[random.nextInt(maleNames.length)];
+            if(isMale) {
+                firstName = maleNames[personIndex];
                 imageULR = MALE_IMAGE_URL;
             } else {
-                firstName = femaleNames[random.nextInt(femaleNames.length)];
+                firstName = femaleNames[personIndex];
                 imageULR = FEMALE_IMAGE_URL;
             }
 
-            String lastName = surnames[random.nextInt(surnames.length)];
+            String lastName = surnames[personIndex];
             User user = new User(firstName, lastName, imageULR);
 
             if(!users.contains(user)) {
                 users.add(user);
             }
+            if(!isMale){
+                personIndex++;
+            }
+            isMale = !isMale;
         }
+
+        User testUser = new User("Test", "User", UserGenerator.MALE_IMAGE_URL);
+        users.add(testUser);
 
         return users;
     }
 
+    /**
+     *
+     * Generates passwords for the list of users
+     *
+     * @param users list of users who need a password.
+     *
+     * @return passwords
+     * */
     public Map<String, String> generatePasswords(List<User> users){
-        Map<String, String> auth = new HashMap<>();
-        String testUser = "@TestUser";
-        String hashedPass = hashPassword("Password");
-        auth.put(testUser, hashedPass);
-        return auth;
+        Map<String, String> passwords = new HashMap<>();
+        for(User user: users){
+            String hashedPass = hashPassword("Password");
+            passwords.put(user.getAlias(), hashedPass);
+        }
+        return passwords;
     }
 
+    /**
+     * Generates random tokens for list of users.
+     *
+     * @param users list of users who need auth tokens
+     * @return tokens
+     */
     public Map<String, String> generateTokens(List<User> users){
         Map<String, String> tokens = new HashMap<>();
         return tokens;

@@ -8,9 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import edu.byu.cs.tweeter.model.domain.User;
-import edu.byu.cs.tweeter.model.service.request.SignInRequest;
 import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
-import edu.byu.cs.tweeter.model.service.response.SignInResponse;
 import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
 
 /**

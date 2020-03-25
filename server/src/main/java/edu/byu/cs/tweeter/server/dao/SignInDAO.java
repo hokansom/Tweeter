@@ -126,10 +126,17 @@ public class SignInDAO {
         return generatedPassword;
     }
 
+    /**
+     * Initializes map for storing auth tokens
+     * */
     private void initializeAuthTokens(){
         authTokens = getUserGenerator().generateTokens(users);
     }
 
+    /**
+     *
+     * initializes user passwords
+     */
     private void initializeAuthentication(){
         authentication = getUserGenerator().generatePasswords(users);
     }
@@ -140,10 +147,6 @@ public class SignInDAO {
      * */
     private List<User> initializeUsers(){
         List<User> users = getUserGenerator().generateUsers(50);
-        /** FIXME:
-        User testUser = new User("Test", "User", UserGenerator.MALE_IMAGE_URL);
-        users.add(testUser);
-         **/
 
         return users;
     }

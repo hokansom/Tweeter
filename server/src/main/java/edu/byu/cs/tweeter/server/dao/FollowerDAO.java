@@ -1,7 +1,6 @@
 package edu.byu.cs.tweeter.server.dao;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,8 +93,8 @@ public class FollowerDAO {
     private Map<User, List<User>> initializeFollowers() {
         Map<User, List<User>> followersByFollowee = new HashMap<>();
 
-        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
-                0, 50, FollowGenerator.Sort.FOLLOWEE_FOLLOWER);
+        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(50,
+                0, 25, FollowGenerator.Sort.FOLLOWEE_FOLLOWER);
 
         // Populate a map of followers, keyed by followee so we can easily handle follower requests
         for(Follow follow : follows) {

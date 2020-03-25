@@ -1,7 +1,5 @@
 package edu.byu.cs.tweeter.server.service;
 
-import java.io.IOException;
-
 import edu.byu.cs.tweeter.model.service.FollowerService;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;

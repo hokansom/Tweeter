@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import edu.byu.cs.tweeter.model.domain.Feed;
+import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedRequest;
@@ -17,6 +17,8 @@ public class FeedDAO {
     private static Map<User, List<Status>> statusesByUser;
 
     private static List<User> users;
+
+    private static Map<User, List<User>> followeesByFollower;
 
     /**
      * Gets the feed from the database for the user specified in the request. Uses
@@ -40,16 +42,14 @@ public class FeedDAO {
         }
 
         if(request.getLimit() > 0){
-            List<User> allFollowees = getFollowees(10);
+            List<User> allFollowees = getFollowees(request.getUser());
             if(allFollowees == null){
                 return new FeedResponse(new Feed(new ArrayList<Status>(), request.getUser()), false);
             }
             for(User user: allFollowees){
                 List<Status> temp_statuses = statusesByUser.get(user);
                 if(null != temp_statuses){
-                    for(Status status: temp_statuses){
-                        all_statuses.add(status);
-                    }
+                    all_statuses.addAll(temp_statuses);
                 }
             }
             int statusIndex = getStatusStartingIndex(request.getLastStatus(), all_statuses);
@@ -152,29 +152,53 @@ public class FeedDAO {
     }
 
 
-    private List<User> getFollowees(int number) {
-        List<User> followees = new ArrayList<>();
-        Random random = new Random();
-        int randomIndex = random.nextInt(users.size() - 1);
-        int count = 0;
-        while(count < number){
-            followees.add(users.get(randomIndex));
-            count++;
-            randomIndex++;
-            if(randomIndex >= users.size()){
-                randomIndex = 0;
-            }
+    public List<User> getFollowees(User user) {
+        if(followeesByFollower == null){
+            followeesByFollower = initializeFollowees();
         }
-        return followees;
+        return followeesByFollower.get(user);
+    }
+
+
+    /**
+     * Generates the followee data.
+     */
+    private Map<User, List<User>> initializeFollowees() {
+
+        Map<User, List<User>> followeesByFollower = new HashMap<>();
+
+        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(50,
+                0, 25, FollowGenerator.Sort.FOLLOWER_FOLLOWEE);
+
+        // Populate a map of followees, keyed by follower so we can easily handle followee requests
+        for(Follow follow : follows) {
+            List<User> followees = followeesByFollower.get(follow.getFollower());
+
+            if(followees == null) {
+                followees = new ArrayList<>();
+                followeesByFollower.put(follow.getFollower(), followees);
+            }
+
+            followees.add(follow.getFollowee());
+        }
+
+        return followeesByFollower;
     }
 
     /**
-     * Returns an instance of UseGenerator that can be used to generate User data. This is
+     * Returns an instance of UserGenerator that can be used to generate User data. This is
      * written as a separate method to allow mocking of the generator.
      *
      * @return the generator.
      */
     UserGenerator getUserGenerator() { return UserGenerator.getInstance(); }
+
+    /**
+     * Returns an instance of FollowGenerator that can be used to generated Follow data.
+     * This is written
+     *
+     * */
+    FollowGenerator getFollowGenerator() { return FollowGenerator.getInstance(); }
 
 
 }

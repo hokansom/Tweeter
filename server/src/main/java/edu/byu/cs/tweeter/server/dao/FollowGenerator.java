@@ -19,6 +19,8 @@ public class FollowGenerator {
 
     private static FollowGenerator followGenerator;
 
+    private User testUser2 = new User("Alonzo", "Cadden", UserGenerator.MALE_IMAGE_URL);
+
     /**
      * An enum used to specify the sort order of {@link Follow} object returned by this generator.
      * {@link #FOLLOWER_FOLLOWEE} specifies a primary sort by follower alias with a secondary sort
@@ -89,9 +91,14 @@ public class FollowGenerator {
         assert minFollowersPerUser >= 0 : minFollowersPerUser;
         assert maxFollowersPerUser < users.size() : maxFollowersPerUser;
 
+        User testUser = new User("Test", "User", UserGenerator.MALE_IMAGE_URL);
+
         // For each user, generate a random number of followers between the specified min and max
         Random random = new Random();
         for(User user : users) {
+            if(user.equals(testUser)){
+                continue;
+            }
             int numbFollowersToGenerate = random.nextInt(
                     maxFollowersPerUser - minFollowersPerUser) + minFollowersPerUser;
 
@@ -99,19 +106,20 @@ public class FollowGenerator {
         }
 
         // Add the test user and make him follow everyone
-        User testUser = new User("Test", "User", UserGenerator.MALE_IMAGE_URL);
-
         for(User user : users) {
+            if(user.equals(testUser)){
+                continue;
+            }
             Follow follow = new Follow(testUser, user);
             follows.add(follow);
 
             //Make everyone follow the testUser
             follow = new Follow(user, testUser);
-            follows.add(follow);
+            if(!user.equals(testUser2)){
+                follows.add(follow);
+            }
+
         }
-
-
-
 
         // Sort by the specified sort order
         switch (sortOrder) {

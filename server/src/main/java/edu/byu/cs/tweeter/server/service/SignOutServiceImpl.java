@@ -1,15 +1,13 @@
 package edu.byu.cs.tweeter.server.service;
 
-import java.io.IOException;
-
 import edu.byu.cs.tweeter.model.service.SignOutService;
-import edu.byu.cs.tweeter.server.dao.SignOutDAO;
+import edu.byu.cs.tweeter.server.dao.UserDAO;
 
 public class SignOutServiceImpl implements SignOutService {
 
     @Override
     public void signOut(){
-        SignOutDAO dao = new SignOutDAO();
+        UserDAO dao = new UserDAO();
         dao.signOut();
     }
 }

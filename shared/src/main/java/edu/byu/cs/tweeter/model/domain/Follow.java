@@ -9,7 +9,7 @@ public class Follow {
     *   B is the followee
     * */
 
-    public  User follower;
+    public User follower;
     public User followee;
 
     public Follow () {}

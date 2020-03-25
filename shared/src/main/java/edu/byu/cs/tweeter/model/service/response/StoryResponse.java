@@ -1,8 +1,7 @@
 package edu.byu.cs.tweeter.model.service.response;
 
-import java.util.List;
+import java.util.ArrayList;
 
-import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.Story;
 
 public class StoryResponse extends PagedResponse {
@@ -11,6 +10,7 @@ public class StoryResponse extends PagedResponse {
 
     public StoryResponse(String message) {
         super(false, message, false);
+        this.story = new Story(new ArrayList<>(), null);
     }
 
     public StoryResponse(Story story, boolean hasMorePages){

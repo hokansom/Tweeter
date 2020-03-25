@@ -44,7 +44,7 @@ public class StoryDAO {
         if(request.getLimit() > 0){
             all_statuses = statusesByUser.get(request.getUser());
             if(all_statuses == null){
-                return new StoryResponse(new Story(new ArrayList<Status>(), request.getUser()), false);
+                return new StoryResponse("Bad Request: User does not exist");
             }
             int statusIndex = getStatusStartingIndex(request.getLastStatus(), all_statuses);
             final_statuses = getPagedStatuses(request.getLimit(), statusIndex, all_statuses);
@@ -65,11 +65,9 @@ public class StoryDAO {
         Map<User, List<Status>> statusesByUser = new HashMap<>();
         if(users == null){
             users = getUserGenerator().generateUsers(50);
-            User testUser = new User("Test", "User", UserGenerator.MALE_IMAGE_URL);
-            users.add(testUser);
         }
 
-        List<Status> statuses = getStatusGenerator().generateAllStatuses(users, 0,5);
+        List<Status> statuses = getStatusGenerator().generateAllStatuses(users, 1,5);
         for(Status status: statuses){
             List<Status> user_statuses = statusesByUser.get(status.getAuthor());
             if(user_statuses == null){

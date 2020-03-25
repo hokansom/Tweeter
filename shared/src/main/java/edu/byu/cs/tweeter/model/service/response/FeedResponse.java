@@ -1,7 +1,6 @@
 package edu.byu.cs.tweeter.model.service.response;
 
 import edu.byu.cs.tweeter.model.domain.Feed;
-import edu.byu.cs.tweeter.model.service.response.PagedResponse;
 
 
 public class FeedResponse extends PagedResponse {

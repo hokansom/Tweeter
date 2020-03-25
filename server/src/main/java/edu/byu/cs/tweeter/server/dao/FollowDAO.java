@@ -1,6 +1,6 @@
 package edu.byu.cs.tweeter.server.dao;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,19 +72,19 @@ public class FollowDAO {
      * Generates the follows data.
      */
     private List<Follow> initializeFollows() {
-
-        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
-                0, 50, FollowGenerator.Sort.FOLLOWER_FOLLOWEE);
+        List<Follow> testFollows  = new ArrayList<>();
+        testFollows.addAll(getFollowGenerator().generateUsersAndFollows(100,
+                0, 50, FollowGenerator.Sort.FOLLOWER_FOLLOWEE));
 
         Set<User> allUsers = new HashSet<>();
 
-        for(Follow follow: follows){
+        for(Follow follow: testFollows){
             allUsers.add(follow.getFollowee());
             allUsers.add(follow.getFollower());
         }
         users = allUsers;
 
-        return follows;
+        return testFollows;
     }
 
 

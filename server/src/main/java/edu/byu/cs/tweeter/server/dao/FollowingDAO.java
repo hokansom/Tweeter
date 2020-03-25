@@ -63,8 +63,8 @@ public class FollowingDAO {
 
         Map<User, List<User>> followeesByFollower = new HashMap<>();
 
-        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(100,
-                0, 50, FollowGenerator.Sort.FOLLOWER_FOLLOWEE);
+        List<Follow> follows = getFollowGenerator().generateUsersAndFollows(50,
+                0, 25, FollowGenerator.Sort.FOLLOWER_FOLLOWEE);
 
         // Populate a map of followees, keyed by follower so we can easily handle followee requests
         for(Follow follow : follows) {

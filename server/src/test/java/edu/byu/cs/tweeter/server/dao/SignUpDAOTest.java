@@ -65,7 +65,7 @@ class SignUpDAOTest {
         SignUpRequest request = new SignUpRequest(testUser, password, "" );
         SignUpResponse response = signUpDAOSpy.postSignUp(request);
 
-        Assertions.assertEquals(response.getMessage(), "Bad Request: Alias is already taken");
+        Assertions.assertEquals(response.getMessage(), "[Bad Request]: Alias is already taken");
         Assertions.assertNull(response.getUser());
     }
 

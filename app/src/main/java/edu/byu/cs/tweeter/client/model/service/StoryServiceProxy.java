@@ -14,7 +14,7 @@ public class StoryServiceProxy implements StoryService {
     private final ServerFacade serverFacade = new ServerFacade();
 
     @Override
-    public StoryResponse getStory(StoryRequest request) throws IOException  {
-        return serverFacade.getStory(request, URL_PATH);
+    public StoryResponse getStory(StoryRequest request, String auth) throws IOException  {
+        return serverFacade.getStory(request, auth, URL_PATH);
     }
 }

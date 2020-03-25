@@ -105,6 +105,6 @@ class StoryDAOTest {
         StoryResponse response = storyDAOspy.getStory(request);
 
         Assertions.assertFalse(response.success);
-        Assertions.assertEquals(response.getMessage(), "Bad Request: User does not exist");
+        Assertions.assertEquals(response.getMessage(), "[Bad Request]: User does not exist");
     }
 }

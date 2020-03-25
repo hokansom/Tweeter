@@ -14,8 +14,8 @@ public class FollowServiceProxy implements FollowService {
     private final ServerFacade serverFacade = new ServerFacade();
 
     @Override
-    public FollowResponse postFollow(FollowRequest request) throws IOException {
-        return serverFacade.postFollow(request, URL_PATH);
+    public FollowResponse postFollow(FollowRequest request, String auth) throws IOException {
+        return serverFacade.postFollow(request, auth, URL_PATH);
     }
 
 

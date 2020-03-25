@@ -1,6 +1,9 @@
 package edu.byu.cs.tweeter.client.net;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.byu.cs.tweeter.model.service.request.FeedRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
@@ -68,9 +71,11 @@ public class ServerFacade {
      * @param request contains the data required to fulfill the request.
      * @return success
      */
-    public FollowResponse postFollow(FollowRequest request, String urlPath) throws IOException{
+    public FollowResponse postFollow(FollowRequest request, String auth, String urlPath) throws IOException{
         ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
-        return clientCommunicator.doPost(urlPath, request, null, FollowResponse.class);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", auth);
+        return clientCommunicator.doPost(urlPath, request, headers, FollowResponse.class);
     }
 
     /*------------------------------------------STATUS------------------------------*/
@@ -83,9 +88,11 @@ public class ServerFacade {
      * @return a success boolean
      *
      */
-    public StatusResponse postStatus(StatusRequest request, String urlPath) throws IOException{
+    public StatusResponse postStatus(StatusRequest request, String auth, String urlPath) throws IOException{
         ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
-        return clientCommunicator.doPost(urlPath, request, null, StatusResponse.class);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", auth);
+        return clientCommunicator.doPost(urlPath, request, headers, StatusResponse.class);
     }
 
 
@@ -115,9 +122,11 @@ public class ServerFacade {
      * @param request contains the data required to fulfill the request.
      * @return the story.
      */
-    public StoryResponse getStory(StoryRequest request, String urlPath) throws IOException {
+    public StoryResponse getStory(StoryRequest request, String auth, String urlPath) throws IOException {
         ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
-        return clientCommunicator.doPost(urlPath, request, null, StoryResponse.class);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", auth);
+        return clientCommunicator.doPost(urlPath, request, headers, StoryResponse.class);
     }
 
 

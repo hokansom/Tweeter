@@ -16,5 +16,5 @@ public interface StatusService {
      * @return a success boolean
      *
      */
-    StatusResponse postStatus(StatusRequest request) throws IOException;
+    StatusResponse postStatus(StatusRequest request, String auth) throws IOException;
 }

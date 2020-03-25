@@ -88,7 +88,7 @@ class StatusDAOTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertFalse(response.success);
-        Assertions.assertEquals(response.getMessage(), "Bad Request: Status cannot be posted by a user that does not exist");
+        Assertions.assertEquals(response.getMessage(), "[Bad Request]: Status cannot be posted by a user that does not exist");
     }
 
     @Test
@@ -98,7 +98,7 @@ class StatusDAOTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertFalse(response.success);
-        Assertions.assertEquals(response.getMessage(), "Bad Request: User has already posted that status.");
+        Assertions.assertEquals(response.getMessage(), "[Bad Request]: User has already posted that status.");
     }
 
 

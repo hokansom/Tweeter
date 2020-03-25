@@ -11,7 +11,7 @@ import edu.byu.cs.tweeter.server.dao.StoryDAO;
  */
 public class StoryServiceImpl implements StoryService {
     @Override
-    public StoryResponse getStory(StoryRequest request) {
+    public StoryResponse getStory(StoryRequest request, String auth) {
         StoryDAO dao = new StoryDAO();
         return dao.getStory(request);
     }

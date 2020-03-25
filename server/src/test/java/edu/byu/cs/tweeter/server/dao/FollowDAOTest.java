@@ -75,7 +75,7 @@ class FollowDAOTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertTrue(response.success);
-        Assertions.assertEquals("Follow posted", response.getMessage());
+        Assertions.assertEquals("", response.getMessage());
     }
 
     @Test
@@ -84,7 +84,7 @@ class FollowDAOTest {
         FollowRequest request = new FollowRequest(follow, true);
         FollowResponse response = followDAOSpy.postFollow(request);
 
-        Assertions.assertEquals("Bad Request: User can't follow or unfollow themself", response.getMessage());
+        Assertions.assertEquals("[Bad Request]: User can't follow or unfollow themself", response.getMessage());
     }
 
     @Test
@@ -94,7 +94,7 @@ class FollowDAOTest {
         FollowRequest request = new FollowRequest(follow, true);
         FollowResponse response = followDAOSpy.postFollow(request);
 
-        Assertions.assertEquals("Bad Request: Followee doesn't exist", response.getMessage());
+        Assertions.assertEquals("[Bad Request]: Followee doesn't exist", response.getMessage());
     }
 
     @Test
@@ -104,7 +104,7 @@ class FollowDAOTest {
         FollowRequest request = new FollowRequest(follow, true);
         FollowResponse response = followDAOSpy.postFollow(request);
 
-        Assertions.assertEquals("Bad Request: Follower doesn't exist", response.getMessage());
+        Assertions.assertEquals("[Bad Request]: Follower doesn't exist", response.getMessage());
     }
 
     @Test
@@ -113,7 +113,7 @@ class FollowDAOTest {
         FollowRequest request = new FollowRequest(follow, true);
         FollowResponse response = followDAOSpy.postFollow(request);
 
-        Assertions.assertEquals("Bad Request: Follow relationship already exists", response.getMessage());
+        Assertions.assertEquals("[Bad Request]: Follow relationship already exists", response.getMessage());
     }
 
     /*---------------------------FOLLOW-----------------------------------*/
@@ -126,7 +126,7 @@ class FollowDAOTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertTrue(response.success);
-        Assertions.assertEquals("Follow deleted", response.getMessage());
+        Assertions.assertEquals("", response.getMessage());
     }
 
     @Test
@@ -135,7 +135,7 @@ class FollowDAOTest {
         FollowRequest request = new FollowRequest(follow, false);
         FollowResponse response = followDAOSpy.postFollow(request);
 
-        Assertions.assertEquals("Bad Request: User can't follow or unfollow themself", response.getMessage());
+        Assertions.assertEquals("[Bad Request]: User can't follow or unfollow themself", response.getMessage());
     }
 
 
@@ -146,7 +146,7 @@ class FollowDAOTest {
         FollowRequest request = new FollowRequest(follow, false);
         FollowResponse response = followDAOSpy.postFollow(request);
 
-        Assertions.assertEquals("Bad Request: Followee doesn't exist", response.getMessage());
+        Assertions.assertEquals("[Bad Request]: Followee doesn't exist", response.getMessage());
     }
 
     @Test
@@ -156,7 +156,7 @@ class FollowDAOTest {
         FollowRequest request = new FollowRequest(follow, false);
         FollowResponse response = followDAOSpy.postFollow(request);
 
-        Assertions.assertEquals("Bad Request: Follower doesn't exist", response.getMessage());
+        Assertions.assertEquals("[Bad Request]: Follower doesn't exist", response.getMessage());
     }
 
     @Test
@@ -165,7 +165,7 @@ class FollowDAOTest {
         FollowRequest request = new FollowRequest(follow, false);
         FollowResponse response = followDAOSpy.postFollow(request);
 
-        Assertions.assertEquals("Bad Request: Cannot delete a follow relationship that doesn't exist", response.getMessage());
+        Assertions.assertEquals("[Bad Request]: Cannot delete a follow relationship that doesn't exist", response.getMessage());
     }
 
 }

@@ -37,6 +37,7 @@ public class FollowingDAO {
         }
 
         List<User> allFollowees = followeesByFollower.get(request.getFollower());
+
         List<User> responseFollowees = new ArrayList<>(request.getLimit());
 
         boolean hasMorePages = false;

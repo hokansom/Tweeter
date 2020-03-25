@@ -17,6 +17,7 @@ class StatusServiceProxyTest {
     private final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private final User user = new User("Test", "User", MALE_IMAGE_URL);
 
+    private final String auth = "AuthToken";
     private final Status status1 = new Status(user, "Testing status 1 @TestUser www.google.com");
     private StatusServiceProxy serviceProxySpy;
 
@@ -30,7 +31,7 @@ class StatusServiceProxyTest {
         StatusRequest request = new StatusRequest(user, status1);
         StatusResponse response = null;
         try{
-            response = serviceProxySpy.postStatus(request);
+            response = serviceProxySpy.postStatus(request, auth);
         } catch (IOException e){
             System.out.println(e);
         }

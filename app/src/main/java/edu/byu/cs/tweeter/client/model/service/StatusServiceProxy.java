@@ -14,7 +14,7 @@ public class StatusServiceProxy implements StatusService {
     private final ServerFacade serverFacade = new ServerFacade();
 
     @Override
-    public StatusResponse postStatus(StatusRequest request) throws IOException {
-        return serverFacade.postStatus(request, URL_PATH);
+    public StatusResponse postStatus(StatusRequest request, String auth) throws IOException {
+        return serverFacade.postStatus(request, auth, URL_PATH);
     }
 }

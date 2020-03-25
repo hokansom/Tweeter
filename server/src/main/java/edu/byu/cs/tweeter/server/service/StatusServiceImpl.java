@@ -9,7 +9,7 @@ public class StatusServiceImpl implements StatusService {
 
 
     @Override
-    public StatusResponse postStatus(StatusRequest request) {
+    public StatusResponse postStatus(StatusRequest request, String auth) {
         StatusDAO dao = new StatusDAO();
         return dao.postStatus(request);
     }

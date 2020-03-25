@@ -25,7 +25,7 @@ public class StoryPresenter extends AbstractStoryPresenter {
 
     public StoryResponse getStory(StoryRequest request) throws IOException {
         StoryService service = new StoryServiceProxy();
-        return service.getStory(request);
+        return service.getStory(request, getToken());
     }
 
     public void updateNumStatuses(int num){

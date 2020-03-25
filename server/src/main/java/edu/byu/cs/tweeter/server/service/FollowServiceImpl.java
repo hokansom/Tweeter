@@ -11,7 +11,7 @@ import edu.byu.cs.tweeter.server.dao.FollowDAO;
 public class FollowServiceImpl implements FollowService {
 
     @Override
-    public FollowResponse postFollow(FollowRequest request) {
+    public FollowResponse postFollow(FollowRequest request, String auth) {
         FollowDAO dao = new FollowDAO();
         return dao.postFollow(request);
     }

@@ -71,7 +71,7 @@ class SignInDAOTest {
         SignInResponse response = signInDAOSpy.postSignIn(request);
 
         Assertions.assertNull(response.getUser());
-        Assertions.assertEquals("Bad Request: Invalid alias or password", response.getMessage());
+        Assertions.assertEquals("[Bad Request]: Invalid alias or password", response.getMessage());
         Assertions.assertNull(response.getToken());
     }
 
@@ -81,7 +81,7 @@ class SignInDAOTest {
         SignInResponse response = signInDAOSpy.postSignIn(request);
 
         Assertions.assertNull(response.getUser());
-        Assertions.assertEquals("Bad Request: User with given alias (@RandomUser) does not exist.", response.getMessage());
+        Assertions.assertEquals("[Bad Request]: User with given alias (@RandomUser) does not exist.", response.getMessage());
         Assertions.assertNull(response.getToken());
     }
 

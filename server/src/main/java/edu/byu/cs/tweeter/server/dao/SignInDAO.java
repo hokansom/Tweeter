@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.server.dao;
 
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -39,7 +40,7 @@ public class SignInDAO {
         }
         String message;
         if(!authentication.containsKey(request.getAlias())){
-            message = String.format("Bad Request: User with given alias (%s) does not exist.", request.getAlias());
+            message = String.format("[Bad Request]: User with given alias (%s) does not exist.", request.getAlias());
             return new SignInResponse(false, message);
         }
         String hashed = hashPassword(request.getPassword());
@@ -48,7 +49,7 @@ public class SignInDAO {
             return new SignInResponse(false, message);
         }
         if(!hashed.equals(authentication.get(request.getAlias()))){
-            message = "Bad Request: Invalid alias or password";
+            message = "[Bad Request]: Invalid alias or password";
             return new SignInResponse(false, message);
         }
         User user = searchUser(request.getAlias());
@@ -62,7 +63,7 @@ public class SignInDAO {
             return new SignInResponse(user, token);
         }
         else{
-            message = String.format("Bad Request: User with given alias (%s) does not exist.", request.getAlias());
+            message = String.format("[Bad Request]: User with given alias (%s) does not exist.", request.getAlias());
             return new SignInResponse(false, message);
         }
     }

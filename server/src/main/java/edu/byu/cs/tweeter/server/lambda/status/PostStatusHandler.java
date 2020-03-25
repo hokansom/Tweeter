@@ -24,6 +24,6 @@ public class PostStatusHandler implements RequestHandler<StatusRequest, StatusRe
     @Override
     public StatusResponse handleRequest(StatusRequest request, Context context) {
         StatusServiceImpl service = new StatusServiceImpl();
-        return service.postStatus(request);
+        return service.postStatus(request, "");
     }
 }

@@ -83,10 +83,20 @@ class ClientCommunicator {
             requestStrategy.sendRequest(connection);
 
             String response = getResponse(connection);
+
             if(returnType == null){
                 return null;
             }
+
             return Serializer.deserialize(response, returnType);
+        } catch(Exception e){
+            int responseStatus = connection.getResponseCode();
+            if(responseStatus != 200){
+                String message = connection.getResponseMessage();
+                System.out.println(message);
+                throw new IOException(message);
+            }
+            return null;
         } finally {
             if(connection != null) {
                 connection.disconnect();

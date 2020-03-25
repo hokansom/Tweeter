@@ -24,6 +24,6 @@ public class GetStoryHandler implements RequestHandler<StoryRequest, StoryRespon
     @Override
     public StoryResponse handleRequest(StoryRequest request, Context context) {
         StoryServiceImpl service = new StoryServiceImpl();
-        return service.getStory(request);
+        return service.getStory(request, "AuthToken");
     }
 }

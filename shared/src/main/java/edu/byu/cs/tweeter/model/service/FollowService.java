@@ -17,5 +17,5 @@ public interface FollowService {
      * @param request contains the data required to fulfill the request.
      * @return success
      */
-    FollowResponse postFollow(FollowRequest request) throws IOException;
+    FollowResponse postFollow(FollowRequest request, String auth) throws IOException;
 }

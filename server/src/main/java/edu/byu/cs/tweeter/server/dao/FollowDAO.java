@@ -19,6 +19,12 @@ public class FollowDAO {
     private static Set<User> users;
 
 
+    /**
+     *
+     * @param request contains information about the follow relationship to be added
+     *
+     * @return success.
+     * */
     public FollowResponse postFollow(FollowRequest request) {
         if(follows == null){
             follows = initializeFollows();
@@ -30,15 +36,15 @@ public class FollowDAO {
 
         /* Check to see if the person is trying to follow themselves*/
         if(follower.equals(followee)){
-            return new FollowResponse(false, "Bad Request: User can't follow or unfollow themself");
+            return new FollowResponse(false, "[Bad Request]: User can't follow or unfollow themself");
         }
 
         /*Check to see if the followee and follower exist*/
         if(!users.contains(followee)){
-            return new FollowResponse(false, "Bad Request: Followee doesn't exist");
+            return new FollowResponse(false, "[Bad Request]: Followee doesn't exist");
         }
         if(!users.contains(follower)){
-            return new FollowResponse(false, "Bad Request: Follower doesn't exist");
+            return new FollowResponse(false, "[Bad Request]: Follower doesn't exist");
         }
 
         if(request.getIsFollow()){
@@ -52,20 +58,20 @@ public class FollowDAO {
     private FollowResponse addFollow(Follow follow) {
         /* Check to see if the follow relationship already exists */
         if(follows.contains(follow)){
-            return new FollowResponse(false, "Bad Request: Follow relationship already exists");
+            return new FollowResponse(false, "[Bad Request]: Follow relationship already exists");
         }
 
         follows.add(follow);
-        return new FollowResponse(true, "Follow posted");
+        return new FollowResponse(true, "");
     }
 
     private FollowResponse removeFollow(Follow follow) {
         /* Verify that the follow relationship already exists */
         if(!follows.contains(follow)){
-            return new FollowResponse(false, "Bad Request: Cannot delete a follow relationship that doesn't exist");
+            return new FollowResponse(false, "[Bad Request]: Cannot delete a follow relationship that doesn't exist");
         }
         follows.remove(follow);
-        return new FollowResponse(true, "Follow deleted");
+        return new FollowResponse(true, "");
     }
 
     /**

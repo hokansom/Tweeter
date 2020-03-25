@@ -30,7 +30,7 @@ class FollowServiceProxyTest {
         FollowRequest request = new FollowRequest(follow, false);
         FollowResponse response = null;
         try{
-            response = serviceProxySpy.postFollow(request);
+            response = serviceProxySpy.postFollow(request, "AuthToken");
         } catch(IOException e){
             System.out.println(e);
         }
@@ -45,7 +45,7 @@ class FollowServiceProxyTest {
         FollowRequest request = new FollowRequest(follow, true);
         FollowResponse response = null;
         try{
-            response = serviceProxySpy.postFollow(request);
+            response = serviceProxySpy.postFollow(request, "AuthToken");
         } catch(IOException e){
             System.out.println(e);
         }

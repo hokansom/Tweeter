@@ -28,14 +28,14 @@ public class StatusDAO {
      * */
     public StatusResponse postStatus(StatusRequest request){
         if(request.getAuthor() == null){
-            return new StatusResponse(false, "Bad Request: User cannot be null");
+            return new StatusResponse(false, "[Bad Request]: User cannot be null");
         }
         if(statusesByUser == null){
             statusesByUser = initializeStatuses();
         }
 
         if(!users.contains(request.getAuthor())){
-            return new StatusResponse(false, "Bad Request: Status cannot be posted by a user that does not exist");
+            return new StatusResponse(false, "[Bad Request]: Status cannot be posted by a user that does not exist");
         }
 
 
@@ -45,7 +45,7 @@ public class StatusDAO {
         }
 
         if(userStatuses.contains(request.getStatus())){
-            return new StatusResponse(false, "Bad Request: User has already posted that status.");
+            return new StatusResponse(false, "[Bad Request]: User has already posted that status.");
         }
 
         userStatuses.add(request.getStatus());

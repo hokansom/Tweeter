@@ -50,7 +50,7 @@ public class UserDAO {
         }
         String message;
         if(!authentication.containsKey(request.getAlias())){
-            message = String.format("Bad Request: User with given alias (%s) does not exist.", request.getAlias());
+            message = String.format("[Bad Request]: User with given alias (%s) does not exist.", request.getAlias());
             return new SignInResponse(false, message);
         }
         String hashed = hashPassword(request.getPassword());
@@ -59,7 +59,7 @@ public class UserDAO {
             return new SignInResponse(false, message);
         }
         if(!hashed.equals(authentication.get(request.getAlias()))){
-            message = "Bad Request: Invalid alias or password";
+            message = "[Bad Request]: Invalid alias or password";
             return new SignInResponse(false, message);
         }
         User user = searchUser(request.getAlias());
@@ -73,7 +73,7 @@ public class UserDAO {
             return new SignInResponse(user, token);
         }
         else{
-            message = String.format("Bad Request: User with given alias (%s) does not exist.", request.getAlias());
+            message = String.format("[Bad Request]: User with given alias (%s) does not exist.", request.getAlias());
             return new SignInResponse(false, message);
         }
     }
@@ -118,7 +118,7 @@ public class UserDAO {
 //            response = new SignUpResponse(request.getUser(), generateAuthToken());
         }
         else{
-            response = new SignUpResponse(false, "Bad Request: Alias is already taken");
+            response = new SignUpResponse(false, "[Bad Request]: Alias is already taken");
         }
 
         return response;

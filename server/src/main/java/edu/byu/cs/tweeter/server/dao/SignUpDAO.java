@@ -60,7 +60,7 @@ public class SignUpDAO {
             response = new SignUpResponse(request.getUser(), generateAuthToken());
         }
         else{
-            response = new SignUpResponse(false, "Bad Request: Alias is already taken");
+            response = new SignUpResponse(false, "[Bad Request]: Alias is already taken");
         }
 
         return response;

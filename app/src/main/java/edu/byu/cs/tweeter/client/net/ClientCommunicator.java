@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
 import edu.byu.cs.tweeter.client.json.Serializer;
+import edu.byu.cs.tweeter.model.domain.Error;
 
 class ClientCommunicator {
 
@@ -82,6 +84,7 @@ class ClientCommunicator {
 
             requestStrategy.sendRequest(connection);
 
+
             String response = getResponse(connection);
 
             if(returnType == null){
@@ -92,9 +95,8 @@ class ClientCommunicator {
         } catch(Exception e){
             int responseStatus = connection.getResponseCode();
             if(responseStatus != 200){
-                String message = connection.getResponseMessage();
-                System.out.println(message);
-                throw new IOException(message);
+                String error = getError(connection);
+                throw new IOException(error);
             }
             return null;
         } finally {
@@ -120,6 +122,23 @@ class ClientCommunicator {
             }
 
             return response.toString();
+        }
+    }
+
+    private String getError(HttpURLConnection connection) throws IOException{
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getErrorStream()))) {
+
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+
+            String message =  response.toString();
+            message = message.replace("{    errorMessage: ", "");
+            message = message.replace(";}", "");
+
+           return message;
         }
     }
 }

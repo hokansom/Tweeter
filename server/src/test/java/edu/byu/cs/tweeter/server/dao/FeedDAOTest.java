@@ -58,6 +58,8 @@ class FeedDAOTest {
     private final Follow follow14 = new Follow(user6,  user10);
     private final Follow follow15 = new Follow(user6,  user4);
 
+    private final String token = "123456789";
+
 
     private final List<Follow> follows = Arrays.asList(follow1, follow2, follow3, follow4, follow5, follow6,
             follow7, follow8, follow9, follow10, follow11, follow12, follow13, follow14, follow15);
@@ -85,7 +87,7 @@ class FeedDAOTest {
 
     @Test
     void testGetFeed_noFollowees_emptyFeed(){
-        FeedRequest request = new FeedRequest(user1, 2, null);
+        FeedRequest request = new FeedRequest(user1, 2, null, token);
         FeedResponse response = feedDAOSpy.getFeed(request);
 
         Assertions.assertEquals(0, response.getFeed().getFeed().size());
@@ -94,7 +96,7 @@ class FeedDAOTest {
 
     @Test
     void testGetFeed_hasFolloweesButNoStatuses_emptyFeed(){
-        FeedRequest request = new FeedRequest(user9, 2, null);
+        FeedRequest request = new FeedRequest(user9, 2, null, token);
         FeedResponse response = feedDAOSpy.getFeed(request);
 
         Assertions.assertEquals(0, response.getFeed().getFeed().size());
@@ -103,7 +105,7 @@ class FeedDAOTest {
 
     @Test
     void testGetFeed_limitLessThanStatuses(){
-        FeedRequest request = new FeedRequest(user3, 2, null);
+        FeedRequest request = new FeedRequest(user3, 2, null, token);
         FeedResponse response = feedDAOSpy.getFeed(request);
 
         // Verify first page
@@ -117,7 +119,7 @@ class FeedDAOTest {
         Status last_status = response.getFeed().getFeed().get(1);
 
         // Verify second page
-        request = new FeedRequest(user3, 2, last_status);
+        request = new FeedRequest(user3, 2, last_status, token);
         response = feedDAOSpy.getFeed(request);
 
         Assertions.assertEquals(1, response.getFeed().getFeed().size());

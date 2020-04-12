@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.*;
 
 import java.util.Date;
+import java.util.UUID;
 
 import edu.byu.cs.tweeter.model.domain.Authorization;
 
@@ -74,5 +75,20 @@ public class AuthorizationDAO {
         catch (Exception e){
             throw new RuntimeException("[Internal Service Error]: Something went wrong while updating auth timestamp");
         }
+    }
+
+    public String getAuthorization(String alias){
+        String token = UUID.randomUUID().toString();
+        Date date = new Date();
+        long current = date.getTime();
+
+        Table table = dynamoDB.getTable(TableName);
+
+        Item item = new Item()
+                .withPrimaryKey(AliasAttr, alias, TokenAttr, token)
+                .withNumber(TimeStampAttr, current);
+        table.putItem(item);
+
+        return token;
     }
 }

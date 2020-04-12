@@ -279,7 +279,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View{
             addLoadingFooter();
 
             GetFeedTask getFeedTask = new GetFeedTask(presenter, this);
-            FeedRequest request = new FeedRequest(presenter.getViewingUser(), PAGE_SIZE, lastStatus);
+            FeedRequest request = new FeedRequest(presenter.getViewingUser(), PAGE_SIZE, lastStatus, presenter.getToken());
             getFeedTask.execute(request);
         }
 

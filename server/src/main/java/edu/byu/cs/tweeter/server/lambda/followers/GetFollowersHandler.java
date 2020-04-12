@@ -28,7 +28,9 @@ public class GetFollowersHandler extends Handler implements RequestHandler<Follo
         FollowerServiceImpl service = new FollowerServiceImpl();
         FollowerResponse response = service.getFollowers(request);
 
-        checkForError(response.getMessage());
+        if(null != response.getMessage()){
+            checkForError(response.getMessage());
+        }
 
         return response;
     }

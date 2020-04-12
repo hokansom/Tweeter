@@ -41,7 +41,10 @@ public class GetFeedHandler extends Handler implements RequestHandler<FeedReques
         FeedResponse response =  service.getFeed(request);
 
         /*Checks if an error occurred. If so, throw RuntimeException*/
-        checkForError(response.getMessage());
+        if(null != response.getMessage()){
+            checkForError(response.getMessage());
+        }
+
 
         /*Posting status succeeded, so update timestamp on the auth token*/
         updateAuthTimestamp(alias, token);

@@ -13,6 +13,8 @@ import java.util.Map;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.SignInRequest;
 import edu.byu.cs.tweeter.model.service.response.SignInResponse;
+import edu.byu.cs.tweeter.server.dao.SignIn.SignInDAOMock;
+import edu.byu.cs.tweeter.server.service.HashService;
 
 class SignInDAOTest {
 
@@ -33,12 +35,12 @@ class SignInDAOTest {
 
     private Map<String, String> auths;
 
-    private SignInDAO signInDAOSpy;
+    private SignInDAOMock signInDAOSpy;
 
 
     @BeforeEach
     void setup(){
-        signInDAOSpy = Mockito.spy(new SignInDAO());
+        signInDAOSpy = Mockito.spy(new SignInDAOMock());
 
         UserGenerator mockUserGenerator = Mockito.mock(UserGenerator.class);
         Mockito.when(mockUserGenerator.generateUsers(Mockito.anyInt())).thenReturn(users);
@@ -56,12 +58,12 @@ class SignInDAOTest {
 
     @Test
     void testSignIn_validUser(){
-        SignInRequest request = new SignInRequest("@TestUser", "Password");
+        SignInRequest request = new SignInRequest("TestUser", "Password");
         SignInResponse response = signInDAOSpy.postSignIn(request);
 
         Assertions.assertNotNull(response.getUser());
         Assertions.assertEquals("Test User", response.getUser().getName());
-        Assertions.assertEquals("@TestUser", response.getUser().getAlias());
+        Assertions.assertEquals("TestUser", response.getUser().getAlias());
         Assertions.assertNotNull(response.getToken());
     }
 
@@ -84,6 +86,24 @@ class SignInDAOTest {
         Assertions.assertEquals("[Bad Request]: User with given alias (@RandomUser) does not exist.", response.getMessage());
         Assertions.assertNull(response.getToken());
     }
+
+//    @Test
+//    void generate_password(){
+//        try{
+//            String password = HashService.generatePasswordHash("Password");
+//            System.out.println(password);
+//        } catch (Exception e){
+//
+//        }
+//
+//        try{
+//            boolean matched = HashService.validatePassword("Password", "1000:15cb71159a033bfa128eb7b83e051e32:273eb57eba6d9396b2e17f1b0058155061ceb18302abe0e34d6a7e6164a332ff33b1f5f2d5085624857d1322fb9de30854fb670f14ff445f195ab0cabdba4177");
+//            Assertions.assertTrue(matched);
+//        } catch(Exception e){
+//
+//        }
+//
+//    }
 
 
     private Map<String, String> buildTestPasswords(){

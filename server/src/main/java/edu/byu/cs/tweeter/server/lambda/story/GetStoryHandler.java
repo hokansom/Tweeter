@@ -27,7 +27,9 @@ public class GetStoryHandler extends Handler implements RequestHandler<StoryRequ
         StoryServiceImpl service = new StoryServiceImpl();
         StoryResponse response = service.getStory(request);
 
-        checkForError(response.getMessage());
+        if(null != response.getMessage()){
+            checkForError(response.getMessage());
+        }
 
         return response;
     }

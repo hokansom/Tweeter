@@ -14,7 +14,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 class FeedServiceProxyTest {
     private final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private final User user = new User("Test", "User", MALE_IMAGE_URL);
-
+    private final String token = "123456789";
     private FeedServiceProxy serviceProxySpy;
 
     @BeforeEach
@@ -24,7 +24,7 @@ class FeedServiceProxyTest {
 
     @Test
     void test_getFeedHandler(){
-        FeedRequest request = new FeedRequest(user, 10, null);
+        FeedRequest request = new FeedRequest(user, 10, null, token);
         FeedResponse response = null;
         try{
             response = serviceProxySpy.getFeed(request);

@@ -24,9 +24,12 @@ public class PostSignInHandler extends Handler implements RequestHandler<SignInR
 
         SignInServiceImpl service = new SignInServiceImpl();
         SignInResponse response =  service.postSignIn(request);
+        System.out.println("Received response from service");
 
-        checkForError(response.getMessage());
+        if(null != response.getMessage()){
+            checkForError(response.getMessage());
+        }
 
-        return response; 
+        return response;
     }
 }

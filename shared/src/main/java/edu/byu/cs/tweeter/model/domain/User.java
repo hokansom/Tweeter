@@ -38,7 +38,7 @@ public class User implements Comparable<User>, Serializable {
     }
 
     public String getAlias() {
-        return alias;
+        return String.format("@%s", alias);
     }
 
     public String getImageUrl() {

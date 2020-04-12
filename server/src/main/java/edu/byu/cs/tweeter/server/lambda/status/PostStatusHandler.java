@@ -43,7 +43,9 @@ public class PostStatusHandler extends Handler implements RequestHandler<StatusR
         StatusResponse response = service.postStatus(request);
 
         /*Checks if an error occurred. If so, throw RuntimeException*/
-        checkForError(response.getMessage());
+        if(null != response.getMessage()){
+            checkForError(response.getMessage());
+        };
 
 
         /*Posting status succeeded, so update timestamp on the auth token*/

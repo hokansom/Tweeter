@@ -10,6 +10,7 @@ import java.util.UUID;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
 import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
+import edu.byu.cs.tweeter.server.service.HashService;
 
 /**
  * A DAO for accessing and updating 'user' data from the database.
@@ -54,7 +55,7 @@ public class SignUpDAO {
 
             /*Log the new user in*/
 //            SignInRequest signInRequest = new SignInRequest(request.getUser().getAlias(), request.getPassword());
-//            SignInDAO signInDAO = new SignInDAO();
+//            SignInDAOMock signInDAO = new SignInDAOMock();
 //            SignInResponse signInResponse = signInDAO.postSignIn(signInRequest);
 //            if(signInResponse.getUser() != null){
 //                response = new SignUpResponse(signInResponse.getUser(), signInResponse.getToken());
@@ -71,6 +72,23 @@ public class SignUpDAO {
 
         return response;
     }
+
+
+//    /**
+//     * Returns the hash of a password
+//     *
+//     * @param password
+//     * @return hashedPassword
+//     * */
+//    static String hashPassword(String password){
+//        String hashed;
+//        try{
+//            hashed = HashService.generatePasswordHash(password);
+//        } catch (Exception e){
+//            throw new RuntimeException("[Internal Service Error]: Could not hash password");
+//        }
+//        return hashed;
+//    }
 
 
     private boolean checkValidAlias(String alias){

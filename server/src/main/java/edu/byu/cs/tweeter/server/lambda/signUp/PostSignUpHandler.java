@@ -25,7 +25,9 @@ public class PostSignUpHandler extends Handler implements RequestHandler<SignUpR
         SignUpServiceImpl service = new SignUpServiceImpl();
         SignUpResponse response = service.postSignUp(request);
 
-        checkForError(response.getMessage());
+        if(null != response.getMessage()){
+            checkForError(response.getMessage());
+        }
 
         return response;
     }

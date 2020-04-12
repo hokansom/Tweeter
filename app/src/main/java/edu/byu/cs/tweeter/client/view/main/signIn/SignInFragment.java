@@ -113,6 +113,11 @@ public class SignInFragment extends Fragment implements SignInPresenter.View, Po
     private void signIn(){
         PostSignInTask task = new PostSignInTask(presenter, this);
         String alias = editHandle.getText().toString();
+        if(alias.startsWith("@")){
+            StringBuilder builder = new StringBuilder(alias);
+            builder.deleteCharAt(0);
+            alias = builder.toString();
+        }
         String password = editPassword.getText().toString();
         SignInRequest request = new SignInRequest(alias, password);
         task.execute(request);

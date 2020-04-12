@@ -15,4 +15,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         AuthorizationDAO dao = new AuthorizationDAO();
         dao.updateAuthorization(alias, token);
     }
+
+    @Override
+    public String getAuthorization(String alias) {
+        AuthorizationDAO dao = new AuthorizationDAO();
+        return dao.getAuthorization(alias);
+    }
 }

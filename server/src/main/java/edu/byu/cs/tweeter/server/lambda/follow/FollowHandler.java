@@ -44,7 +44,9 @@ public class FollowHandler extends Handler implements RequestHandler<FollowReque
         FollowServiceImpl service = new FollowServiceImpl();
         FollowResponse response = service.postFollow(request);
 
-        checkForError(response.getMessage());
+        if(null != response.getMessage()){
+            checkForError(response.getMessage());
+        }
 
         updateAuthTimestamp(alias, token);
 

@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.SignIn;
 
 
 import java.io.IOException;
@@ -11,11 +11,12 @@ import java.util.UUID;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.SignInRequest;
 import edu.byu.cs.tweeter.model.service.response.SignInResponse;
+import edu.byu.cs.tweeter.server.dao.UserGenerator;
 
 /**
  * A DAO for accessing 'user' data from the database.
  */
-public class SignInDAO {
+public class SignInDAOMock implements SignInDAO {
 
     private User currentUser;
 
@@ -31,6 +32,7 @@ public class SignInDAO {
      * @param request contains the data required to fulfill the request.
      * @return the user.
      */
+    @Override
     public SignInResponse postSignIn(SignInRequest request){
         if(users == null){
             users = initializeUsers();
@@ -40,10 +42,10 @@ public class SignInDAO {
         }
         String message;
         if(!authentication.containsKey(request.getAlias())){
-            message = String.format("[Bad Request]: User with given alias (%s) does not exist.", request.getAlias());
+            message = String.format("[Bad Request]: User with given alias (@%s) does not exist.", request.getAlias());
             return new SignInResponse(false, message);
         }
-        String hashed = hashPassword(request.getPassword());
+        String hashed = SignInDAO.hashPassword(request.getPassword());
         if(hashed == null){
             message = "Internal Service Error: Error signing in.";
             return new SignInResponse(false, message);
@@ -99,35 +101,6 @@ public class SignInDAO {
 
 
     /**
-     * Returns the hash of a password
-     *
-     * @param password
-     * @return hashedPassword
-    * */
-    private String hashPassword(String password){
-        String generatedPassword = null;
-        try{
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            //Add password bytes to digest
-            md.update(password.getBytes());
-            //Get the hash's bytes
-            byte[] bytes = md.digest();
-            //This bytes[] has bytes in decimal format;
-            //Convert it to hexadecimal format
-            StringBuilder sb = new StringBuilder();
-            for(int i=0; i< bytes.length ;i++)
-            {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            //Get complete hashed password in hex format
-            generatedPassword = sb.toString();
-        } catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
-        }
-        return generatedPassword;
-    }
-
-    /**
      * Initializes map for storing auth tokens
      * */
     private void initializeAuthTokens(){
@@ -158,5 +131,5 @@ public class SignInDAO {
      *
      * @return the generator.
      */
-    UserGenerator getUserGenerator() { return UserGenerator.getInstance(); }
+    public UserGenerator getUserGenerator() { return UserGenerator.getInstance(); }
 }

@@ -10,7 +10,7 @@ import edu.byu.cs.tweeter.model.service.response.SignInResponse;
 
 public class SignInServiceProxy implements SignInService {
 
-    private static final String URL_PATH = "/postsignin";
+    private static final String URL_PATH = "/signin";
 
     private final ServerFacade serverFacade = new ServerFacade();
 

@@ -44,7 +44,7 @@ public class StatusPresenter extends AbstractStatusPresenter {
 
     public StatusResponse postStatus(StatusRequest request) throws IOException {
         StatusService service = new StatusServiceProxy();
-        return service.postStatus(request, getToken());
+        return service.postStatus(request);
     }
 
 }

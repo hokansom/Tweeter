@@ -17,5 +17,5 @@ public interface StoryService {
      * @param request contains the data required to fulfill the request.
      * @return the story.
      */
-    StoryResponse getStory(StoryRequest request, String auth) throws IOException;
+    StoryResponse getStory(StoryRequest request) throws IOException;
 }

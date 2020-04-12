@@ -285,10 +285,15 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
         @Override
         public void storyRetrieved(StoryResponse storyResponse) {
             swipeContainer.setRefreshing(false);
-            List<Status> statuses = storyResponse.getStory().getStory();
-            presenter.updateNumStatuses(statuses.size());
-            lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() -1) : null;
-            hasMorePages = storyResponse.getHasMorePages();
+            List<Status> statuses = new ArrayList<>();
+            if(storyResponse.getStory() != null){
+                statuses = storyResponse.getStory().getStory();
+                presenter.updateNumStatuses(statuses.size());
+                lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() -1) : null;
+                hasMorePages = storyResponse.getHasMorePages();
+            }else{
+                presenter.updateNumStatuses(0);
+            }
 
             isLoading = false;
             removeLoadingFooter();

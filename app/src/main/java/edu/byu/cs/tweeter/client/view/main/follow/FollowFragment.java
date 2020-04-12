@@ -87,7 +87,7 @@ public class FollowFragment extends Fragment implements FollowPresenter.View, Po
         //If they aren't following, then it is a follow request;
 
         PostFollowTask task = new PostFollowTask(presenter, this);
-        FollowRequest request = new FollowRequest(follow, isFollowRequest);
+        FollowRequest request = new FollowRequest(follow, isFollowRequest, presenter.getToken());
         task.execute(request);
     }
 

@@ -6,12 +6,13 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import edu.byu.cs.tweeter.model.service.request.SignInRequest;
 import edu.byu.cs.tweeter.model.service.response.SignInResponse;
+import edu.byu.cs.tweeter.server.lambda.Handler;
 import edu.byu.cs.tweeter.server.service.SignInServiceImpl;
 
 /**
  * An AWS lambda function that returns the user with the specified alias.
  */
-public class PostSignInHandler implements RequestHandler<SignInRequest, SignInResponse> {
+public class PostSignInHandler extends Handler implements RequestHandler<SignInRequest, SignInResponse> {
     /**
      * Returns the user object and auth token for the given alias specified in the request.
      *
@@ -20,7 +21,12 @@ public class PostSignInHandler implements RequestHandler<SignInRequest, SignInRe
      */
     @Override
     public SignInResponse handleRequest(SignInRequest request, Context context) {
+
         SignInServiceImpl service = new SignInServiceImpl();
-        return service.postSignIn(request);
+        SignInResponse response =  service.postSignIn(request);
+
+        checkForError(response.getMessage());
+
+        return response; 
     }
 }

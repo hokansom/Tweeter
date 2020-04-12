@@ -21,7 +21,7 @@ public class FollowPresenter extends AbstractFollowPresenter{
 
     public FollowResponse postFollow(FollowRequest request) throws IOException {
         FollowService service = new FollowServiceProxy();
-        return service.postFollow(request, getToken());
+        return service.postFollow(request);
     }
 
     public boolean isFollowingRequest(){ return !following;  }

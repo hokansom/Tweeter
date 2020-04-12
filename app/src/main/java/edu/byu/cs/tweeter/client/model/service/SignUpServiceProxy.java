@@ -9,7 +9,7 @@ import edu.byu.cs.tweeter.client.net.ServerFacade;
 
 public class SignUpServiceProxy implements SignUpService {
 
-    private static final String URL_PATH = "/postsignup";
+    private static final String URL_PATH = "/signup";
 
 
     private final ServerFacade serverFacade = new ServerFacade();

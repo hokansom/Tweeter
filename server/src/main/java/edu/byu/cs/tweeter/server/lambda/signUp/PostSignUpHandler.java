@@ -6,12 +6,13 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
 import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
+import edu.byu.cs.tweeter.server.lambda.Handler;
 import edu.byu.cs.tweeter.server.service.SignUpServiceImpl;
 
 /**
  * An AWS lambda function that returns newly generated user.
  */
-public class PostSignUpHandler implements RequestHandler<SignUpRequest, SignUpResponse> {
+public class PostSignUpHandler extends Handler implements RequestHandler<SignUpRequest, SignUpResponse> {
     /**
      * Returns the new user that was generated based off of the requets data.
      *
@@ -22,6 +23,10 @@ public class PostSignUpHandler implements RequestHandler<SignUpRequest, SignUpRe
     @Override
     public SignUpResponse handleRequest(SignUpRequest request, Context context) {
         SignUpServiceImpl service = new SignUpServiceImpl();
-        return service.postSignUp(request);
+        SignUpResponse response = service.postSignUp(request);
+
+        checkForError(response.getMessage());
+
+        return response;
     }
 }

@@ -20,6 +20,7 @@ public class StoryRequest {
         this.limit = limit;
     }
 
+
     public void setLast_status(Status last_status) {
         this.last_status = last_status;
     }

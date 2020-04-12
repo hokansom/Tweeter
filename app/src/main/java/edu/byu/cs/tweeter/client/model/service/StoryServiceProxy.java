@@ -9,12 +9,12 @@ import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
 public class StoryServiceProxy implements StoryService {
 
-    private static final String URL_PATH = "/getstory";
+    private static final String URL_PATH = "/story";
 
     private final ServerFacade serverFacade = new ServerFacade();
 
     @Override
-    public StoryResponse getStory(StoryRequest request, String auth) throws IOException  {
-        return serverFacade.getStory(request, auth, URL_PATH);
+    public StoryResponse getStory(StoryRequest request) throws IOException  {
+        return serverFacade.getStory(request, URL_PATH);
     }
 }

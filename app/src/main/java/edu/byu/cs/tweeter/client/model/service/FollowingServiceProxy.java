@@ -9,7 +9,7 @@ import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
 
 public class FollowingServiceProxy implements FollowingService {
 
-    private static final String URL_PATH = "/getfollowing";
+    private static final String URL_PATH = "/following";
 
     private final ServerFacade serverFacade = new ServerFacade();
 

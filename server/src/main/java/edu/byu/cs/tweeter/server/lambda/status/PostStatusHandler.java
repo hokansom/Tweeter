@@ -6,12 +6,14 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
+import edu.byu.cs.tweeter.server.lambda.Handler;
+import edu.byu.cs.tweeter.server.service.AuthorizationServiceImpl;
 import edu.byu.cs.tweeter.server.service.StatusServiceImpl;
 
 /**
  * An AWS lambda function that posts a new status.
  */
-public class PostStatusHandler implements RequestHandler<StatusRequest, StatusResponse> {
+public class PostStatusHandler extends Handler implements RequestHandler<StatusRequest, StatusResponse>  {
 
 
     /**
@@ -23,7 +25,30 @@ public class PostStatusHandler implements RequestHandler<StatusRequest, StatusRe
      */
     @Override
     public StatusResponse handleRequest(StatusRequest request, Context context) {
+        String alias = request.getAuthor().getAlias();
+        String token = request.getToken();
+
+
+        /*TODO: Remove after done testing*/
+//        forTestingValidActiveToken(alias, token);
+
+        checkAuthorization(alias, token);
+
+
+
+        //2. Call StatusServiceImpl or StoryService? and update story
+
+        //3. Write post status message
         StatusServiceImpl service = new StatusServiceImpl();
-        return service.postStatus(request, "");
+        StatusResponse response = service.postStatus(request);
+
+        /*Checks if an error occurred. If so, throw RuntimeException*/
+        checkForError(response.getMessage());
+
+
+        /*Posting status succeeded, so update timestamp on the auth token*/
+        updateAuthTimestamp(alias, token);
+
+        return response;
     }
 }

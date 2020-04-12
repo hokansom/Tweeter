@@ -199,10 +199,13 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
         @Override
         public void followersRetrieved(FollowerResponse followerResponse){
             swipeContainer.setRefreshing(false);
-            List<User> followers = followerResponse.getFollowers();
-
-            presenter.updateNumFollowers(followerResponse.getNumOfFolllowers());
-
+            List<User> followers = new ArrayList<>();
+            if(followerResponse.getFollowers() != null){
+                followers = followerResponse.getFollowers();
+                presenter.updateNumFollowers(followerResponse.getNumOfFolllowers());
+            } else{
+                presenter.updateNumFollowers(0);
+            }
             lastFollower = (followers.size() > 0) ? followers.get(followers.size() - 1) : null;
             hasMorePages = followerResponse.getHasMorePages();
 

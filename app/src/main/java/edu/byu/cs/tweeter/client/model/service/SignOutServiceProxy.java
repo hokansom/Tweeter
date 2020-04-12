@@ -7,7 +7,7 @@ import edu.byu.cs.tweeter.model.service.SignOutService;
 
 public class SignOutServiceProxy implements SignOutService {
 
-    private static final String URL_PATH = "/postsignout";
+    private static final String URL_PATH = "/signout";
 
     private final ServerFacade serverFacade = new ServerFacade();
 

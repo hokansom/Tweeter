@@ -30,6 +30,7 @@ public class StatusDAO {
         if(request.getAuthor() == null){
             return new StatusResponse(false, "[Bad Request]: User cannot be null");
         }
+
         if(statusesByUser == null){
             statusesByUser = initializeStatuses();
         }
@@ -50,7 +51,7 @@ public class StatusDAO {
 
         userStatuses.add(request.getStatus());
         statusesByUser.put(request.getAuthor(), userStatuses);
-        return new StatusResponse(true, "Status posted");
+        return new StatusResponse(true, "");
     }
 
 

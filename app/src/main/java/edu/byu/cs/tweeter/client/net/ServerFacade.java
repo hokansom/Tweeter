@@ -122,11 +122,9 @@ public class ServerFacade {
      * @param request contains the data required to fulfill the request.
      * @return the story.
      */
-    public StoryResponse getStory(StoryRequest request, String auth, String urlPath) throws IOException {
+    public StoryResponse getStory(StoryRequest request, String urlPath) throws IOException {
         ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", auth);
-        return clientCommunicator.doPost(urlPath, request, headers, StoryResponse.class);
+        return clientCommunicator.doPost(urlPath, request, null, StoryResponse.class);
     }
 
 

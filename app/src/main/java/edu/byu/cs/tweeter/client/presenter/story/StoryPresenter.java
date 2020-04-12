@@ -18,14 +18,13 @@ public class StoryPresenter extends AbstractStoryPresenter {
      */
     public interface View {
         void displayNoData(int visible);
-        // If needed, Specify methods here that will be called on the view in response to model updates
     }
 
     public StoryPresenter(View view) { this.view = view; }
 
     public StoryResponse getStory(StoryRequest request) throws IOException {
         StoryService service = new StoryServiceProxy();
-        return service.getStory(request, getToken());
+        return service.getStory(request);
     }
 
     public void updateNumStatuses(int num){

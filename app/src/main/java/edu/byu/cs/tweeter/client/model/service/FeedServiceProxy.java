@@ -9,7 +9,7 @@ import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 
 public class FeedServiceProxy implements FeedService {
 
-    private static final String URL_PATH = "/getfeed";
+    private static final String URL_PATH = "/feed";
 
     private final ServerFacade serverFacade = new ServerFacade();
 

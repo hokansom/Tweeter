@@ -19,6 +19,7 @@ public class FollowGenerator {
 
     private static FollowGenerator followGenerator;
 
+    private  User testUser = new User("Test", "User", UserGenerator.MALE_IMAGE_URL);
     private User testUser2 = new User("Alonzo", "Cadden", UserGenerator.MALE_IMAGE_URL);
 
     /**
@@ -91,8 +92,6 @@ public class FollowGenerator {
         assert minFollowersPerUser >= 0 : minFollowersPerUser;
         assert maxFollowersPerUser < users.size() : maxFollowersPerUser;
 
-        User testUser = new User("Test", "User", UserGenerator.MALE_IMAGE_URL);
-
         // For each user, generate a random number of followers between the specified min and max
         Random random = new Random();
         for(User user : users) {
@@ -111,11 +110,14 @@ public class FollowGenerator {
                 continue;
             }
             Follow follow = new Follow(testUser, user);
+            if(!user.equals(testUser2) && !follows.contains(follow)){
+                follows.add(follow);
+            }
             follows.add(follow);
 
             //Make everyone follow the testUser
             follow = new Follow(user, testUser);
-            if(!user.equals(testUser2)){
+            if(!user.equals(testUser2) && !follows.contains(follow)){
                 follows.add(follow);
             }
 
@@ -173,7 +175,7 @@ public class FollowGenerator {
             User follower;
             do {
                 follower = users.get(random.nextInt(users.size()));
-            } while (user == follower || selectedFollowers.contains(follower));
+            } while (user == follower || selectedFollowers.contains(follower) || user == testUser);
 
             selectedFollowers.add(follower);
             follows.add(new Follow(follower, user));

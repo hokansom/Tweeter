@@ -1,9 +1,13 @@
 package edu.byu.cs.tweeter.server.dao;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -37,7 +41,6 @@ public class FollowingDAO {
         }
 
         List<User> allFollowees = followeesByFollower.get(request.getFollower());
-
         List<User> responseFollowees = new ArrayList<>(request.getLimit());
 
         boolean hasMorePages = false;
@@ -75,8 +78,10 @@ public class FollowingDAO {
                 followees = new ArrayList<>();
                 followeesByFollower.put(follow.getFollower(), followees);
             }
+            if(!followees.contains(follow.getFollowee())){
+                followees.add(follow.getFollowee());
+            }
 
-            followees.add(follow.getFollowee());
         }
 
         return followeesByFollower;

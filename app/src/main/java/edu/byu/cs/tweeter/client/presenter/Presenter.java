@@ -10,7 +10,7 @@ public abstract class Presenter {
 
     private static User viewingUser;
 
-    public static boolean following;
+    public static boolean following = false;
 
 
     public void setCurrentUser(User user){

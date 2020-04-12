@@ -46,12 +46,12 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
         presenter = new ProfilePresenter(this);
         searchPresenter = new SearchPresenter(this);
 
-
-        ProfileSectionsPagerAdapter pagerAdapter = new ProfileSectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(pagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+//
+//        ProfileSectionsPagerAdapter pagerAdapter = new ProfileSectionsPagerAdapter(this, getSupportFragmentManager());
+//        ViewPager viewPager = findViewById(R.id.view_pager);
+//        viewPager.setAdapter(pagerAdapter);
+//        TabLayout tabs = findViewById(R.id.tabs);
+//        tabs.setupWithViewPager(viewPager);
 
         userImageView = findViewById(R.id.userImage);
         userName = findViewById(R.id.userName);
@@ -64,7 +64,9 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
             search(alias);
         }catch (Exception e){
             user = presenter.getViewingUser();
+            System.out.println(presenter.isFollowing());
             updateUserData();
+            addSubPages();
         }
 
 
@@ -95,12 +97,19 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
 
     }
 
+    private void addSubPages(){
+        ProfileSectionsPagerAdapter pagerAdapter = new ProfileSectionsPagerAdapter(this, getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(pagerAdapter);
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
+    }
+
+
     private void goBack(){
         presenter.setViewingUser(null);
         finish();
     }
-
-
 
     private void createNewStatus(){
         if(presenter.getCurrentUser() != null){
@@ -150,9 +159,13 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
             Toast.makeText(getBaseContext(), "User doesn't exist", Toast.LENGTH_LONG).show();
             kill_activity();
         } else {
+            System.out.println(response.getUser());
+            System.out.println(response.isFollowing());
             presenter.following = response.isFollowing();
+            addSubPages();
             updateUserData();
         }
+
     }
 
     private void kill_activity(){

@@ -69,6 +69,7 @@ public class SearchActivity extends Activity implements GetUserTask.GetUserObser
             presenter.setFollowing(response.isFollowing());
             startActivity(intent);
         } else{
+            presenter.setFollowing(false);
             Toast.makeText(getBaseContext(), response.getMessage(), Toast.LENGTH_LONG ).show();
         }
     }

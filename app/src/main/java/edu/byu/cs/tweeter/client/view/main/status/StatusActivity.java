@@ -133,7 +133,7 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
     private void share(){
         Status status = new Status(user, editMessage.getText().toString());
         PostStatusTask postStatusTask = new PostStatusTask(presenter, this);
-        StatusRequest request = new StatusRequest(user, status);
+        StatusRequest request = new StatusRequest(user, status, presenter.getToken());
         postStatusTask.execute(request);
     }
 

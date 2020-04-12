@@ -5,12 +5,13 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
+import edu.byu.cs.tweeter.server.lambda.Handler;
 import edu.byu.cs.tweeter.server.service.FollowerServiceImpl;
 
 /**
  * An AWS lambda function that returns the users following a user.
  */
-public class GetFollowersHandler implements RequestHandler<FollowerRequest, FollowerResponse> {
+public class GetFollowersHandler extends Handler implements RequestHandler<FollowerRequest, FollowerResponse> {
     /**
      * Returns the users that are following the user specified in the request. Uses information in
      * the request object to limit the number of followers returned and to return the next set of
@@ -22,8 +23,14 @@ public class GetFollowersHandler implements RequestHandler<FollowerRequest, Foll
      */
     @Override
     public FollowerResponse handleRequest(FollowerRequest request, Context context) {
+        /*TODO: low priority, but update token timestamp*/
+
         FollowerServiceImpl service = new FollowerServiceImpl();
-        return service.getFollowers(request);
+        FollowerResponse response = service.getFollowers(request);
+
+        checkForError(response.getMessage());
+
+        return response;
     }
 
 }

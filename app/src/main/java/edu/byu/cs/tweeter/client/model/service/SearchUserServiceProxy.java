@@ -9,7 +9,7 @@ import edu.byu.cs.tweeter.model.service.response.SearchResponse;
 
 public class SearchUserServiceProxy implements SearchUserService {
 
-    private static final String URL_PATH = "/getuser";
+    private static final String URL_PATH = "/user";
 
     private final ServerFacade serverFacade = new ServerFacade();
 

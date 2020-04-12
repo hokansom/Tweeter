@@ -9,7 +9,7 @@ import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 
 public class FollowerServiceProxy implements FollowerService {
 
-    private static final String URL_PATH = "/getfollowers";
+    private static final String URL_PATH = "/followers";
 
     private final ServerFacade serverFacade = new ServerFacade();
 

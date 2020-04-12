@@ -9,12 +9,13 @@ import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 
 public class StatusServiceProxy implements StatusService {
 
-    private static final String URL_PATH = "/poststatus";
+    private static final String URL_PATH = "/status";
 
     private final ServerFacade serverFacade = new ServerFacade();
 
     @Override
-    public StatusResponse postStatus(StatusRequest request, String auth) throws IOException {
-        return serverFacade.postStatus(request, auth, URL_PATH);
+    public StatusResponse postStatus(StatusRequest request) throws IOException {
+        String authToken = request.getToken();
+        return serverFacade.postStatus(request, authToken, URL_PATH);
     }
 }

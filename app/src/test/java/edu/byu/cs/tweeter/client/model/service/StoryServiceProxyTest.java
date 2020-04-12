@@ -15,7 +15,6 @@ import edu.byu.cs.tweeter.model.domain.User;
 class StoryServiceProxyTest {
     private final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private final User user = new User("Test", "User", MALE_IMAGE_URL);
-    private final String auth = "AuthToken";
     private StoryServiceProxy serviceProxySpy;
 
     @BeforeEach
@@ -29,7 +28,7 @@ class StoryServiceProxyTest {
         StoryRequest request = new StoryRequest(user, 10, null);
         StoryResponse response = null;
         try{
-            response = serviceProxySpy.getStory(request, auth);
+            response = serviceProxySpy.getStory(request);
         } catch (IOException e){
             System.out.println(e);
         }

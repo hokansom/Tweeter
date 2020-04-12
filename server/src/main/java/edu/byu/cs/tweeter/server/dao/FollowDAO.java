@@ -26,6 +26,11 @@ public class FollowDAO {
      * @return success.
      * */
     public FollowResponse postFollow(FollowRequest request) {
+        //Check authToken
+        if(request.getToken().equals("")){
+            return new FollowResponse(false, "[Unauthorized]: User is not authorized");
+        }
+
         if(follows == null){
             follows = initializeFollows();
         }

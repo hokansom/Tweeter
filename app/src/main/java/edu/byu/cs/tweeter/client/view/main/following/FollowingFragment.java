@@ -204,7 +204,14 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         @Override
         public void followeesRetrieved(FollowingResponse followingResponse) {
             swipeContainer.setRefreshing(false);
-            List<User> followees = followingResponse.getFollowees();
+            List<User> followees = new ArrayList<>();
+            if(followingResponse.getFollowees() != null ){
+                followees = followingResponse.getFollowees();
+                presenter.updateNumFollowees(followingResponse.getFollowees().size());
+            } else{
+                presenter.updateNumFollowees(0);
+            }
+
 
             lastFollowee = (followees.size() > 0) ? followees.get(followees.size() -1) : null;
             hasMorePages = followingResponse.getHasMorePages();

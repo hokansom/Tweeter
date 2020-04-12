@@ -5,12 +5,13 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.server.lambda.Handler;
 import edu.byu.cs.tweeter.server.service.FollowingServiceImpl;
 
 /**
  * An AWS lambda function that returns the users a user is following.
  */
-public class GetFollowingHandler implements RequestHandler<FollowingRequest, FollowingResponse> {
+public class GetFollowingHandler extends Handler implements RequestHandler<FollowingRequest, FollowingResponse> {
 
     /**
      * Returns the users that the user specified in the request is following. Uses information in
@@ -23,7 +24,13 @@ public class GetFollowingHandler implements RequestHandler<FollowingRequest, Fol
      */
     @Override
     public FollowingResponse handleRequest(FollowingRequest request, Context context) {
+        /*TODO: low priority, but update token timestamp*/
+
         FollowingServiceImpl service = new FollowingServiceImpl();
-        return service.getFollowees(request);
+        FollowingResponse response =  service.getFollowees(request);
+
+        checkForError(response.getMessage());
+
+        return response;
     }
 }

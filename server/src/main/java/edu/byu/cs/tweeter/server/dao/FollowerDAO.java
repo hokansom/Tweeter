@@ -104,8 +104,10 @@ public class FollowerDAO {
                 followers = new ArrayList<>();
                 followersByFollowee.put(follow.getFollowee(), followers);
             }
+            if(!followers.contains(follow.getFollower())){
+                followers.add(follow.getFollower());
+            }
 
-            followers.add(follow.getFollower());
         }
 
         return followersByFollowee;

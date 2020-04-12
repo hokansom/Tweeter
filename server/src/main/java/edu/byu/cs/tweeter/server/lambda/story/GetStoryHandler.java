@@ -6,12 +6,13 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import edu.byu.cs.tweeter.model.service.request.StoryRequest;
 import edu.byu.cs.tweeter.model.service.response.StoryResponse;
+import edu.byu.cs.tweeter.server.lambda.Handler;
 import edu.byu.cs.tweeter.server.service.StoryServiceImpl;
 
 /**
  * An AWS lambda function that returns a user's story.
  */
-public class GetStoryHandler implements RequestHandler<StoryRequest, StoryResponse> {
+public class GetStoryHandler extends Handler implements RequestHandler<StoryRequest, StoryResponse> {
     /**
      * Returns the story for the user specified in the request. Uses information in
      * the request object to limit the number of statuses returned and to return the next set of
@@ -24,6 +25,10 @@ public class GetStoryHandler implements RequestHandler<StoryRequest, StoryRespon
     @Override
     public StoryResponse handleRequest(StoryRequest request, Context context) {
         StoryServiceImpl service = new StoryServiceImpl();
-        return service.getStory(request, "AuthToken");
+        StoryResponse response = service.getStory(request);
+
+        checkForError(response.getMessage());
+
+        return response;
     }
 }

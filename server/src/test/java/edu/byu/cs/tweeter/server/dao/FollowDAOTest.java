@@ -53,6 +53,8 @@ class FollowDAOTest {
             follow7, follow8, follow9, follow10, follow11, follow12, follow13, follow14, follow15,
             follow16);
 
+    private String authToken = "randomTok123";
+
     private FollowDAO followDAOSpy;
 
     @BeforeEach
@@ -70,7 +72,7 @@ class FollowDAOTest {
     @Test
     void testPostFollow(){
         Follow follow = new Follow(user3, user2);
-        FollowRequest request = new FollowRequest(follow, true);
+        FollowRequest request = new FollowRequest(follow, true, authToken);
         FollowResponse response = followDAOSpy.postFollow(request);
 
         Assertions.assertNotNull(response);
@@ -81,7 +83,7 @@ class FollowDAOTest {
     @Test
     void testPostFollow_followSelf(){
         Follow follow = new Follow(user1, user1);
-        FollowRequest request = new FollowRequest(follow, true);
+        FollowRequest request = new FollowRequest(follow, true, authToken);
         FollowResponse response = followDAOSpy.postFollow(request);
 
         Assertions.assertEquals("[Bad Request]: User can't follow or unfollow themself", response.getMessage());
@@ -91,7 +93,7 @@ class FollowDAOTest {
     void testPostFollow_nonexistingFollowee(){
         User nonexisting = new User("No", "Name", "");
         Follow follow = new Follow(user1, nonexisting);
-        FollowRequest request = new FollowRequest(follow, true);
+        FollowRequest request = new FollowRequest(follow, true, authToken);
         FollowResponse response = followDAOSpy.postFollow(request);
 
         Assertions.assertEquals("[Bad Request]: Followee doesn't exist", response.getMessage());
@@ -101,7 +103,7 @@ class FollowDAOTest {
     void testPostFollow_nonexistingFollower(){
         User nonexisting = new User("No", "Name", "");
         Follow follow = new Follow(nonexisting, user1);
-        FollowRequest request = new FollowRequest(follow, true);
+        FollowRequest request = new FollowRequest(follow, true, authToken);
         FollowResponse response = followDAOSpy.postFollow(request);
 
         Assertions.assertEquals("[Bad Request]: Follower doesn't exist", response.getMessage());
@@ -110,7 +112,7 @@ class FollowDAOTest {
     @Test
     void testPostFollow_alreadyFollowing(){
         Follow follow = new Follow(user9, user5);
-        FollowRequest request = new FollowRequest(follow, true);
+        FollowRequest request = new FollowRequest(follow, true, authToken);
         FollowResponse response = followDAOSpy.postFollow(request);
 
         Assertions.assertEquals("[Bad Request]: Follow relationship already exists", response.getMessage());
@@ -121,7 +123,7 @@ class FollowDAOTest {
     @Test
     void testPostUnfollow(){
         Follow follow = new Follow(user6, user4);
-        FollowRequest request = new FollowRequest(follow, false);
+        FollowRequest request = new FollowRequest(follow, false, authToken);
         FollowResponse response = followDAOSpy.postFollow(request);
 
         Assertions.assertNotNull(response);
@@ -132,7 +134,7 @@ class FollowDAOTest {
     @Test
     void testPostUnfollow_unfollowSelf(){
         Follow follow = new Follow(user1, user1);
-        FollowRequest request = new FollowRequest(follow, false);
+        FollowRequest request = new FollowRequest(follow, false, authToken);
         FollowResponse response = followDAOSpy.postFollow(request);
 
         Assertions.assertEquals("[Bad Request]: User can't follow or unfollow themself", response.getMessage());
@@ -143,7 +145,7 @@ class FollowDAOTest {
     void testPostUnfollow_nonexistingFollowee(){
         User nonexisting = new User("No", "Name", "");
         Follow follow = new Follow(user1, nonexisting);
-        FollowRequest request = new FollowRequest(follow, false);
+        FollowRequest request = new FollowRequest(follow, false, authToken);
         FollowResponse response = followDAOSpy.postFollow(request);
 
         Assertions.assertEquals("[Bad Request]: Followee doesn't exist", response.getMessage());
@@ -153,7 +155,7 @@ class FollowDAOTest {
     void testPostUnfollow_nonexistingFollower(){
         User nonexisting = new User("No", "Name", "");
         Follow follow = new Follow(nonexisting, user1);
-        FollowRequest request = new FollowRequest(follow, false);
+        FollowRequest request = new FollowRequest(follow, false, authToken);
         FollowResponse response = followDAOSpy.postFollow(request);
 
         Assertions.assertEquals("[Bad Request]: Follower doesn't exist", response.getMessage());
@@ -162,7 +164,7 @@ class FollowDAOTest {
     @Test
     void testPostUnfollow_nonexistentFollow(){
         Follow follow = new Follow(user3, user2);
-        FollowRequest request = new FollowRequest(follow, false);
+        FollowRequest request = new FollowRequest(follow, false, authToken);
         FollowResponse response = followDAOSpy.postFollow(request);
 
         Assertions.assertEquals("[Bad Request]: Cannot delete a follow relationship that doesn't exist", response.getMessage());

@@ -13,8 +13,7 @@ import java.util.Map;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.SignInRequest;
 import edu.byu.cs.tweeter.model.service.response.SignInResponse;
-import edu.byu.cs.tweeter.server.dao.SignIn.SignInDAOMock;
-import edu.byu.cs.tweeter.server.service.HashService;
+import edu.byu.cs.tweeter.server.dao.signIn.SignInDAOMock;
 
 class SignInDAOTest {
 

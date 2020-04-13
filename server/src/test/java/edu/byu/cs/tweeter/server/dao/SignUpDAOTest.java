@@ -13,7 +13,7 @@ import java.util.Map;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
 import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
-
+import edu.byu.cs.tweeter.server.dao.signUp.SignUpDAOMock;
 
 
 class SignUpDAOTest {
@@ -32,11 +32,11 @@ class SignUpDAOTest {
 
     private Map<String, String> passwordsMap;
 
-    private SignUpDAO signUpDAOSpy;
+    private SignUpDAOMock signUpDAOSpy;
 
     @BeforeEach
     void setup(){
-        signUpDAOSpy = Mockito.spy(new SignUpDAO());
+        signUpDAOSpy = Mockito.spy(new SignUpDAOMock());
 
         UserGenerator mockUserGenerator = Mockito.mock(UserGenerator.class);
         Mockito.when(mockUserGenerator.generateUsers(Mockito.anyInt())).thenReturn(users);

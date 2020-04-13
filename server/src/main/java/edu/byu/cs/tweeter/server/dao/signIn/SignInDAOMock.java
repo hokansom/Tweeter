@@ -1,9 +1,6 @@
-package edu.byu.cs.tweeter.server.dao.SignIn;
+package edu.byu.cs.tweeter.server.dao.signIn;
 
 
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

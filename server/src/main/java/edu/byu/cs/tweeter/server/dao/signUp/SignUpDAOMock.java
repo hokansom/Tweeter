@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.signUp;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -10,13 +10,14 @@ import java.util.UUID;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
 import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
+import edu.byu.cs.tweeter.server.dao.UserGenerator;
 import edu.byu.cs.tweeter.server.service.HashService;
 
 /**
  * A DAO for accessing and updating 'user' data from the database.
  * SignUp DAO
  */
-public class SignUpDAO {
+public class SignUpDAOMock implements SignUpDAO {
 
     private static List<User> users;
 
@@ -28,6 +29,7 @@ public class SignUpDAO {
      * @param request contains the data required to fulfill the request.
      * @return the user.
      */
+    @Override
     public SignUpResponse postSignUp(SignUpRequest request){
         SignUpResponse response;
         if(users == null){
@@ -42,7 +44,7 @@ public class SignUpDAO {
             if(authentication == null){
                 initializeAuthentication();
             }
-            String hashed = hashPassword(request.getPassword());
+            String hashed = SignUpDAO.hashPassword(request.getPassword());
             authentication.put(request.getUser().getAlias(), hashed);
 
             //TODO: save the image and update the
@@ -72,23 +74,6 @@ public class SignUpDAO {
 
         return response;
     }
-
-
-//    /**
-//     * Returns the hash of a password
-//     *
-//     * @param password
-//     * @return hashedPassword
-//     * */
-//    static String hashPassword(String password){
-//        String hashed;
-//        try{
-//            hashed = HashService.generatePasswordHash(password);
-//        } catch (Exception e){
-//            throw new RuntimeException("[Internal Service Error]: Could not hash password");
-//        }
-//        return hashed;
-//    }
 
 
     private boolean checkValidAlias(String alias){
@@ -121,34 +106,6 @@ public class SignUpDAO {
         return UUID.randomUUID().toString();
     }
 
-    /**
-     * Returns the hash of a password
-     *
-     * @param password
-     * @return hashedPassword
-     * */
-    private String hashPassword(String password){
-        String generatedPassword = null;
-        try{
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            //Add password bytes to digest
-            md.update(password.getBytes());
-            //Get the hash's bytes
-            byte[] bytes = md.digest();
-            //This bytes[] has bytes in decimal format;
-            //Convert it to hexadecimal format
-            StringBuilder sb = new StringBuilder();
-            for(int i=0; i< bytes.length ;i++)
-            {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            //Get complete hashed password in hex format
-            generatedPassword = sb.toString();
-        } catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
-        }
-        return generatedPassword;
-    }
 
 
     private void initializeAuthentication(){
@@ -170,5 +127,5 @@ public class SignUpDAO {
      *
      * @return the generator.
      */
-    UserGenerator getUserGenerator() { return UserGenerator.getInstance(); }
+    public UserGenerator getUserGenerator() { return UserGenerator.getInstance(); }
 }

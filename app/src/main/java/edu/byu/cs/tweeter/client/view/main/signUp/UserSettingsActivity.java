@@ -125,7 +125,13 @@ public class UserSettingsActivity extends AppCompatActivity implements SignUpPre
 
     private void signUp(){
         PostSignUpTask task = new PostSignUpTask(presenter, this);
-        User newUser = new User(firstName.getText().toString(), lastName.getText().toString(), presenter.getHandle(), "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png");
+        String alias = presenter.getHandle();
+        if(alias.startsWith("@")){
+            StringBuilder builder = new StringBuilder(alias);
+            builder.deleteCharAt(0);
+            alias = builder.toString();
+        }
+        User newUser = new User(firstName.getText().toString(), lastName.getText().toString(), alias, "");
         SignUpRequest request = new SignUpRequest(newUser, presenter.getPassword(), imageString);
         task.execute(request);
     }

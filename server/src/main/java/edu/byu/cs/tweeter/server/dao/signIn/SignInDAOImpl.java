@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.dao.SignIn;
+package edu.byu.cs.tweeter.server.dao.signIn;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;

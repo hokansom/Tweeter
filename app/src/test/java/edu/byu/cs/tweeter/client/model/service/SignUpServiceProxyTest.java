@@ -22,7 +22,7 @@ class SignUpServiceProxyTest {
 
     @Test
     void test_postSignUpHandler(){
-        User newUser = new User("Morgan", "Davis", "@Momo", "");
+        User newUser = new User("Morgan", "Davis", "Momo", "");
         SignUpRequest request = new SignUpRequest(newUser, "Password", "");
         SignUpResponse response = null;
 

@@ -9,7 +9,6 @@ import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException;
 
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
-import edu.byu.cs.tweeter.model.service.response.SignInResponse;
 import edu.byu.cs.tweeter.server.json.Serializer;
 
 public class FollowDAOImpl implements FollowDAO{

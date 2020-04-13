@@ -16,6 +16,7 @@ class FollowServiceProxyTest {
     private final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private final User user1 = new User("Test", "User", MALE_IMAGE_URL);
     private final User user2 = new User("Alonzo", "Cadden", MALE_IMAGE_URL);
+    private final User user3 = new User("Mo", "Davis", "Morgan", "https://cs-340-w2020.s3-us-west-2.amazonaws.com/Morgan.jpg");
 
     private FollowServiceProxy serviceProxySpy;
     private UnfollowServiceProxy unfollowServiceProxySpy;
@@ -63,6 +64,20 @@ class FollowServiceProxyTest {
         User test2 = new User("Morgan", "Davis", "Momo", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
 
         Follow follow = new Follow(test1, test2);
+        FollowRequest request = new FollowRequest(follow, true, "123456789");
+        FollowResponse response = null;
+        try{
+            response = serviceProxySpy.postFollow(request);
+        } catch(IOException e){
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    void myTest2_follow(){
+        User test1 = new User("Test", "User", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+
+        Follow follow = new Follow(test1, user3);
         FollowRequest request = new FollowRequest(follow, true, "123456789");
         FollowResponse response = null;
         try{

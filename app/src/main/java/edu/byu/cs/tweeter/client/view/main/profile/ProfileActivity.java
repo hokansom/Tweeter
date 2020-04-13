@@ -130,7 +130,8 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
     public void updateUserData(){
         loadImage();
         userName.setText(user.getName());
-        userAlias.setText(user.getAlias());
+        String alias = "@" + user.getAlias();
+        userAlias.setText(alias);
         updateNumbers();
         initializeFragment();
     }

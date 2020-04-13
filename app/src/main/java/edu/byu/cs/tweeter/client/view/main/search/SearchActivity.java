@@ -76,6 +76,11 @@ public class SearchActivity extends Activity implements GetUserTask.GetUserObser
 
     private void search(){
         String alias = searchText.getText().toString();
+        if(alias.startsWith("@")){
+            StringBuilder builder = new StringBuilder(alias);
+            builder.deleteCharAt(0);
+            alias = builder.toString();
+        }
         GetUserTask getUserTask = new GetUserTask(presenter, this);
         SearchRequest request = new SearchRequest(alias, presenter.getCurrentUser());
         getUserTask.execute(request);

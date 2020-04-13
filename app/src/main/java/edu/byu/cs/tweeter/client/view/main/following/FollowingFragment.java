@@ -107,16 +107,18 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
         void bindUser(User user) {
             userImage.setImageDrawable(ImageCache.getInstance().getImageDrawable(user));
-            userAlias.setText(user.getAlias());
+            String alias = "@" + user.getAlias();
+            userAlias.setText(alias);
             userName.setText(user.getName());
             tempUser = user;
         }
 
         private void switchToProfile(){
             Intent intent = new Intent(getContext(), ProfileActivity.class);
-            intent.putExtra("ALIAS", userAlias.getText().toString());
+            intent.putExtra("ALIAS", tempUser.getAlias());
             startActivity(intent);
         }
+
 
     }
 

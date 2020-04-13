@@ -107,7 +107,8 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
         void bindUser(User user){
             userImage.setImageDrawable(ImageCache.getInstance().getImageDrawable(user));
-            userAlias.setText(user.getAlias());
+            String alias = "@" + user.getAlias();
+            userAlias.setText(alias);
             userName.setText(user.getName());
             tempUser = user;
         }
@@ -115,7 +116,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
 
         private void switchToProfile(){
             Intent intent = new Intent(getContext(), ProfileActivity.class);
-            intent.putExtra("ALIAS", userAlias.getText().toString());
+            intent.putExtra("ALIAS", tempUser.getAlias());
             startActivity(intent);
         }
 

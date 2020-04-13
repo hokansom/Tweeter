@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.following;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,11 +13,12 @@ import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowingResponse;
+import edu.byu.cs.tweeter.server.dao.FollowGenerator;
 
 /**
  * A DAO for accessing 'following' data from the database.
  */
-public class FollowingDAO {
+public class FollowingDAOMock implements FollowingDAO{
 
     private static Map<User, List<User>> followeesByFollower;
 
@@ -31,6 +32,7 @@ public class FollowingDAO {
      *                other information required to satisfy the request.
      * @return the followees.
      */
+    @Override
     public FollowingResponse getFollowees(FollowingRequest request) {
 
         assert request.getLimit() > 0;
@@ -122,7 +124,7 @@ public class FollowingDAO {
      *
      * @return the generator.
      */
-    FollowGenerator getFollowGenerator() {
+    public FollowGenerator getFollowGenerator() {
         return FollowGenerator.getInstance();
     }
 }

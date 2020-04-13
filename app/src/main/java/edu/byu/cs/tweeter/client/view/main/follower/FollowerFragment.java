@@ -203,7 +203,7 @@ public class FollowerFragment extends Fragment implements FollowerPresenter.View
             List<User> followers = new ArrayList<>();
             if(followerResponse.getFollowers() != null){
                 followers = followerResponse.getFollowers();
-                presenter.updateNumFollowers(followerResponse.getNumOfFolllowers());
+                presenter.updateNumFollowers(followerResponse.getFollowers().size());
             } else{
                 presenter.updateNumFollowers(0);
             }

@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.followers;
 
 
 import java.util.ArrayList;
@@ -10,11 +10,12 @@ import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
+import edu.byu.cs.tweeter.server.dao.FollowGenerator;
 
 /**
  * A DAO for accessing 'follower' data from the database.
  */
-public class FollowerDAO {
+public class FollowerDAOMock implements FollowerDAO {
     private static Map<User, List<User>> followersByFollowee;
 
     /**
@@ -27,7 +28,7 @@ public class FollowerDAO {
      *                other information required to satisfy the request.
      * @return the followers.
      */
-
+    @Override
     public FollowerResponse getFollowers(FollowerRequest request) {
         assert request.getLimit() > 0;
         assert request.getFollowee() != null;
@@ -51,11 +52,11 @@ public class FollowerDAO {
                 hasMorePages = followersIndex < allFollowers.size();
             }
             else{
-                return new FollowerResponse(responseFollowers, false, 0);
+                return new FollowerResponse(responseFollowers, false);
             }
         }
 
-        return new FollowerResponse(responseFollowers, hasMorePages, allFollowers.size());
+        return new FollowerResponse(responseFollowers, hasMorePages);
     }
 
     /**
@@ -119,7 +120,7 @@ public class FollowerDAO {
      *
      * @return the generator.
      */
-    FollowGenerator getFollowGenerator() {
+    public FollowGenerator getFollowGenerator() {
         return FollowGenerator.getInstance();
     }
 }

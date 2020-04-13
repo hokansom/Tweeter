@@ -2,7 +2,6 @@ package edu.byu.cs.tweeter.server.dao.following;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryResult;
@@ -24,19 +23,14 @@ public class FollowingDAOImpl implements FollowingDAO {
     private static final String FolloweeAliasAttr = "followeeAlias";
     private static final String FolloweeAttr = "followee";
 
-    private static boolean isNonEmpty(User lastFollowee) {
-        if(null != lastFollowee ){
-            return (lastFollowee.getAlias() != null && lastFollowee.getAlias().length() > 0);
-        }
-        return false;
-    }
 
     // DynamoDB client
     private static AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder
             .standard()
             .withRegion("us-west-2")
             .build();
-//    private static DynamoDB dynamoDB = new DynamoDB(amazonDynamoDB);
+
+
     /**
      * Gets the users from the database that the user specified in the request is following. Uses
      * information in the request object to limit the number of followees returned and to return the
@@ -104,4 +98,13 @@ public class FollowingDAOImpl implements FollowingDAO {
             throw new RuntimeException(String.format("[Internal Service Error]: Could not get @%s's followees", followerAlias));
         }
     }
+
+
+    private static boolean isNonEmpty(User lastFollowee) {
+        if(null != lastFollowee ){
+            return (lastFollowee.getAlias() != null && lastFollowee.getAlias().length() > 0);
+        }
+        return false;
+    }
+
 }

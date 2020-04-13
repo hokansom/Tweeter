@@ -6,23 +6,17 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowerResponse extends PagedResponse {
     public List<User> followers;
-    public int numOfFolllowers;
-
     public FollowerResponse(String message){
         super(false, message,false);
     }
 
-    public FollowerResponse(List<User> followers, boolean hasMorePages, int numOfFolllowers){
+    public FollowerResponse(List<User> followers, boolean hasMorePages){
         super(true, hasMorePages);
         this.followers = followers;
-        this.numOfFolllowers = numOfFolllowers;
     }
 
     public List<User> getFollowers(){
         return this.followers;
     }
 
-    public int getNumOfFolllowers() {
-        return numOfFolllowers;
-    }
 }

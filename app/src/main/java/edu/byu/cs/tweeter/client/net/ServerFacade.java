@@ -64,9 +64,7 @@ public class ServerFacade {
     /*------------------------------------------FOLLOW RELATED-------------------------------------*/
 
     /**
-     * Updates a follow relationship. Uses information in
-     * the request object to either create the follow relationship between the followee and follower,
-     * or delete the follow relationship between the followee and follower.
+     * Creates a follow relationship.
      *
      * @param request contains the data required to fulfill the request.
      * @return success
@@ -76,6 +74,20 @@ public class ServerFacade {
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", auth);
         return clientCommunicator.doPost(urlPath, request, headers, FollowResponse.class);
+    }
+
+
+    /**
+     * Deletes a follow relationship.
+     *
+     * @param request contains the data required to fulfill the request.
+     * @return success
+     */
+    public FollowResponse deleteFollow(FollowRequest request, String auth, String urlPath) throws IOException{
+        ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", auth);
+        return clientCommunicator.doDelete(urlPath, request, headers, FollowResponse.class);
     }
 
     /*------------------------------------------STATUS------------------------------*/

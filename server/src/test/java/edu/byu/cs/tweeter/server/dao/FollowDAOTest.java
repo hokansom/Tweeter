@@ -12,6 +12,7 @@ import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.server.dao.follow.FollowDAOMock;
 
 
 class FollowDAOTest {
@@ -55,11 +56,11 @@ class FollowDAOTest {
 
     private String authToken = "randomTok123";
 
-    private FollowDAO followDAOSpy;
+    private FollowDAOMock followDAOSpy;
 
     @BeforeEach
     void setup(){
-        followDAOSpy = Mockito.spy(new FollowDAO());
+        followDAOSpy = Mockito.spy(new FollowDAOMock());
 
         FollowGenerator mockFollowGenerator = Mockito.mock(FollowGenerator.class);
         Mockito.when(mockFollowGenerator.generateUsersAndFollows(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.any())).thenReturn(follows);

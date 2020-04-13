@@ -18,10 +18,13 @@ class FollowServiceProxyTest {
     private final User user2 = new User("Alonzo", "Cadden", MALE_IMAGE_URL);
 
     private FollowServiceProxy serviceProxySpy;
+    private UnfollowServiceProxy unfollowServiceProxySpy;
 
     @BeforeEach
     void setup(){
         serviceProxySpy = Mockito.spy(new FollowServiceProxy());
+        unfollowServiceProxySpy = Mockito.spy(new UnfollowServiceProxy());
+
     }
 
     @Test
@@ -52,6 +55,36 @@ class FollowServiceProxyTest {
 
 //        Assertions.assertNotNull(response);
 //        Assertions.assertEquals(FollowResponse.class, response.getClass());
+    }
+
+    @Test
+    void myTest_follow(){
+        User test1 = new User("Test", "User", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+        User test2 = new User("Morgan", "Davis", "Momo", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+
+        Follow follow = new Follow(test1, test2);
+        FollowRequest request = new FollowRequest(follow, true, "123456789");
+        FollowResponse response = null;
+        try{
+            response = serviceProxySpy.postFollow(request);
+        } catch(IOException e){
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    void myTest_unfollow(){
+        User test1 = new User("Test", "User", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+        User test2 = new User("Morgan", "Davis", "Momo", "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png");
+
+        Follow follow = new Follow(test1, test2);
+        FollowRequest request = new FollowRequest(follow, false, "123456789");
+        FollowResponse response = null;
+        try{
+            response = unfollowServiceProxySpy.deleteFollow(request);
+        } catch(IOException e){
+            System.out.println(e);
+        }
     }
 
 }

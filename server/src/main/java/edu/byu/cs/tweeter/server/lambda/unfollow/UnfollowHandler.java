@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.lambda.follow;
+package edu.byu.cs.tweeter.server.lambda.unfollow;
 
 
 import com.amazonaws.services.lambda.runtime.Context;
@@ -8,16 +8,15 @@ import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 import edu.byu.cs.tweeter.server.lambda.Handler;
 import edu.byu.cs.tweeter.server.service.FollowServiceImpl;
+import edu.byu.cs.tweeter.server.service.UnfollowServiceImpl;
 
 /**
  * An AWS lambda function that returns the users a user is following.
  */
-public class FollowHandler extends Handler implements RequestHandler<FollowRequest, FollowResponse> {
+public class UnfollowHandler extends Handler implements RequestHandler<FollowRequest, FollowResponse> {
 
     /**
-     * Updates a follow relationship. Uses information in
-     * the request object to either create the follow relationship between the followee and follower,
-     * or delete the follow relationship between the followee and follower.
+     * Deletes a follow relationship.
      *
      * @param request contains the data required to fulfill the request.
      * @return success
@@ -30,10 +29,9 @@ public class FollowHandler extends Handler implements RequestHandler<FollowReque
 
 
         /*TODO: Remove after done testing*/
-        forTestingValidActiveToken(alias, token);
+//        forTestingValidActiveToken(alias, token);
 
         checkAuthorization(alias, token);
-        //TODO: Separate into follow and unfollow
 
         //Check if user is logged in an authorized, then proceed
 
@@ -41,8 +39,8 @@ public class FollowHandler extends Handler implements RequestHandler<FollowReque
         System.out.println(request.getFollow().follower.getAlias());
         System.out.println(String.format("Request token: %s", request.getToken()));
 
-        FollowServiceImpl service = new FollowServiceImpl();
-        FollowResponse response = service.postFollow(request);
+        UnfollowServiceImpl service = new UnfollowServiceImpl();
+        FollowResponse response = service.deleteFollow(request);
 
         if(null != response.getMessage()){
             checkForError(response.getMessage());

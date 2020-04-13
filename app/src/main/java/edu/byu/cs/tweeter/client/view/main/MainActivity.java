@@ -77,7 +77,8 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
         if(presenter.getCurrentUser() != null){
             loadImageTask.execute(presenter.getCurrentUser().getImageUrl());
             userName.setText(user.getName());
-            userAlias.setText(user.getAlias());
+            String alias = "@" + user.getAlias();
+            userAlias.setText(alias);
         }
         else{
             userImageView.setImageResource(R.drawable.profile_default);

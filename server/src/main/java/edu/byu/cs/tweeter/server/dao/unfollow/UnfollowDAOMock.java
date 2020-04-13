@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.unfollow;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,23 +9,18 @@ import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
+import edu.byu.cs.tweeter.server.dao.FollowGenerator;
 
 /**
  * A DAO for updating 'follow' data in the database.
  */
-public class FollowDAO {
+public class UnfollowDAOMock {
 
     private static List<Follow> follows;
     private static Set<User> users;
 
 
-    /**
-     *
-     * @param request contains information about the follow relationship to be added
-     *
-     * @return success.
-     * */
-    public FollowResponse postFollow(FollowRequest request) {
+    private FollowResponse deleteFollow(FollowRequest request) {
         //Check authToken
         if(request.getToken().equals("")){
             return new FollowResponse(false, "[Unauthorized]: User is not authorized");
@@ -41,7 +36,7 @@ public class FollowDAO {
 
         /* Check to see if the person is trying to follow themselves*/
         if(follower.equals(followee)){
-            return new FollowResponse(false, "[Bad Request]: User can't follow or unfollow themself");
+            return new FollowResponse(false, "[Bad Request]: User can't unfollow themself");
         }
 
         /*Check to see if the followee and follower exist*/
@@ -52,25 +47,6 @@ public class FollowDAO {
             return new FollowResponse(false, "[Bad Request]: Follower doesn't exist");
         }
 
-        if(request.getIsFollow()){
-            return addFollow(follow);
-        } else {
-            return removeFollow(follow);
-        }
-
-    }
-
-    private FollowResponse addFollow(Follow follow) {
-        /* Check to see if the follow relationship already exists */
-        if(follows.contains(follow)){
-            return new FollowResponse(false, "[Bad Request]: Follow relationship already exists");
-        }
-
-        follows.add(follow);
-        return new FollowResponse(true, "");
-    }
-
-    private FollowResponse removeFollow(Follow follow) {
         /* Verify that the follow relationship already exists */
         if(!follows.contains(follow)){
             return new FollowResponse(false, "[Bad Request]: Cannot delete a follow relationship that doesn't exist");

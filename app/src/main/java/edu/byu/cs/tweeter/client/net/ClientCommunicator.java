@@ -64,6 +64,29 @@ class ClientCommunicator {
         return doRequest(urlPath, headers, returnType, requestStrategy);
     }
 
+
+    <T> T doDelete(String urlPath, final Object requestInfo, Map<String, String> headers, Class<T> returnType) throws IOException {
+        RequestStrategy requestStrategy = new RequestStrategy() {
+            @Override
+            public void setRequestMethod(HttpURLConnection connection) throws IOException {
+                connection.setRequestMethod("DELETE");
+            }
+
+            @Override
+            public void sendRequest(HttpURLConnection connection) throws IOException {
+                connection.setDoOutput(true);
+
+                String entityBody = Serializer.serialize(requestInfo);
+                try (DataOutputStream os = new DataOutputStream(connection.getOutputStream())) {
+                    os.writeBytes(entityBody);
+                    os.flush();
+                }
+            }
+        };
+
+        return doRequest(urlPath, headers, returnType, requestStrategy);
+    }
+
     private <T> T doRequest(String urlPath, Map<String, String> headers, Class<T> returnType, RequestStrategy requestStrategy) throws IOException {
 
         HttpURLConnection connection = null;

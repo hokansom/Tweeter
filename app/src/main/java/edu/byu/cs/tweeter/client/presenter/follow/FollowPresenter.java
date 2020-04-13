@@ -2,8 +2,10 @@ package edu.byu.cs.tweeter.client.presenter.follow;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.client.model.service.UnfollowServiceProxy;
 import edu.byu.cs.tweeter.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.FollowServiceProxy;
+import edu.byu.cs.tweeter.model.service.UnfollowService;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 
@@ -20,8 +22,15 @@ public class FollowPresenter extends AbstractFollowPresenter{
     public FollowPresenter(View view){ this.view = view; }
 
     public FollowResponse postFollow(FollowRequest request) throws IOException {
-        FollowService service = new FollowServiceProxy();
-        return service.postFollow(request);
+        boolean isFollowRequest = request.getIsFollow();
+        if(isFollowRequest){
+            FollowService service = new FollowServiceProxy();
+            return service.postFollow(request);
+        }else{
+            UnfollowService service = new UnfollowServiceProxy();
+            return service.deleteFollow(request);
+        }
+
     }
 
     public boolean isFollowingRequest(){ return !following;  }

@@ -28,6 +28,7 @@ import edu.byu.cs.tweeter.client.view.cache.ImageCache;
 import edu.byu.cs.tweeter.client.view.main.profile.ProfileActivity;
 import edu.byu.cs.tweeter.client.view.main.search.SearchActivity;
 import edu.byu.cs.tweeter.client.view.main.status.StatusActivity;
+import edu.byu.cs.tweeter.model.service.request.SignOutRequest;
 
 public class MainActivity extends AppCompatActivity implements LoadImageTask.LoadImageObserver, MainPresenter.View, PostSignOutTask.SignOutObserver {
 
@@ -161,8 +162,9 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     }
 
     private void signOut(){
+        SignOutRequest request = new SignOutRequest(presenter.getCurrentUser().getAlias(), presenter.getToken());
         PostSignOutTask task = new PostSignOutTask(presenter, this);
-        task.execute();
+        task.execute(request);
     }
 
     @Override

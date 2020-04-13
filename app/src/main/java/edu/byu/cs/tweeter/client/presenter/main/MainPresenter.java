@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.model.service.SignOutService;
 import edu.byu.cs.tweeter.client.model.service.SignOutServiceProxy;
+import edu.byu.cs.tweeter.model.service.request.SignOutRequest;
 
 public class MainPresenter extends AbstractMainPresenter {
 
@@ -19,9 +20,9 @@ public class MainPresenter extends AbstractMainPresenter {
         // If needed, Specify methods here that will be called on the view in response to model updates
     }
 
-    public void signOut() throws IOException {
+    public void signOut(SignOutRequest request) throws IOException {
         SignOutService service = new SignOutServiceProxy();
-        service.signOut();
+        service.signOut(request);
         setCurrentUser(null);
         view.clearData();
     }

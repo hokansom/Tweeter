@@ -17,6 +17,7 @@ import edu.byu.cs.tweeter.model.service.response.SearchResponse;
 import edu.byu.cs.tweeter.model.service.response.SignInResponse;
 import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.server.dao.user.UserDAOMock;
 
 class UserDAOTest {
 
@@ -37,11 +38,11 @@ class UserDAOTest {
 
     private Map<String, String> auths;
 
-    private UserDAO userDAOSpy;
+    private UserDAOMock userDAOSpy;
 
     @BeforeEach
     void setup(){
-        userDAOSpy = Mockito.spy(new UserDAO());
+        userDAOSpy = Mockito.spy(new UserDAOMock());
 
         UserGenerator mockUserGenerator = Mockito.mock(UserGenerator.class);
         Mockito.when(mockUserGenerator.generateUsers(Mockito.anyInt())).thenReturn(users);

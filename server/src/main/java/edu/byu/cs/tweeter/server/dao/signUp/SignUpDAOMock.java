@@ -1,7 +1,5 @@
 package edu.byu.cs.tweeter.server.dao.signUp;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +9,6 @@ import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
 import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
 import edu.byu.cs.tweeter.server.dao.UserGenerator;
-import edu.byu.cs.tweeter.server.service.HashService;
 
 /**
  * A DAO for accessing and updating 'user' data from the database.

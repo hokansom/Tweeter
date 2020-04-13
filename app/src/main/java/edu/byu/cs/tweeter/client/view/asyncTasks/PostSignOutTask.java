@@ -6,8 +6,9 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.presenter.main.AbstractMainPresenter;
 import edu.byu.cs.tweeter.client.presenter.main.MainPresenter;
+import edu.byu.cs.tweeter.model.service.request.SignOutRequest;
 
-public class PostSignOutTask extends AsyncTask<Void, Void, Void> {
+public class PostSignOutTask extends AsyncTask<SignOutRequest, Void, Void> {
     private final AbstractMainPresenter presenter;
     private final SignOutObserver observer;
 
@@ -23,9 +24,9 @@ public class PostSignOutTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Void doInBackground(SignOutRequest... signOutRequests) {
         try{
-           presenter.signOut();
+           presenter.signOut(signOutRequests[0]);
         }catch (IOException e){
             exception = e;
         }

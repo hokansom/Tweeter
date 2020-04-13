@@ -8,9 +8,10 @@ public class SearchResponse extends Response {
 
     public boolean isFollowing;
 
-    public SearchResponse(boolean success) {
-        super(success);
+    public SearchResponse(boolean success, String message) {
+        super(success, message);
     }
+
 
     public SearchResponse(boolean success, String message, User user, boolean isFollowing) {
         super(success, message);

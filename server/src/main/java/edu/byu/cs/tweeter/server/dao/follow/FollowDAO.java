@@ -6,4 +6,6 @@ import edu.byu.cs.tweeter.model.service.response.FollowResponse;
 public interface FollowDAO {
 
     FollowResponse postFollow(FollowRequest request);
+
+    boolean getFollow(String followerAlias, String followeeAlias);
 }

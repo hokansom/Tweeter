@@ -9,6 +9,7 @@ import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException;
 
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
+import edu.byu.cs.tweeter.model.service.response.SignInResponse;
 import edu.byu.cs.tweeter.server.json.Serializer;
 
 public class FollowDAOImpl implements FollowDAO{
@@ -66,5 +67,13 @@ public class FollowDAOImpl implements FollowDAO{
         if(request.getFollow().getFollower().equals(request.getFollow().getFollowee())){
             throw new RuntimeException("[Bad Request]: User cannot follow themself ");
         }
+    }
+
+    @Override
+    public boolean getFollow(String followerAlias, String followeeAlias) {
+        Table table = dynamoDB.getTable(TableName);
+        Item item = table.getItem(FollowerAliasAttr, followerAlias, FolloweeAliasAttr, followeeAlias);
+        return item != null;
+
     }
 }

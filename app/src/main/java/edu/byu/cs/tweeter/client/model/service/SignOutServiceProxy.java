@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.net.ServerFacade;
 import edu.byu.cs.tweeter.model.service.SignOutService;
+import edu.byu.cs.tweeter.model.service.request.SignOutRequest;
 
 public class SignOutServiceProxy implements SignOutService {
 
@@ -12,7 +13,7 @@ public class SignOutServiceProxy implements SignOutService {
     private final ServerFacade serverFacade = new ServerFacade();
 
     @Override
-    public void signOut() throws IOException {
-        serverFacade.signOut(URL_PATH);
+    public void signOut(SignOutRequest request) throws IOException {
+        serverFacade.signOut(request, URL_PATH);
     }
 }

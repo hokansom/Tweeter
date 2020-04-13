@@ -10,6 +10,7 @@ import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.request.FollowingRequest;
 import edu.byu.cs.tweeter.model.service.request.SearchRequest;
 import edu.byu.cs.tweeter.model.service.request.SignInRequest;
+import edu.byu.cs.tweeter.model.service.request.SignOutRequest;
 import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.request.StoryRequest;
@@ -171,9 +172,9 @@ public class ServerFacade {
      * @param urlPath path for the api endpoint
      *
      * */
-    public void signOut(String urlPath) throws IOException{
+    public void signOut(SignOutRequest request, String urlPath) throws IOException{
         ClientCommunicator clientCommunicator = new ClientCommunicator(SERVER_URL);
-        clientCommunicator.doGet(urlPath, null, null);
+        clientCommunicator.doPost(urlPath, request, null, null);
     }
 
     /**

@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.user;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,20 +8,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import edu.byu.cs.tweeter.model.service.request.SignInRequest;
-import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
-import edu.byu.cs.tweeter.model.service.response.SignInResponse;
-import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.SearchRequest;
+import edu.byu.cs.tweeter.model.service.request.SignInRequest;
+import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
 import edu.byu.cs.tweeter.model.service.response.SearchResponse;
+import edu.byu.cs.tweeter.model.service.response.SignInResponse;
+import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
+import edu.byu.cs.tweeter.server.dao.FollowGenerator;
+import edu.byu.cs.tweeter.server.dao.UserGenerator;
 
 /**
  * A DAO for accessing 'user' data from the database.
  * This is used for signing in, signing out, signing up, and searching for a user.
  */
-public class UserDAO {
+public class UserDAOMock implements UserDAO{
 
     private User currentUser;
 
@@ -155,6 +157,7 @@ public class UserDAO {
      * @param request contains information about the user whose is being retrieved.
      * @return the user.
      */
+    @Override
     public SearchResponse getUser(SearchRequest request){
         User user = searchUser(request.getAlias());
         boolean success = (user != null);
@@ -259,7 +262,7 @@ public class UserDAO {
      *
      * @return the generator.
      */
-    UserGenerator getUserGenerator() { return UserGenerator.getInstance(); }
+    public UserGenerator getUserGenerator() { return UserGenerator.getInstance(); }
 
     /**
      * Generates the followee data.
@@ -292,7 +295,7 @@ public class UserDAO {
      *
      * @return the generator.
      */
-    FollowGenerator getFollowGenerator() {
+    public FollowGenerator getFollowGenerator() {
         return FollowGenerator.getInstance();
     }
 

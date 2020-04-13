@@ -1,36 +1,35 @@
 package edu.byu.cs.tweeter.model.domain;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Status implements Comparable<Status> {
-    public String publishDate;
     public String message;
     public User author;
     public URLs urls;
     public UserMentions mentions;
+    public long date;
 
     public Status() {}
 
-    public Status(User author, String message, URLs urls, UserMentions mentions, String date){
+    public Status(User author, String message, URLs urls, UserMentions mentions, long date){
         this.author = author;
         this.message = message;
         this.urls = urls;
         this.mentions = mentions;
-        this.publishDate = date;
+        this.date = date;
     }
 
-    public Status(User author, String message, String date){
+    public Status(User author, String message, long date){
         this.author = author;
         this.message = message;
         this.urls = new URLs();
         this.mentions = new UserMentions();
-        this.publishDate =  date;
+        this.date =  date;
         parseAliases(message);
         parseUrls(message);
     }
@@ -39,7 +38,8 @@ public class Status implements Comparable<Status> {
         this.author = author;
         this.message = message;
         this.urls = new URLs();
-        this.publishDate = Calendar.getInstance().getTime().toString();
+        Date date = new Date();
+        this.date = date.getTime();
         parseAliases(message);
         parseUrls(message);
     }
@@ -80,19 +80,21 @@ public class Status implements Comparable<Status> {
 
     }
 
-    public String getPublishDate() {
-       String date = publishDate;
-       String [] parsed = date.split(" ");
-       if(parsed.length == 2){
-           return String.format("%s %s",parsed[0], parsed[1]);
-       } else {
-           return String.format("%s %s", parsed[1], parsed[2]);
-       }
+    public String getDisplayDate(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(date);
+        String [] parsed = calendar.getTime().toString().split(" ");
+        if(parsed.length == 2){
+            return String.format("%s %s",parsed[0], parsed[1]);
+        } else {
+            return String.format("%s %s", parsed[1], parsed[2]);
+        }
     }
 
-    private String getFullDate(){
-        return publishDate;
+    public long getDate() {
+      return date;
     }
+
 
     public String getMessage() {
         return message;
@@ -120,7 +122,7 @@ public class Status implements Comparable<Status> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Status status = (Status) o;
-        if (!publishDate.equals(status.publishDate)){ return false;  }
+        if (date != status.getDate()){ return false;  }
         else if(!author.equals(status.getAuthor())) { return false; }
         else if(!message.equals(status.getMessage())) { return false; }
         else{
@@ -130,21 +132,10 @@ public class Status implements Comparable<Status> {
 
     @Override
     public int compareTo(Status o) {
-        String date1 = this.getFullDate();
-        String date2 = o.getFullDate();
+        long date1 = this.getDate();
+        long date2 = o.getDate();
 
-
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        try{
-            cal1.setTime(sdf.parse(date1));
-            cal2.setTime(sdf.parse(date2));
-        } catch (ParseException exception){
-            System.out.println("Error trying to parse dates");
-        }
-
-        return cal1.compareTo(cal2);
+        return (int) (date1 - date2);
     }
 
     @Override
@@ -152,7 +143,7 @@ public class Status implements Comparable<Status> {
         return "Status{" +
                 "message='" + message + '\'' +
                 ", author ='" + author.getName() + '\'' +
-                ", publish date ='" + publishDate + '\'' +
+                ", publish date ='" + getDisplayDate() + '\'' +
                 '}';
     }
 }

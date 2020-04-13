@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.story;
 
 
 import java.util.ArrayList;
@@ -12,11 +12,13 @@ import edu.byu.cs.tweeter.model.domain.Story;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.StoryRequest;
 import edu.byu.cs.tweeter.model.service.response.StoryResponse;
+import edu.byu.cs.tweeter.server.dao.StatusGenerator;
+import edu.byu.cs.tweeter.server.dao.UserGenerator;
 
 /**
  * A DAO for accessing 'story' data from the database.
  */
-public class StoryDAO {
+public class StoryDAOMock implements StoryDAO {
     private static Map<User, List<Status>> statusesByUser;
 
     private static List<User> users;
@@ -31,7 +33,7 @@ public class StoryDAO {
      *                other information required to satisfy the request.
      * @return the story (list of statuses).
      */
-
+    @Override
     public StoryResponse getStory(StoryRequest request){
         List<Status> all_statuses = new ArrayList<>();
         List<Status> final_statuses = new ArrayList<>(request.getLimit());
@@ -142,7 +144,7 @@ public class StoryDAO {
      *
      * @return the generator.
      */
-    StatusGenerator getStatusGenerator() {
+    public StatusGenerator getStatusGenerator() {
         return StatusGenerator.getInstance();
     }
 

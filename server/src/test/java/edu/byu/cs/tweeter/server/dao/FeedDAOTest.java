@@ -13,6 +13,7 @@ import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.server.dao.feed.FeedDAOMock;
 
 class FeedDAOTest {
     private final User user1 = new User("Daffy", "Duck", "");
@@ -68,11 +69,11 @@ class FeedDAOTest {
             status6, status7, status8, status9, status10);
 
 
-    private FeedDAO feedDAOSpy;
+    private FeedDAOMock feedDAOSpy;
 
     @BeforeEach
     void setup(){
-        feedDAOSpy = Mockito.spy(new FeedDAO());
+        feedDAOSpy = Mockito.spy(new FeedDAOMock());
 
         StatusGenerator mockStatusGenerator = Mockito.mock(StatusGenerator.class);
         Mockito.when(mockStatusGenerator.generateAllStatuses(Mockito.anyListOf(User.class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(statuses);

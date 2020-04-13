@@ -1,4 +1,4 @@
-package edu.byu.cs.tweeter.server.dao;
+package edu.byu.cs.tweeter.server.dao.feed;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,8 +12,11 @@ import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FeedRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedResponse;
+import edu.byu.cs.tweeter.server.dao.FollowGenerator;
+import edu.byu.cs.tweeter.server.dao.StatusGenerator;
+import edu.byu.cs.tweeter.server.dao.UserGenerator;
 
-public class FeedDAO {
+public class FeedDAOMock implements FeedDAO {
     private static Map<User, List<Status>> statusesByUser;
 
     private static List<User> users;
@@ -147,7 +150,7 @@ public class FeedDAO {
      *
      * @return the generator.
      */
-    StatusGenerator getStatusGenerator() {
+    public StatusGenerator getStatusGenerator() {
         return StatusGenerator.getInstance();
     }
 
@@ -191,14 +194,14 @@ public class FeedDAO {
      *
      * @return the generator.
      */
-    UserGenerator getUserGenerator() { return UserGenerator.getInstance(); }
+    public UserGenerator getUserGenerator() { return UserGenerator.getInstance(); }
 
     /**
      * Returns an instance of FollowGenerator that can be used to generated Follow data.
      * This is written
      *
      * */
-    FollowGenerator getFollowGenerator() { return FollowGenerator.getInstance(); }
+    public FollowGenerator getFollowGenerator() { return FollowGenerator.getInstance(); }
 
 
 }

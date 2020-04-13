@@ -64,8 +64,7 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         storyRecyclerView.setLayoutManager(layoutManager);
 
-        storyRecyclerViewAdapter = new StoryRecyclerViewAdapter();
-        storyRecyclerView.setAdapter(storyRecyclerViewAdapter);
+
 
         storyRecyclerView.addOnScrollListener(new StoryRecyclerViewPaginationScrollListener(layoutManager));
 
@@ -79,6 +78,9 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
                 storyRecyclerViewAdapter.loadMoreItems();
             }
         });
+
+        storyRecyclerViewAdapter = new StoryRecyclerViewAdapter();
+        storyRecyclerView.setAdapter(storyRecyclerViewAdapter);
 
         return view;
     }
@@ -110,10 +112,11 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
         void bindStatus(Status status) {
             userImage.setImageDrawable(ImageCache.getInstance().getImageDrawable(status.getAuthor()));
-            userAlias.setText(addSingleSpan(status.getAuthor().getAlias()));
+            String alias = "@" + status.getAuthor().getAlias();
+            userAlias.setText(addSingleSpan(alias));
             userAlias.setMovementMethod(LinkMovementMethod.getInstance());
             userName.setText(status.getAuthor().getName());
-            statusDate.setText(status.getPublishDate());
+            statusDate.setText(status.getDisplayDate());
             statusMessage.setText(addSpans(status.getMessage(), status));
             statusMessage.setMovementMethod(LinkMovementMethod.getInstance());
         }
@@ -155,9 +158,15 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
     private class AliasClickableSpan extends ClickableSpan{
         String text;
 
-        public AliasClickableSpan(String text){
+        private AliasClickableSpan(String text){
             super();
-            this.text = text;
+            String alias = text;
+            if(alias.startsWith("@")){
+                StringBuilder builder = new StringBuilder(alias);
+                builder.deleteCharAt(0);
+                alias = builder.toString();
+            }
+            this.text = alias;
         }
 
         @Override
@@ -274,11 +283,18 @@ public class StoryFragment extends Fragment implements StoryPresenter.View {
 
 
         void loadMoreItems() {
-            isLoading = true;
-            addLoadingFooter();
-            GetStoryTask getStoryTask = new GetStoryTask(presenter, this);
-            StoryRequest request = new StoryRequest(presenter.getViewingUser(), PAGE_SIZE, lastStatus);
-            getStoryTask.execute(request);
+            if(null != presenter.getViewingUser()){
+                isLoading = true;
+                addLoadingFooter();
+
+                GetStoryTask getStoryTask = new GetStoryTask(presenter, this);
+                StoryRequest request = new StoryRequest(presenter.getViewingUser(), PAGE_SIZE, lastStatus);
+                getStoryTask.execute(request);
+            }else{
+                isLoading = false;
+                swipeContainer.setRefreshing(false);
+                presenter.updateNumStatuses(0);
+            }
         }
 
 

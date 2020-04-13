@@ -30,7 +30,7 @@ public class GetFeedHandler extends Handler implements RequestHandler<FeedReques
 
 
         /*TODO: Remove after done testing*/
-//        forTestingValidActiveToken(alias, token);
+        forTestingValidActiveToken(alias, token);
 
         //Check if user is logged in
         checkAuthorization(alias, token);

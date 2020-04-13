@@ -70,6 +70,7 @@ class FollowerServiceProxyTest {
         Assertions.assertNotNull(response);
         Assertions.assertNotNull(response.getFollowers());
         Assertions.assertEquals(1, response.getFollowers().size());
+        Assertions.assertEquals(user, response.getFollowers().get(0));
         Assertions.assertFalse(response.getHasMorePages());
 
     }

@@ -6,12 +6,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.service.request.StoryRequest;
 import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.server.dao.story.StoryDAOMock;
+import edu.byu.cs.tweeter.server.json.Serializer;
 
 class StoryDAOTest {
     private final User user1 = new User("Daffy", "Duck", "");
@@ -33,11 +37,11 @@ class StoryDAOTest {
     private final List<Status> statuses = Arrays.asList(status1, status2, status3, status4, status5,
             status6, status7);
 
-    private StoryDAO storyDAOspy;
+    private StoryDAOMock storyDAOspy;
 
     @BeforeEach
     void setup(){
-        storyDAOspy = Mockito.spy(new StoryDAO());
+        storyDAOspy = Mockito.spy(new StoryDAOMock());
 
         StatusGenerator mockStatusGenerator = Mockito.mock(StatusGenerator.class);
         Mockito.when(mockStatusGenerator.generateAllStatuses(Mockito.anyListOf(User.class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(statuses);
@@ -107,4 +111,30 @@ class StoryDAOTest {
         Assertions.assertFalse(response.success);
         Assertions.assertEquals(response.getMessage(), "[Bad Request]: User does not exist");
     }
+
+//    @Test
+//    void testDate(){
+//        Date date2 = new Date();
+//        long date = date2.getTime();
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeInMillis(date);
+//        String [] parsed = calendar.getTime().toString().split(" ");
+//        String display;
+//        if(parsed.length == 2){
+//            display = String.format("%s %s",parsed[0], parsed[1]);
+//        } else {
+//            display = String.format("%s %s", parsed[1], parsed[2]);
+//        }
+//        System.out.println(display);
+//    }
+
+//    @Test
+//    void test_status(){
+//        User test = new User("Mo", "Davis", "Morgan", "https://cs-340-w2020.s3-us-west-2.amazonaws.com/Morgan.jpg");
+//        Date date = new Date();
+//        long time = date.getTime();
+//        Status status = new Status(test, "Testing a new status");
+//        String testing = Serializer.serialize(status);
+//        System.out.println(testing);
+//    }
 }

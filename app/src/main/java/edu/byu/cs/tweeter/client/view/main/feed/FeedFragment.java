@@ -65,8 +65,7 @@ public class FeedFragment extends Fragment implements FeedPresenter.View{
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         feedRecyclerView.setLayoutManager(layoutManager);
 
-        feedRecyclerViewAdapter = new FeedRecyclerViewAdapter();
-        feedRecyclerView.setAdapter(feedRecyclerViewAdapter);
+
 
         feedRecyclerView.addOnScrollListener(new FeedRecyclerViewPaginationScrollListener(layoutManager));
 
@@ -81,6 +80,9 @@ public class FeedFragment extends Fragment implements FeedPresenter.View{
                 feedRecyclerViewAdapter.loadMoreItems();
             }
         });
+
+        feedRecyclerViewAdapter = new FeedRecyclerViewAdapter();
+        feedRecyclerView.setAdapter(feedRecyclerViewAdapter);
 
         return view;
     }
@@ -110,10 +112,11 @@ public class FeedFragment extends Fragment implements FeedPresenter.View{
 
         void bindStatus(Status status) {
             userImage.setImageDrawable(ImageCache.getInstance().getImageDrawable(status.getAuthor()));
-            userAlias.setText(addSingleSpan(status.getAuthor().getAlias()));
+            String alias = "@" + status.getAuthor().getAlias();
+            userAlias.setText(addSingleSpan(alias));
             userAlias.setMovementMethod(LinkMovementMethod.getInstance());
             userName.setText(status.getAuthor().getName());
-            statusDate.setText(status.getPublishDate());
+            statusDate.setText(status.getDisplayDate());
             statusMessage.setText(addSpans(status.getMessage(), status));
             statusMessage.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -160,7 +163,13 @@ public class FeedFragment extends Fragment implements FeedPresenter.View{
 
         public AliasClickableSpan(String text){
             super();
-            this.text = text;
+            String alias = text;
+            if(alias.startsWith("@")){
+                StringBuilder builder = new StringBuilder(alias);
+                builder.deleteCharAt(0);
+                alias = builder.toString();
+            }
+            this.text = alias;
         }
 
         @Override
@@ -276,11 +285,16 @@ public class FeedFragment extends Fragment implements FeedPresenter.View{
 
         void loadMoreItems() {
             isLoading = true;
-            addLoadingFooter();
-
-            GetFeedTask getFeedTask = new GetFeedTask(presenter, this);
-            FeedRequest request = new FeedRequest(presenter.getViewingUser(), PAGE_SIZE, lastStatus, presenter.getToken());
-            getFeedTask.execute(request);
+            if(null != presenter.getViewingUser()) {
+                addLoadingFooter();
+                GetFeedTask getFeedTask = new GetFeedTask(presenter, this);
+                FeedRequest request = new FeedRequest(presenter.getViewingUser(), PAGE_SIZE, lastStatus, presenter.getToken());
+                getFeedTask.execute(request);
+            }else{
+                isLoading = false;
+                swipeContainer.setRefreshing(false);
+                presenter.updateNumStatuses(0);
+            }
         }
 
 

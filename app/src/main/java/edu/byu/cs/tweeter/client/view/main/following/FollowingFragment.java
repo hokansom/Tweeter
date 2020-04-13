@@ -58,8 +58,7 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         followingRecyclerView.setLayoutManager(layoutManager);
 
-        followingRecyclerViewAdapter = new FollowingRecyclerViewAdapter();
-        followingRecyclerView.setAdapter(followingRecyclerViewAdapter);
+
 
         followingRecyclerView.addOnScrollListener(new FollowRecyclerViewPaginationScrollListener(layoutManager));
 
@@ -74,6 +73,9 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
                 followingRecyclerViewAdapter.loadMoreItems();
             }
         });
+
+        followingRecyclerViewAdapter = new FollowingRecyclerViewAdapter();
+        followingRecyclerView.setAdapter(followingRecyclerViewAdapter);
 
         return view;
     }
@@ -195,12 +197,19 @@ public class FollowingFragment extends Fragment implements FollowingPresenter.Vi
 
 
         void loadMoreItems() {
-            isLoading = true;
-            addLoadingFooter();
+            if(null != presenter.getViewingUser()){
+                isLoading = true;
+                addLoadingFooter();
 
-            GetFollowingTask getFollowingTask = new GetFollowingTask(presenter, this);
-            FollowingRequest request = new FollowingRequest(presenter.getViewingUser(), PAGE_SIZE, lastFollowee);
-            getFollowingTask.execute(request);
+                GetFollowingTask getFollowingTask = new GetFollowingTask(presenter, this);
+                FollowingRequest request = new FollowingRequest(presenter.getViewingUser(), PAGE_SIZE, lastFollowee);
+                getFollowingTask.execute(request);
+            }else{
+                isLoading = false;
+                swipeContainer.setRefreshing(false);
+                presenter.updateNumFollowees(0);
+            }
+
         }
 
         @Override

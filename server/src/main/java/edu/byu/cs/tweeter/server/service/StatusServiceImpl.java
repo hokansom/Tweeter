@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.server.service;
 
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.service.StatusService;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.response.StatusResponse;
@@ -12,5 +13,10 @@ public class StatusServiceImpl implements StatusService {
     public StatusResponse postStatus(StatusRequest request) {
         StatusDAO dao = new StatusDAO();
         return dao.postStatus(request);
+    }
+
+    public void addStatusToQueue(Status status){
+        SQSService service = new SQSService();
+        service.addStatusToQueue(status);
     }
 }

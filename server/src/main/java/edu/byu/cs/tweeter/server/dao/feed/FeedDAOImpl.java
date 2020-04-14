@@ -2,9 +2,15 @@ package edu.byu.cs.tweeter.server.dao.feed;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.BatchWriteItemOutcome;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.TableWriteItems;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryResult;
+import com.amazonaws.services.dynamodbv2.model.WriteRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +35,8 @@ public class FeedDAOImpl implements FeedDAO {
             .standard()
             .withRegion("us-west-2")
             .build();
+
+    private static DynamoDB dynamoDB = new DynamoDB(amazonDynamoDB);
 
     @Override
     public FeedResponse getFeed(FeedRequest request) {
@@ -96,5 +104,47 @@ public class FeedDAOImpl implements FeedDAO {
             return (lastStatus.getDate() != 0);
         }
         return false;
+    }
+
+    public void updateFeeds(Status status, List<String> aliases){
+        System.out.println("Update feeds for status");
+        long date = status.getDate();
+        String statusString = Serializer.serialize(status);
+        TableWriteItems items = new TableWriteItems(TableName);
+
+        for(String alias: aliases){
+            Item item = new Item()
+                    .withPrimaryKey(AliasAttr, alias, DateAttr, date)
+                    .withString(StatusAttr, statusString);
+            items.addItemToPut(item);
+
+            if(items.getItemsToPut() != null && items.getItemsToPut().size() == 25){
+                loopBatchWrite(items);
+                items = new TableWriteItems(TableName);
+            }
+        }
+
+        if(items.getItemsToPut() != null && items.getItemsToPut().size() > 0){
+            loopBatchWrite(items);
+        }
+    }
+
+    private void loopBatchWrite(TableWriteItems items) {
+
+        try{
+            BatchWriteItemOutcome outcome = dynamoDB.batchWriteItem(items);
+            System.out.println("Wrote feed batch");
+
+            // Check the outcome for items that didn't make it onto the table
+            // If any were not added to the table, try again to write the batch
+            while (outcome.getUnprocessedItems().size() > 0) {
+                Map<String, List<WriteRequest>> unprocessedItems = outcome.getUnprocessedItems();
+                outcome = dynamoDB.batchWriteItemUnprocessed(unprocessedItems);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("[Internal Service Error]: Could not update feeds after a new status was posted");
+        }
+
     }
 }

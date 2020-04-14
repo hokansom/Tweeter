@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import edu.byu.cs.tweeter.client.net.ServerFacade;
 import edu.byu.cs.tweeter.model.service.StoryService;
+import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.request.StoryRequest;
+import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
 public class StoryServiceProxy implements StoryService {
@@ -16,5 +18,10 @@ public class StoryServiceProxy implements StoryService {
     @Override
     public StoryResponse getStory(StoryRequest request) throws IOException  {
         return serverFacade.getStory(request, URL_PATH);
+    }
+
+    @Override
+    public StatusResponse postStatus(StatusRequest request) throws IOException {
+        return null;
     }
 }

@@ -10,7 +10,9 @@ import java.util.Map;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.Story;
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.request.StoryRequest;
+import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 import edu.byu.cs.tweeter.server.dao.StatusGenerator;
 import edu.byu.cs.tweeter.server.dao.UserGenerator;
@@ -157,4 +159,8 @@ public class StoryDAOMock implements StoryDAO {
      */
     UserGenerator getUserGenerator() { return UserGenerator.getInstance(); }
 
+    @Override
+    public StatusResponse postStatus(StatusRequest request) {
+        return null;
+    }
 }

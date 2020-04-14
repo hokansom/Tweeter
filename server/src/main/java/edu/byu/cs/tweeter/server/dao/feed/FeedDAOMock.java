@@ -203,5 +203,8 @@ public class FeedDAOMock implements FeedDAO {
      * */
     public FollowGenerator getFollowGenerator() { return FollowGenerator.getInstance(); }
 
+    @Override
+    public void updateFeeds(Status status, List<String> aliases) {
 
+    }
 }

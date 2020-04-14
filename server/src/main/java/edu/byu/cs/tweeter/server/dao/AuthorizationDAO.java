@@ -44,17 +44,23 @@ public class AuthorizationDAO {
     private Authorization getAuthorization(String alias, String token){
         System.out.println(alias);
         System.out.println(token);
-        Table table = dynamoDB.getTable(TableName);
-        System.out.println("Got table");
-        Item item = table.getItem(AliasAttr, alias, TokenAttr, token);
-        if(item == null){
-            System.out.println("Got null");
-            return null;
+        try{
+            Table table = dynamoDB.getTable(TableName);
+            System.out.println("Got table");
+            Item item = table.getItem(AliasAttr, alias, TokenAttr, token);
+            if(item == null){
+                System.out.println("Got null");
+                return null;
 
-        }else{
-            System.out.println("Got something");
-            return new Authorization(item.getString(AliasAttr), item.getString(TokenAttr), item.getLong(TimeStampAttr));
+            }else{
+                System.out.println("Got something");
+                return new Authorization(item.getString(AliasAttr), item.getString(TokenAttr), item.getLong(TimeStampAttr));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("[Internal Service Error]: Could not verify user is authorized");
         }
+
     }
 
     public void updateAuthorization(String alias, String token){
@@ -81,13 +87,19 @@ public class AuthorizationDAO {
         String token = UUID.randomUUID().toString();
         Date date = new Date();
         long current = date.getTime();
+        try{
+            Table table = dynamoDB.getTable(TableName);
 
-        Table table = dynamoDB.getTable(TableName);
+            Item item = new Item()
+                    .withPrimaryKey(AliasAttr, alias, TokenAttr, token)
+                    .withNumber(TimeStampAttr, current);
+            table.putItem(item);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("[Internal Service Error]:  Could not get auth token for user");
+        }
 
-        Item item = new Item()
-                .withPrimaryKey(AliasAttr, alias, TokenAttr, token)
-                .withNumber(TimeStampAttr, current);
-        table.putItem(item);
+
 
         return token;
     }

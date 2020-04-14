@@ -1,6 +1,8 @@
 package edu.byu.cs.tweeter.server.dao.story;
 
+import edu.byu.cs.tweeter.model.service.request.StatusRequest;
 import edu.byu.cs.tweeter.model.service.request.StoryRequest;
+import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 import edu.byu.cs.tweeter.model.service.response.StoryResponse;
 
 public interface StoryDAO {
@@ -16,4 +18,6 @@ public interface StoryDAO {
      */
 
     StoryResponse getStory(StoryRequest request);
+
+    StatusResponse postStatus(StatusRequest request);
 }

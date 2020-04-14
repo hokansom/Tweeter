@@ -59,7 +59,7 @@ public class FollowerDAOImpl implements FollowerDAO {
 
         Table table = dynamoDB.getTable(TableName);
 
-        System.out.print("Querying index " + IndexName + "...");
+        System.out.print("Querying index " + IndexName);
 
 
         NameMap nameMap = new NameMap()
@@ -86,14 +86,12 @@ public class FollowerDAOImpl implements FollowerDAO {
             List<User> followers = new ArrayList<>();
             while(iterator.hasNext()){
                 String result = iterator.next().toJSONPretty();
-                System.out.println(result);
                 DBResults temp = Serializer.deserialize(result, DBResults.class);
-                System.out.println(temp.getFollower());
                 User follower = Serializer.deserialize(temp.getFollower(), User.class);
                 followers.add(follower);
             }
             boolean hasMorePages = false;
-            System.out.println("Followers size" + followers.size());
+            System.out.println("Followers size " + followers.size());
             if(followers.size() == request.getLimit()){
                 hasMorePages = true;
             }

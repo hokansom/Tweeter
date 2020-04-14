@@ -1,5 +1,8 @@
 package edu.byu.cs.tweeter.server.dao.feed;
 
+import java.util.List;
+
+import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.service.request.FeedRequest;
 import edu.byu.cs.tweeter.model.service.response.FeedResponse;
 
@@ -15,4 +18,6 @@ public interface FeedDAO {
      * @return the feed (list of statuses).
      */
     FeedResponse getFeed(FeedRequest request);
+
+    void updateFeeds(Status status, List<String> aliases);
 }

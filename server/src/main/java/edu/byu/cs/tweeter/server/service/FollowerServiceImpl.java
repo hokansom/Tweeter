@@ -20,6 +20,7 @@ import edu.byu.cs.tweeter.server.dao.followers.FollowerDAOMock;
 public class FollowerServiceImpl implements FollowerService {
     private final int limit = 25; // Single read from DB returns 25 items
     private final int totalLimit = limit * 10; //Batches can send 10 messages at a time
+
     @Override
     public FollowerResponse getFollowers(FollowerRequest request) {
         FollowerDAO dao = new FollowerDAOImpl();
@@ -27,7 +28,6 @@ public class FollowerServiceImpl implements FollowerService {
     }
 
     public void getAllFollowers(Status status){
-
         User followee = status.getAuthor();
         String alias = status.getAuthor().getAlias();
         System.out.println("Getting all individuals following @" + alias);
@@ -43,7 +43,7 @@ public class FollowerServiceImpl implements FollowerService {
             List<User> users = response.getFollowers();
 
             for(User user: users){
-                System.out.println(user.getAlias()); 
+                System.out.println(user.getAlias());
                 aliases.add(user.getAlias());
                 if(aliases.size() == totalLimit){
                     System.out.println("Preparing to send over to postToFeedQueue");

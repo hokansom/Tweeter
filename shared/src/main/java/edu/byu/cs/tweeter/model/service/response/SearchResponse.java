@@ -22,4 +22,12 @@ public class SearchResponse extends Response {
     public User getUser() { return user; }
 
     public boolean isFollowing() { return isFollowing; }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setFollowing(boolean following) {
+        isFollowing = following;
+    }
 }

@@ -18,4 +18,12 @@ public class SignInResponse extends Response {
     public User getUser() { return user; }
 
     public String getToken() { return token; }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

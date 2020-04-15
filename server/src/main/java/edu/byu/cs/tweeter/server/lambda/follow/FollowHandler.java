@@ -28,18 +28,7 @@ public class FollowHandler extends Handler implements RequestHandler<FollowReque
         String alias = request.getFollow().getFollower().getAlias();
         String token = request.getToken();
 
-
-        /*TODO: Remove after done testing*/
-        forTestingValidActiveToken(alias, token);
-
         checkAuthorization(alias, token);
-        //TODO: Separate into follow and unfollow
-
-        //Check if user is logged in an authorized, then proceed
-
-        System.out.println(request.getFollow().followee.getAlias());
-        System.out.println(request.getFollow().follower.getAlias());
-        System.out.println(String.format("Request token: %s", request.getToken()));
 
         FollowServiceImpl service = new FollowServiceImpl();
         FollowResponse response = service.postFollow(request);

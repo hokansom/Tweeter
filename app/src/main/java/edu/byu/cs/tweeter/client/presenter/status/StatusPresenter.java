@@ -15,7 +15,7 @@ public class StatusPresenter extends AbstractStatusPresenter {
     public void checkStatus(String s){
         int length = s.length();
         if(length > MAX_CHAR){
-            updateView("Message must be less than 280 characters.", false, length);
+            updateView("Message cannot contain more than 280 characters.", false, length);
 
         } else if(length == 0){
             updateView("Message cannot be empty.", false, length);

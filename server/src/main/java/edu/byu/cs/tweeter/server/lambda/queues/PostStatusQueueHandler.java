@@ -16,8 +16,9 @@ public class PostStatusQueueHandler implements RequestHandler<SQSEvent, Void> {
     @Override
     public Void handleRequest(SQSEvent sqsEvent, Context context) {
         FollowerServiceImpl service = new FollowerServiceImpl();
-        for(SQSEvent.SQSMessage msg : sqsEvent.getRecords()){
 
+        for(SQSEvent.SQSMessage msg : sqsEvent.getRecords()){
+            System.out.println("msg from queue: " + msg.getBody());
             Status status = Serializer.deserialize(msg.getBody(), Status.class);
             service.getAllFollowers(status);
         }

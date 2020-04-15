@@ -15,8 +15,6 @@ public class UnfollowDAOImpl implements UnfollowDAO {
 
     private static final String FollowerAliasAttr = "followerAlias";
     private static final String FolloweeAliasAttr = "followeeAlias";
-    private static final String FolloweeAttr = "followee";
-    private static final String FollowerAttr = "follower";
 
 
 
@@ -37,8 +35,10 @@ public class UnfollowDAOImpl implements UnfollowDAO {
                 .withConditionExpression("attribute_exists(followeeAlias)");
         try{
             table.deleteItem(deleteItemSpec);
+
         } catch (ConditionalCheckFailedException e){
             throw new RuntimeException("[Bad Request]: Cannot delete a follow relationship that doesn't exist");
+
         } catch (Exception e){
             throw new RuntimeException("[Internal Service Error]: Could not remove follow");
         }

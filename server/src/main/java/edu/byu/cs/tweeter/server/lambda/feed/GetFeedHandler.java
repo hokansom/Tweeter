@@ -29,13 +29,8 @@ public class GetFeedHandler extends Handler implements RequestHandler<FeedReques
         String token = request.getToken();
 
 
-        /*TODO: Remove after done testing*/
-        forTestingValidActiveToken(alias, token);
-
         //Check if user is logged in
         checkAuthorization(alias, token);
-
-
 
         FeedServiceImpl service = new FeedServiceImpl();
         FeedResponse response =  service.getFeed(request);
@@ -44,7 +39,6 @@ public class GetFeedHandler extends Handler implements RequestHandler<FeedReques
         if(null != response.getMessage()){
             checkForError(response.getMessage());
         }
-
 
         /*Posting status succeeded, so update timestamp on the auth token*/
         updateAuthTimestamp(alias, token);

@@ -44,12 +44,12 @@ class StatusDAOTest {
     private final List<Status> statuses = Arrays.asList(status1, status2, status3, status4, status5,
             status6, status7, status8, status9, status10);
 
-    private StatusDAO statusDAOSpy;
+    private StatusDAOMock statusDAOSpy;
 
 
     @BeforeEach
     void setup(){
-        statusDAOSpy = Mockito.spy(new StatusDAO());
+        statusDAOSpy = Mockito.spy(new StatusDAOMock());
 
         UserGenerator mockUserGenerator = Mockito.mock(UserGenerator.class);
         Mockito.when(mockUserGenerator.generateUsers(Mockito.anyInt())).thenReturn(users);

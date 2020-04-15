@@ -28,16 +28,8 @@ public class UnfollowHandler extends Handler implements RequestHandler<FollowReq
         String token = request.getToken();
 
 
-        /*TODO: Remove after done testing*/
-//        forTestingValidActiveToken(alias, token);
-
         checkAuthorization(alias, token);
 
-        //Check if user is logged in an authorized, then proceed
-
-        System.out.println(request.getFollow().followee.getAlias());
-        System.out.println(request.getFollow().follower.getAlias());
-        System.out.println(String.format("Request token: %s", request.getToken()));
 
         UnfollowServiceImpl service = new UnfollowServiceImpl();
         FollowResponse response = service.deleteFollow(request);

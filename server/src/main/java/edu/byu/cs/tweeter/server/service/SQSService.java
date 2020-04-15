@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.server.service;
 
+import com.amazonaws.handlers.AsyncHandler;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.amazonaws.services.sqs.model.BatchResultErrorEntry;
@@ -52,27 +53,92 @@ public class SQSService {
         if (batchList.size() > 0){
             QueueMessage queueMessage = new QueueMessage(status, batchList);
             String message = Serializer.serialize(queueMessage);
-            sendMessage(message, UpdateFeedURL);
+            String msgName = "msg" + counter;
+            SendMessageBatchRequestEntry entry = new SendMessageBatchRequestEntry(msgName, message);
+            entries.add(entry);
+            sendBatch(entries, UpdateFeedURL);
         }
     }
 
 
+//    private void sendMessage(String message, String url){
+//        try{
+//        SendMessageBatchRequestEntry entry = new SendMessageBatchRequestEntry("msg", message);
+//        SendMessageBatchRequest request = new SendMessageBatchRequest()
+//                .withQueueUrl(url)
+//                .withEntries(entry);
+//
+//        System.out.println("Sending a message: " + message);
+//
+//            sqs.sendMessageBatchAsync(request);
+////            SendMessageRequest sendMessageRequest = new SendMessageRequest()
+////                    .withQueueUrl(url)
+////                    .withMessageBody(message);
+//
+//            System.out.println("Message sent");
+//        } catch(Exception e){
+//            e.printStackTrace();
+//            throw new RuntimeException("[Internal Service Error]: Could not send message to queue");
+//        }
+//    }
+
+
+//    private void sendMessage(String message, String url){
+//        try{
+//            System.out.println("Message to send to SQS sendmessage: message" + message);
+//            SendMessageRequest request = new SendMessageRequest()
+//                    .withQueueUrl(url)
+//                    .withMessageBody(message);
+//
+//            sqs.sendMessageAsync(request, new AsyncHandler<SendMessageRequest, SendMessageResult>() {
+//                @Override
+//                public void onError(Exception e) {
+//                    System.out.println("Message was not sent. An error occurred");
+//                    e.printStackTrace();
+//                    throw new RuntimeException("[Internal Service Error]: Could not send SQS message");
+//                }
+//
+//                @Override
+//                public void onSuccess(SendMessageRequest request, SendMessageResult sendMessageResult) {
+//                    System.out.println("Message successfully sent");
+//                    System.out.println("The message that was delivered: " + request.getMessageBody());
+//                }
+//            });
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            throw new RuntimeException("[Internal Service Error]: Could not send SQS message");
+//        }
+//    }
+
     private void sendMessage(String message, String url){
-        System.out.println("Sending a message: " + message);
         try{
-            SendMessageRequest sendMessageRequest = new SendMessageRequest()
+            System.out.println("Message to send to SQS sendmessage: message" + message);
+            SendMessageRequest request = new SendMessageRequest()
                     .withQueueUrl(url)
-                    .withMessageBody(message)
-                    .withDelaySeconds(5);
+                    .withMessageBody(message);
 
-            sqs.sendMessageAsync(sendMessageRequest);
-        } catch(Exception e){
+            SendMessageResult result = sqs.sendMessage(request);
+            System.out.println(result.getSdkResponseMetadata());
+            System.out.println(result.getMessageId());
+
+//            sqs.sendMessageAsync(request, new AsyncHandler<SendMessageRequest, SendMessageResult>() {
+//                @Override
+//                public void onError(Exception e) {
+//                    System.out.println("Message was not sent. An error occurred");
+//                    e.printStackTrace();
+//                    throw new RuntimeException("[Internal Service Error]: Could not send SQS message");
+//                }
+//
+//                @Override
+//                public void onSuccess(SendMessageRequest request, SendMessageResult sendMessageResult) {
+//                    System.out.println("Message successfully sent");
+//                    System.out.println("The message that was delivered: " + request.getMessageBody());
+//                }
+//            });
+        } catch (Exception e){
             e.printStackTrace();
-            throw new RuntimeException("[Internal Service Error]: Could not send message to queue");
+            throw new RuntimeException("[Internal Service Error]: Could not send SQS message");
         }
-
-        System.out.println("Message sent");
-
     }
 
     private void sendBatch(List<SendMessageBatchRequestEntry> entries, String url){

@@ -14,6 +14,7 @@ import edu.byu.cs.tweeter.server.dao.feed.FeedDAOMock;
  * Contains the business logic for getting the feed of a user.
  */
 public class FeedServiceImpl implements FeedService {
+
     @Override
     public FeedResponse getFeed(FeedRequest request){
         FeedDAO dao = new FeedDAOImpl();
@@ -21,7 +22,6 @@ public class FeedServiceImpl implements FeedService {
     }
 
     public void updateFeeds(Status status, List<String> aliases){
-        System.out.println("In FeedServiceImpl");
         FeedDAO dao = new FeedDAOImpl();
         dao.updateFeeds(status, aliases);
     }

@@ -21,10 +21,11 @@ public class MainPresenter extends AbstractMainPresenter {
     }
 
     public void signOut(SignOutRequest request) throws IOException {
-        SignOutService service = new SignOutServiceProxy();
-        service.signOut(request);
         setCurrentUser(null);
         view.clearData();
+        SignOutService service = new SignOutServiceProxy();
+        service.signOut(request);
+
     }
 
     public void signOutUser(){

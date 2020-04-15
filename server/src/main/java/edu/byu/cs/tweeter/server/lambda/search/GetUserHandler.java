@@ -26,7 +26,6 @@ public class GetUserHandler extends Handler implements RequestHandler<SearchRequ
         SearchUserServiceImpl service = new SearchUserServiceImpl();
         SearchResponse response = service.getUser(request);
 
-        /*FIXME: the line below may not be needed*/
         if(null != response.getMessage()){
             checkForError(response.getMessage());
         }

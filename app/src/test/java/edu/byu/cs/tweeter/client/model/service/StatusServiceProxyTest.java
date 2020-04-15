@@ -21,7 +21,7 @@ class StatusServiceProxyTest {
     private final String auth = "123456789";
     private final Status status1 = new Status(user, "Testing status 1 @TestUser www.google.com");
     private final Status status2 = new Status(user2, "Please work!");
-    private final Status status3 = new Status(user2, "New Status please");
+    private final Status status3 = new Status(user2, "Will it work again?");
     private StatusServiceProxy serviceProxySpy;
 
     @BeforeEach

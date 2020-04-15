@@ -29,7 +29,6 @@ public class FollowerDAOImpl implements FollowerDAO {
 
     private static final String FollowerAliasAttr = "followerAlias";
     private static final String FolloweeAliasAttr = "followeeAlias";
-    private static final String FollowerAttr = "follower";
 
     // DynamoDB client
     private static AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder
@@ -54,13 +53,10 @@ public class FollowerDAOImpl implements FollowerDAO {
 
         assert request.getLimit() > 0;
         assert request.getFollowee() != null;
-        System.out.println(request.getLimit());
+
         String followeeAlias = request.getFollowee().getAlias();
 
         Table table = dynamoDB.getTable(TableName);
-
-        System.out.print("Querying index " + IndexName);
-
 
         NameMap nameMap = new NameMap()
                 .with("#followeeA", FolloweeAliasAttr);
@@ -76,10 +72,12 @@ public class FollowerDAOImpl implements FollowerDAO {
                     .withNameMap(nameMap)
                     .withValueMap(valueMap)
                     .withMaxResultSize(limit);
+
             if(isNonEmpty(request.getLastFollower())){
                 String lastFollowerAlias = request.getLastFollower().getAlias();
                 querySpec.withExclusiveStartKey(FolloweeAliasAttr,followeeAlias, FollowerAliasAttr,lastFollowerAlias);
             }
+
             ItemCollection<QueryOutcome> items = index.query(querySpec);
             Iterator<Item> iterator = items.iterator();
 
@@ -90,11 +88,7 @@ public class FollowerDAOImpl implements FollowerDAO {
                 User follower = Serializer.deserialize(temp.getFollower(), User.class);
                 followers.add(follower);
             }
-            boolean hasMorePages = false;
-            System.out.println("Followers size " + followers.size());
-            if(followers.size() == request.getLimit()){
-                hasMorePages = true;
-            }
+            boolean hasMorePages = followers.size() == request.getLimit();
 
             return new FollowerResponse(followers, hasMorePages);
         } catch (Exception e){

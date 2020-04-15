@@ -7,6 +7,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import edu.byu.cs.tweeter.model.service.request.SignInRequest;
 import edu.byu.cs.tweeter.model.service.response.SignInResponse;
 import edu.byu.cs.tweeter.server.lambda.Handler;
+import edu.byu.cs.tweeter.server.service.AuthorizationServiceImpl;
 import edu.byu.cs.tweeter.server.service.SignInServiceImpl;
 
 /**
@@ -24,7 +25,6 @@ public class PostSignInHandler extends Handler implements RequestHandler<SignInR
 
         SignInServiceImpl service = new SignInServiceImpl();
         SignInResponse response =  service.postSignIn(request);
-        System.out.println("Received response from service");
 
         if(null != response.getMessage()){
             checkForError(response.getMessage());
@@ -32,4 +32,5 @@ public class PostSignInHandler extends Handler implements RequestHandler<SignInR
 
         return response;
     }
+
 }

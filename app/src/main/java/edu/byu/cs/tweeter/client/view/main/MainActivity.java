@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements LoadImageTask.Loa
     @Override
     public void clearData(){
         Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

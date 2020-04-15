@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.client.view.main.status;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.byu.cs.tweeter.R;
+import edu.byu.cs.tweeter.client.view.main.SignInActivity;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.StatusRequest;
@@ -139,7 +141,7 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
 
     @Override
     public void statusRetrieved(StatusResponse response) {
-        if(response.getMessage().equals("Status posted")){
+        if(response.getMessage().equals("")){
             finish();
         }
         else{
@@ -170,5 +172,15 @@ public class StatusActivity extends Activity implements  LoadImageTask.LoadImage
     public void handleException(Exception throwable) {
         Log.e("", throwable.getMessage(), throwable);
         Toast.makeText(getBaseContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
+        if(throwable.getMessage().equals("[Unauthorized]: User has timed out due to inactivity")){
+            forceSignOut();
+        }
+    }
+
+    private void forceSignOut(){
+        presenter.setCurrentUser(null);
+        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

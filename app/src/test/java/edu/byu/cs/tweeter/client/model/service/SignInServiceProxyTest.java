@@ -36,8 +36,45 @@ class SignInServiceProxyTest {
         Assertions.assertNotNull(response);
         Assertions.assertEquals(user, response.getUser());
         Assertions.assertNotNull(response.getToken());
-
+        Assertions.assertNotEquals("", response.getToken());
     }
 
+    @Test
+    void test_badPasswordSignInHandler(){
+        SignInRequest request = new SignInRequest(user.getAlias(), "Random123");
+        SignInResponse response = null;
 
+        try{
+            response = serviceProxySpy.postSignIn(request);
+        } catch (IOException e){
+            Assertions.assertEquals("[Bad Request]: Invalid password",e.getMessage());
+        }
+        Assertions.assertNull(response);
+    }
+
+    @Test
+    void test_badUserSignInHandler(){
+        SignInRequest request = new SignInRequest("RandomUser", "Password");
+        SignInResponse response = null;
+
+        try{
+            response = serviceProxySpy.postSignIn(request);
+        } catch (IOException e){
+            Assertions.assertEquals("[Bad Request]: User with given alias (@RandomUser) does not exist.",e.getMessage());
+        }
+        Assertions.assertNull(response);
+    }
+
+    @Test
+    void test_badRequestSignInHandler(){
+        SignInRequest request = new SignInRequest("", "Password");
+        SignInResponse response = null;
+
+        try{
+            response = serviceProxySpy.postSignIn(request);
+        } catch (IOException e){
+            Assertions.assertEquals("[Bad Request]: Alias is required.",e.getMessage());
+        }
+        Assertions.assertNull(response);
+    }
 }

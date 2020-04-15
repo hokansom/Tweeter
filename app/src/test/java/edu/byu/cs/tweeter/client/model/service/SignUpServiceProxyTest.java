@@ -6,12 +6,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import edu.byu.cs.tweeter.model.service.request.SignUpRequest;
 import edu.byu.cs.tweeter.model.service.response.SignUpResponse;
 import edu.byu.cs.tweeter.model.domain.User;
 
 class SignUpServiceProxyTest {
+    private final String DEFAULT_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
+    private final User existingUser = new User("Morgan", "Davis", "Momo", DEFAULT_URL );
 
     private SignUpServiceProxy serviceProxySpy;
 
@@ -22,7 +25,8 @@ class SignUpServiceProxyTest {
 
     @Test
     void test_postSignUpHandler(){
-        User newUser = new User("Morgan", "Davis", "Momo", "");
+        String randomAlias = UUID.randomUUID().toString();
+        User newUser = new User("Testing", "SignUp", randomAlias, "");
         SignUpRequest request = new SignUpRequest(newUser, "Password", "");
         SignUpResponse response = null;
 
@@ -34,7 +38,23 @@ class SignUpServiceProxyTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(newUser, response.getUser());
+        Assertions.assertEquals(DEFAULT_URL, response.getUser().getImageUrl());
         Assertions.assertNotNull(response.getToken());
+        Assertions.assertNotEquals("", response.getToken());
 
+    }
+
+    @Test
+    void test_postSignUp_exisitingUser(){
+        SignUpRequest request = new SignUpRequest(existingUser, "Password", "");
+        SignUpResponse response = null;
+
+        try{
+            response = serviceProxySpy.postSignUp(request);
+        } catch (IOException e){
+            Assertions.assertEquals("[Bad Request]: The alias (@Momo) is already taken.", e.getMessage());
+        }
+
+        Assertions.assertNull(response);
     }
 }

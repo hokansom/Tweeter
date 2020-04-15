@@ -10,6 +10,14 @@ public class SignInServiceImpl implements SignInService {
     @Override
     public SignInResponse postSignIn(SignInRequest request) {
         SignInDAO dao = new SignInDAOImpl();
-        return dao.postSignIn(request);
+        SignInResponse response = dao.postSignIn(request);
+
+        response.setToken(getAuthorization(request.getAlias()));
+        return response;
+    }
+
+    private String getAuthorization(String alias){
+        AuthorizationServiceImpl authorizationService = new AuthorizationServiceImpl();
+        return authorizationService.getAuthorization(alias);
     }
 }

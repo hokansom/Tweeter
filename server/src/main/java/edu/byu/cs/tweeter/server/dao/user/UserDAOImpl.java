@@ -18,7 +18,6 @@ public class UserDAOImpl implements UserDAO {
     private static final String FirstNameAttr = "firstName";
     private static final String LastNameAtttr = "lastName";
     private static final String ImageUrlAttr = "imageUrl";
-    private static final String PasswordAttr = "password";
 
     // DynamoDB client
     private static AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder
@@ -34,29 +33,23 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public SearchResponse getUser(SearchRequest request) {
-        Table table = dynamoDB.getTable(TableName);
+        try{
+            Table table = dynamoDB.getTable(TableName);
 
-        Item item = table.getItem(AliasAttr, request.getAlias());
-        if(item == null){
-            String message = String.format("[Bad Request]: User with given alias (@%s) does not exist", request.getAlias());
-            return new SearchResponse(false, message);
+            Item item = table.getItem(AliasAttr, request.getAlias());
+            if(item == null){
+                String message = String.format("[Bad Request]: User with given alias (@%s) does not exist", request.getAlias());
+                return new SearchResponse(false, message);
+            }
+
+            User user = new User(item.getString(FirstNameAttr), item.getString(LastNameAtttr),
+                    item.getString(AliasAttr), item.getString(ImageUrlAttr));
+
+            return new SearchResponse(true, "", user, false);
+        } catch (Exception e){
+            e.printStackTrace();
+            String message = String.format("[Internal Service Error]: Could not get @%s", request.getAlias());
+            throw new RuntimeException(message);
         }
-        System.out.println("Found a user");
-        User user = new User(item.getString(FirstNameAttr), item.getString(LastNameAtttr),
-                item.getString(AliasAttr), item.getString(ImageUrlAttr));
-
-        boolean isFollowing = false;
-        if(null != request.getCurrentUser()){
-            isFollowing = checkFollow(request.getCurrentUser().getAlias(), request.getAlias());
-        }
-
-        return new SearchResponse(true, "", user, isFollowing);
-
-    }
-
-
-    private boolean checkFollow(String userAlias, String otherAlias){
-        FollowDAOImpl followDAO = new FollowDAOImpl();
-        return followDAO.getFollow(userAlias, otherAlias);
     }
 }

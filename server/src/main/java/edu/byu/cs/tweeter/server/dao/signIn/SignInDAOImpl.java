@@ -32,49 +32,41 @@ public class SignInDAOImpl implements SignInDAO {
         String alias = request.getAlias();
         String password = request.getPassword();
 
-
-        String message = checkParameters(request);
-        if (null != message){
-            return new SignInResponse(false, message);
-        }
-
+        checkParameters(request);
+        String message;
         Table table = dynamoDB.getTable(TableName);
+        try{
+            Item item = table.getItem(AliasAttr, alias);
+            if(item == null){
+                message = String.format("[Bad Request]: User with given alias (@%s) does not exist.", alias);
+                return new SignInResponse(false, message);
+            }
 
-        Item item = table.getItem(AliasAttr, alias);
-        if(item == null){
-            System.out.println("Got null");
-            message = String.format("[Bad Request]: User with given alias (@%s) does not exist.", alias);
-            return new SignInResponse(false, message);
+            String dbPassword = item.getString(PasswordAttr);
+            if (!SignInDAO.validatePassword(password, dbPassword)){
+                message = "[Bad Request]: Invalid password";
+                return new SignInResponse(false, message);
+            }
+
+            User user = new User(item.getString(FirstNameAttr), item.getString(LastNameAtttr),
+                    item.getString(AliasAttr), item.getString(ImageUrlAttr));
+
+            return new SignInResponse(user, "");
+        } catch (Exception e){
+            e.printStackTrace();
+            message = String.format("[Internal Service Error]: Could not sign in @%s", alias);
+            throw new RuntimeException(message);
         }
-        System.out.println("Found a user");
-
-        String dbPassword = item.getString(PasswordAttr);
-        if (!SignInDAO.validatePassword(password, dbPassword)){
-            message = "[Bad Request]: Invalid password";
-            return new SignInResponse(false, message);
-        }
-
-        User user = new User(item.getString(FirstNameAttr), item.getString(LastNameAtttr),
-                item.getString(AliasAttr), item.getString(ImageUrlAttr));
-
-        String token = getAuthorization(alias);
-
-        return new SignInResponse(user, token);
-
     }
 
-    private String checkParameters(SignInRequest request){
+    private void checkParameters(SignInRequest request){
         if(null == request.getAlias() || request.getAlias().equals("")){
-            return "[Bad Request]: Alias is required.";
+            throw new RuntimeException("[Bad Request]: Alias is required.");
         }
         if(null == request.getPassword() || request.getPassword().equals("")){
-            return "[Bad Request]: Password is required.";
+          throw new RuntimeException("[Bad Request]: Password is required.");
         }
-        return null;
     }
 
-    private String getAuthorization(String alias){
-        AuthorizationServiceImpl authorizationService = new AuthorizationServiceImpl();
-        return authorizationService.getAuthorization(alias);
-    }
+
 }

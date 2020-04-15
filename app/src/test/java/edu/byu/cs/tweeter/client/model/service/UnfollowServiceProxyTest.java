@@ -8,14 +8,17 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
+import edu.byu.cs.tweeter.model.domain.Follow;
+import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.model.service.UnfollowService;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
 import edu.byu.cs.tweeter.model.service.request.SignInRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowResponse;
-import edu.byu.cs.tweeter.model.domain.Follow;
-import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.response.SignInResponse;
 
-class FollowServiceProxyTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class UnfollowServiceProxyTest {
     private final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private final User user1 = new User("Test", "User", MALE_IMAGE_URL);
     private final User user2 = new User("Mo", "Davis", "Morgan", "https://cs-340-w2020.s3-us-west-2.amazonaws.com/Morgan.jpg");
@@ -24,11 +27,11 @@ class FollowServiceProxyTest {
     private String user1Token;
     private String user2Token;
 
-    private FollowServiceProxy serviceProxySpy;
+    private UnfollowServiceProxy serviceProxySpy;
 
     @BeforeEach
-    void setup(){
-        serviceProxySpy = Mockito.spy(new FollowServiceProxy());
+    void setUp() {
+        serviceProxySpy = Mockito.spy(new UnfollowServiceProxy());
         try{
             SignInServiceProxy signInServiceProxy = new SignInServiceProxy();
 
@@ -39,21 +42,19 @@ class FollowServiceProxyTest {
             signInRequest = new SignInRequest("Morgan", "Password");
             response = signInServiceProxy.postSignIn(signInRequest);
             user2Token = response.getToken();
-
-
         } catch (IOException e){
 
         }
-
     }
 
+
     @Test
-    void test_followHandler_follow(){
-        Follow follow = new Follow(user2, user3);
-        FollowRequest request = new FollowRequest(follow, true, user2Token);
+    void test_unfollowHandler_unfollow(){
+        Follow follow = new Follow(user1, user2);
+        FollowRequest request = new FollowRequest(follow, false, user1Token);
         FollowResponse response = null;
         try{
-            response = serviceProxySpy.postFollow(request);
+            response = serviceProxySpy.deleteFollow(request);
         } catch(IOException e){
             System.out.println(e);
         }
@@ -63,26 +64,28 @@ class FollowServiceProxyTest {
     }
 
     @Test
-    void test_followHandler_existingFollow(){
-        Follow follow = new Follow(user1, user2);
-        FollowRequest request = new FollowRequest(follow, true, user1Token);
+    void test_unfollowHandler_nonExisitingFollow(){
+        Follow follow = new Follow(user2, user3);
+        FollowRequest request = new FollowRequest(follow, false, user2Token);
         FollowResponse response = null;
         try{
-            response = serviceProxySpy.postFollow(request);
+            response = serviceProxySpy.deleteFollow(request);
         } catch(IOException e){
-            Assertions.assertEquals("[Bad Request]: follow relationship already exists", e.getMessage());
+            Assertions.assertEquals("[Bad Request]: Cannot delete a follow relationship that doesn't exist", e.getMessage());
         }
 
         Assertions.assertNull(response);
     }
 
+
     @AfterEach
     void tearDown() {
-        UnfollowServiceProxy unfollowServiceProxy = new UnfollowServiceProxy();
-        FollowRequest request = new FollowRequest(new Follow(user2, user3), false, user2Token);
+        FollowServiceProxy followServiceProxy = new FollowServiceProxy();
+        FollowRequest request = new FollowRequest(new Follow(user1, user2), true, user1Token);
+        FollowResponse response = null;
         try{
-            unfollowServiceProxy.deleteFollow(request);
-        } catch (IOException e){
+            response = followServiceProxy.postFollow(request);
+        } catch(IOException e){
 
         }
     }

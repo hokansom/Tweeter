@@ -23,7 +23,6 @@ public class GetFollowersHandler extends Handler implements RequestHandler<Follo
      */
     @Override
     public FollowerResponse handleRequest(FollowerRequest request, Context context) {
-        /*TODO: low priority, but update token timestamp*/
 
         FollowerServiceImpl service = new FollowerServiceImpl();
         FollowerResponse response = service.getFollowers(request);

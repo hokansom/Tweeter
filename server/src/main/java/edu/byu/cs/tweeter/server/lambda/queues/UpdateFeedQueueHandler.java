@@ -14,6 +14,7 @@ public class UpdateFeedQueueHandler implements RequestHandler<SQSEvent, Void> {
     public Void handleRequest(SQSEvent sqsEvent, Context context) {
         System.out.println("Received an event");
         FeedServiceImpl service = new FeedServiceImpl();
+        System.out.println(sqsEvent.getRecords().size());
         for(SQSEvent.SQSMessage msg : sqsEvent.getRecords()){
             System.out.println(msg.getBody());
             QueueMessage queueMessage = Serializer.deserialize(msg.getBody(), QueueMessage.class);

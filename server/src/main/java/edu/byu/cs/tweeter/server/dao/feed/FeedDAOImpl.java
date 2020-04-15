@@ -5,7 +5,6 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.BatchWriteItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.TableWriteItems;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.QueryRequest;
@@ -61,11 +60,9 @@ public class FeedDAOImpl implements FeedDAO {
                     .withLimit(request.getLimit());
 
             if(isNonEmpty(request.getLastStatus())){
-                System.out.println("Has a lastStatus");
                 long lastStatusTime = request.getLastStatus().getDate();
 
                 String dateString = String.format("%d", lastStatusTime);
-                System.out.println("timestamp " + dateString);
                 Map<String, AttributeValue> startKey = new HashMap<>();
                 startKey.put(AliasAttr, new AttributeValue().withS(authorAlias));
                 startKey.put(DateAttr, new AttributeValue().withN(dateString));
@@ -84,13 +81,16 @@ public class FeedDAOImpl implements FeedDAO {
                     statuses.add(temp);
                 }
             }
+
             boolean hasMorePages = false;
             Map<String, AttributeValue> lastKey = queryResult.getLastEvaluatedKey();
             if (lastKey != null) {
                 hasMorePages = true;
             }
+
             Feed feed = new Feed(statuses, request.getUser());
             return new FeedResponse(feed, hasMorePages);
+
         } catch (Exception e){
             e.printStackTrace();
             String message = String.format("[Internal Service Error]: could not get @%s's feed", authorAlias);

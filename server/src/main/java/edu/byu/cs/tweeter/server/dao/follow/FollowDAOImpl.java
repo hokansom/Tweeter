@@ -31,13 +31,13 @@ public class FollowDAOImpl implements FollowDAO{
     public FollowResponse postFollow(FollowRequest request) {
         String followerAlias = request.getFollow().getFollower().getAlias();
         String followeeAlias = request.getFollow().getFollowee().getAlias();
+
         checkInput(request);
         try{
             String followerString = Serializer.serialize(request.getFollow().getFollower());
             String followeeString = Serializer.serialize(request.getFollow().getFollowee());
 
             Table table = dynamoDB.getTable(TableName);
-
 
             Item item = new Item()
                     .withPrimaryKey(FollowerAliasAttr, followerAlias, FolloweeAliasAttr, followeeAlias)
@@ -49,6 +49,7 @@ public class FollowDAOImpl implements FollowDAO{
 
         } catch (ConditionalCheckFailedException e){
             throw new RuntimeException("[Bad Request]: follow relationship already exists");
+
         } catch (Exception e){
             throw new RuntimeException("[Internal Service Error]: could not add follow relationship");
         }
@@ -70,9 +71,15 @@ public class FollowDAOImpl implements FollowDAO{
 
     @Override
     public boolean getFollow(String followerAlias, String followeeAlias) {
-        Table table = dynamoDB.getTable(TableName);
-        Item item = table.getItem(FollowerAliasAttr, followerAlias, FolloweeAliasAttr, followeeAlias);
-        return item != null;
+        try{
+            Table table = dynamoDB.getTable(TableName);
+            Item item = table.getItem(FollowerAliasAttr, followerAlias, FolloweeAliasAttr, followeeAlias);
+            return item != null;
 
+        } catch (Exception e){
+            e.printStackTrace();
+            String message = String.format("[Internal Service Error]: Could not determine if @%s is following @%s", followerAlias, followeeAlias);
+            throw new RuntimeException(message);
+        }
     }
 }

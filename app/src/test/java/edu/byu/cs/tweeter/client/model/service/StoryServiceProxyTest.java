@@ -18,6 +18,10 @@ class StoryServiceProxyTest {
     private final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private final User user = new User("Test", "User", MALE_IMAGE_URL);
     private final User user2 = new User("Mo", "Davis", "Morgan", "https://cs-340-w2020.s3-us-west-2.amazonaws.com/Morgan.jpg");
+    private final User user3 = new User("Morgan", "Pleasework", "Testing", "https://cs-340-w2020.s3-us-west-2.amazonaws.com/Testing.jpg");
+    private final String statusString = "{\"message\":\"Testing a status with @Morgan\",\"author\":{\"firstName\":\"Mo\",\"lastName\":\"Davis\",\"alias\":\"Morgan\",\"imageUrl\":\"https://cs-340-w2020.s3-us-west-2.amazonaws.com/Morgan.jpg\"},\"urls\":{\"uris\":[]},\"mentions\":{\"mentions\":[\"@Morgan\"]},\"date\":1586901114216}";
+
+
     private StoryServiceProxy serviceProxySpy;
 
     @BeforeEach
@@ -43,8 +47,8 @@ class StoryServiceProxyTest {
     }
 
     @Test
-    void test_withDAOgetStoryHandler(){
-        StoryRequest request = new StoryRequest(user2, 1, null);
+    void test_getStory_moreThanLimit(){
+        StoryRequest request = new StoryRequest(user2, 3, null);
         StoryResponse response = null;
         try{
             response = serviceProxySpy.getStory(request);
@@ -54,14 +58,14 @@ class StoryServiceProxyTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertNotNull(response.getStory());
-        Assertions.assertEquals(1, response.getStory().getStory().size());
+        Assertions.assertEquals(3, response.getStory().getStory().size());
         Assertions.assertTrue(response.getHasMorePages());
     }
 
     @Test
-    void test_withDAO2getStoryHandler(){
-        Status status = Serializer.deserialize("{\"message\":\"Testing another status\",\"author\":{\"firstName\":\"Mo\",\"lastName\":\"Davis\",\"alias\":\"Morgan\",\"imageUrl\":\"https://cs-340-w2020.s3-us-west-2.amazonaws.com/Morgan.jpg\"},\"urls\":{\"uris\":[]},\"mentions\":{\"mentions\":[]},\"date\":1586809130840}", Status.class);
-        StoryRequest request = new StoryRequest(user2, 2, status);
+    void test_getStory_withLastStatus(){
+        Status lastStatus = Serializer.deserialize(statusString, Status.class);
+        StoryRequest request = new StoryRequest(user2, 10, lastStatus);
         StoryResponse response = null;
         try{
             response = serviceProxySpy.getStory(request);
@@ -71,7 +75,45 @@ class StoryServiceProxyTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertNotNull(response.getStory());
-        Assertions.assertEquals(1, response.getStory().getStory().size());
+        Assertions.assertEquals(5, response.getStory().getStory().size());
+        for(Status status: response.getStory().getStory()){
+            Assertions.assertNotEquals(lastStatus, status);
+            Assertions.assertEquals(user2,status.getAuthor());
+        }
         Assertions.assertFalse(response.getHasMorePages());
+    }
+
+    @Test
+    void test_getStory_correctAuthor(){
+        User testing = new User("Morgan", "Davis", "Momo", MALE_IMAGE_URL);
+        StoryRequest request = new StoryRequest(testing, 50, null);
+        StoryResponse response = null;
+        try{
+            response = serviceProxySpy.getStory(request);
+        } catch (IOException e){
+            System.out.println(e);
+        }
+
+        Assertions.assertNotNull(response);
+        Assertions.assertNotNull(response.getStory());
+        for(Status status: response.getStory().getStory()){
+            Assertions.assertEquals(testing,status.getAuthor());
+        }
+        Assertions.assertFalse(response.getHasMorePages());
+    }
+
+    @Test
+    void test_getStory_noStatuses(){
+        StoryRequest request = new StoryRequest(user3, 10, null);
+        StoryResponse response = null;
+        try{
+            response = serviceProxySpy.getStory(request);
+        } catch (IOException e){
+            System.out.println(e);
+        }
+
+        Assertions.assertNotNull(response);
+        Assertions.assertNotNull(response.getStory());
+        Assertions.assertEquals(0, response.getStory().getStory().size());
     }
 }

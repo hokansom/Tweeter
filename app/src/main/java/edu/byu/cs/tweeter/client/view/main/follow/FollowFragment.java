@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.client.view.main.follow;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import edu.byu.cs.tweeter.R;
+import edu.byu.cs.tweeter.client.view.main.SignInActivity;
 import edu.byu.cs.tweeter.model.domain.Follow;
 import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.FollowRequest;
@@ -95,5 +97,16 @@ public class FollowFragment extends Fragment implements FollowPresenter.View, Po
     public void handleException(Exception throwable) {
         Log.e("", throwable.getMessage(), throwable);
         Toast.makeText(getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
+        if(throwable.getMessage().equals("[Unauthorized]: User has timed out due to inactivity")){
+            forceSignOut();
+        }
+
+    }
+
+    private void forceSignOut(){
+        presenter.setCurrentUser(null);
+        Intent intent = new Intent(getContext(), SignInActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

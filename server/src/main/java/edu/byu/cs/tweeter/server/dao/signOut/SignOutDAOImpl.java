@@ -26,8 +26,6 @@ public class SignOutDAOImpl implements SignOutDAO {
 
     @Override
     public void signOut(SignOutRequest request) {
-        System.out.println(request.getAlias());
-        System.out.println(request.getToken());
         Table table = dynamoDB.getTable(TableName);
         try{
             long current = 0;
@@ -36,7 +34,7 @@ public class SignOutDAOImpl implements SignOutDAO {
                     .withNameMap(new NameMap().with("#timeStamp", "timeStamp"))
                     .withValueMap(new ValueMap().withNumber(":time", current));
             table.updateItem(updateItemSpec);
-            System.out.println("Updated table");
+            System.out.println("Deactivated user's auth token");
         }
         catch (Exception e){
             e.printStackTrace();

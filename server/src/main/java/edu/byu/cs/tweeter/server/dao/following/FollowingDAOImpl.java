@@ -43,13 +43,10 @@ public class FollowingDAOImpl implements FollowingDAO {
      */
     @Override
     public FollowingResponse getFollowees(FollowingRequest request) {
-        System.out.println("In FollowingDAOImpl");
         assert request.getLimit() > 0;
         assert request.getFollower() != null;
 
         String followerAlias = request.getFollower().getAlias();
-
-
 
         Map<String, String> attrNames = new HashMap<>();
         attrNames.put("#followerA", FollowerAliasAttr);

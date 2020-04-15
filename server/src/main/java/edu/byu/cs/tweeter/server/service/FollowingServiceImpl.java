@@ -14,8 +14,7 @@ public class FollowingServiceImpl implements FollowingService {
 
     @Override
     public FollowingResponse getFollowees(FollowingRequest request) {
-        System.out.println("In Following Service Impl");
-        System.out.println(null != request);
+
         FollowingDAO dao = new FollowingDAOImpl();
         return dao.getFollowees(request);
     }

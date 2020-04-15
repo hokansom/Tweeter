@@ -7,7 +7,6 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryResult;
 
@@ -64,11 +63,9 @@ public class StoryDAOImpl implements StoryDAO {
                     .withLimit(request.getLimit());
 
             if(isNonEmpty(request.getLastStatus())){
-                System.out.println("Has a lastStatus");
                 long lastStatusTime = request.getLastStatus().getDate();
 
                 String dateString = String.format("%d", lastStatusTime);
-                System.out.println("timestamp " + dateString);
                 Map<String, AttributeValue> startKey = new HashMap<>();
                 startKey.put(AliasAttr, new AttributeValue().withS(authorAlias));
                 startKey.put(DateAttr, new AttributeValue().withN(dateString));
@@ -80,20 +77,23 @@ public class StoryDAOImpl implements StoryDAO {
             List<Status> statuses = new ArrayList<>();
 
             List<Map<String, AttributeValue>> items = queryResult.getItems();
-            if(items != null){
-                for(Map<String, AttributeValue> item : items){
+            if(items != null) {
+                for (Map<String, AttributeValue> item : items) {
                     String status = item.get(StatusAttr).getS();
                     Status temp = Serializer.deserialize(status, Status.class);
                     statuses.add(temp);
                 }
             }
+
             boolean hasMorePages = false;
             Map<String, AttributeValue> lastKey = queryResult.getLastEvaluatedKey();
             if (lastKey != null) {
                 hasMorePages = true;
             }
+
             Story story = new Story(statuses, request.getUser());
             return new StoryResponse(story, hasMorePages);
+
         } catch (Exception e){
             e.printStackTrace();
             String message = String.format("[Internal Service Error]: could not get @%s's story", authorAlias);
@@ -112,9 +112,12 @@ public class StoryDAOImpl implements StoryDAO {
             Item item = new Item()
                     .withPrimaryKey(AliasAttr, alias, DateAttr, timeStamp)
                     .withString(StatusAttr, statusString);
-            PutItemSpec putItemSpec = new PutItemSpec().withItem(item).withConditionExpression("attribute_not_exists(statusString)");
+            PutItemSpec putItemSpec = new PutItemSpec()
+                    .withItem(item)
+                    .withConditionExpression("attribute_not_exists(statusString)");
 
             table.putItem(putItemSpec);
+
         } catch(Exception e){
             e.printStackTrace();
             throw new RuntimeException("[Internal Service Error]: Could not post status");

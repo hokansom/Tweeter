@@ -14,7 +14,7 @@ import edu.byu.cs.tweeter.model.service.response.StatusResponse;
 /**
  * A DAO for accessing and updating 'status' data from the database.
  */
-public class StatusDAO {
+public class StatusDAOMock {
     private static List<User> users;
     private static Map<User, List<Status>> statusesByUser;
 

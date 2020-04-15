@@ -46,4 +46,5 @@ public abstract class Presenter {
     public void setFollowing(boolean following){
         following = following;
     }
+
 }

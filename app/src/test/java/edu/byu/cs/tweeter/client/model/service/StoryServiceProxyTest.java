@@ -18,7 +18,7 @@ class StoryServiceProxyTest {
     private final String MALE_IMAGE_URL = "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png";
     private final User user = new User("Test", "User", MALE_IMAGE_URL);
     private final User user2 = new User("Mo", "Davis", "Morgan", "https://cs-340-w2020.s3-us-west-2.amazonaws.com/Morgan.jpg");
-    private final User user3 = new User("Morgan", "Pleasework", "Testing", "https://cs-340-w2020.s3-us-west-2.amazonaws.com/Testing.jpg");
+    private final User user3 = new User("No", "Statuses", "NoStatuses", MALE_IMAGE_URL);
     private final String statusString = "{\"message\":\"Testing a status with @Morgan\",\"author\":{\"firstName\":\"Mo\",\"lastName\":\"Davis\",\"alias\":\"Morgan\",\"imageUrl\":\"https://cs-340-w2020.s3-us-west-2.amazonaws.com/Morgan.jpg\"},\"urls\":{\"uris\":[]},\"mentions\":{\"mentions\":[\"@Morgan\"]},\"date\":1586901114216}";
 
 

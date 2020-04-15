@@ -46,12 +46,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
         presenter = new ProfilePresenter(this);
         searchPresenter = new SearchPresenter(this);
 
-//
-//        ProfileSectionsPagerAdapter pagerAdapter = new ProfileSectionsPagerAdapter(this, getSupportFragmentManager());
-//        ViewPager viewPager = findViewById(R.id.view_pager);
-//        viewPager.setAdapter(pagerAdapter);
-//        TabLayout tabs = findViewById(R.id.tabs);
-//        tabs.setupWithViewPager(viewPager);
 
         userImageView = findViewById(R.id.userImage);
         userName = findViewById(R.id.userName);
@@ -65,19 +59,11 @@ public class ProfileActivity extends AppCompatActivity implements ProfilePresent
         }catch (Exception e){
             user = presenter.getViewingUser();
             System.out.println(presenter.isFollowing());
+            isFollowing = presenter.isFollowing();
             updateUserData();
             addSubPages();
         }
 
-
-//        if(presenter.getViewingUser() == null){
-//            Bundle extras = getIntent().getExtras();
-//            String alias = extras.getString("ALIAS");
-//            search(alias);
-//        } else {
-//            user = presenter.getViewingUser();
-//            updateUserData();
-//        }
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

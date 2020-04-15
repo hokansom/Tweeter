@@ -43,7 +43,7 @@ class StoryServiceProxyTest {
         Assertions.assertNotNull(response);
         Assertions.assertNotNull(response.getStory());
         Assertions.assertNotEquals(0, response.getStory().getStory().size());
-        Assertions.assertFalse(response.getHasMorePages());
+        Assertions.assertTrue(response.getHasMorePages());
     }
 
     @Test

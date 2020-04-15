@@ -52,7 +52,7 @@ public class FollowFragment extends Fragment implements FollowPresenter.View, Po
             }
         });
 
-        isFollowing = presenter.following;
+        isFollowing = presenter.isFollowing();
 
         if(isFollowing){
             followButton.setText(R.string.unfollow);

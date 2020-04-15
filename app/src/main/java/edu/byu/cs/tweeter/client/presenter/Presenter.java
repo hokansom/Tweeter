@@ -43,8 +43,8 @@ public abstract class Presenter {
 
     public boolean isFollowing(){ return following; }
 
-    public void setFollowing(boolean following){
-        following = following;
+    public void setFollowing(boolean isFollowing){
+        following = isFollowing;
     }
 
 }

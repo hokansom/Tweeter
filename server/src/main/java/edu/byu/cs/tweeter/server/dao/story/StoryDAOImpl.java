@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException;
 import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryResult;
 
@@ -108,6 +109,7 @@ public class StoryDAOImpl implements StoryDAO {
             String alias = request.getAuthor().getAlias();
             String statusString = Serializer.serialize(request.getStatus());
             long timeStamp = request.getStatus().getDate();
+
             Table table = dynamoDB.getTable(TableName);
             Item item = new Item()
                     .withPrimaryKey(AliasAttr, alias, DateAttr, timeStamp)
@@ -118,7 +120,11 @@ public class StoryDAOImpl implements StoryDAO {
 
             table.putItem(putItemSpec);
 
-        } catch(Exception e){
+        } catch (ConditionalCheckFailedException e){
+            e.printStackTrace();
+            throw new RuntimeException("[Bad Request]: Status has already been posted");
+        }
+        catch(Exception e){
             e.printStackTrace();
             throw new RuntimeException("[Internal Service Error]: Could not post status");
         }

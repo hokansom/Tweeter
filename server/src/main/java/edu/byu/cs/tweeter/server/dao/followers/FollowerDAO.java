@@ -1,5 +1,7 @@
 package edu.byu.cs.tweeter.server.dao.followers;
 
+import java.util.List;
+
 import edu.byu.cs.tweeter.model.service.request.FollowerRequest;
 import edu.byu.cs.tweeter.model.service.response.FollowerResponse;
 
@@ -15,4 +17,6 @@ public interface FollowerDAO {
      * @return the followers.
      */
     FollowerResponse getFollowers(FollowerRequest request);
+
+    List<String> getAllFollowers(String alias);
 }

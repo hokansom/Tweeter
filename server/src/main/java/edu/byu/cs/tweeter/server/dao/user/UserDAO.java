@@ -1,5 +1,8 @@
 package edu.byu.cs.tweeter.server.dao.user;
 
+import java.util.List;
+
+import edu.byu.cs.tweeter.model.domain.User;
 import edu.byu.cs.tweeter.model.service.request.SearchRequest;
 import edu.byu.cs.tweeter.model.service.response.SearchResponse;
 
@@ -11,4 +14,6 @@ public interface UserDAO {
      * @return the user.
      */
    SearchResponse getUser(SearchRequest request);
+
+   void addUserBatch(List<User> users);
 }

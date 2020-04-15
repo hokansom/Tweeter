@@ -1,6 +1,5 @@
 package edu.byu.cs.tweeter.server.service;
 
-import com.amazonaws.handlers.AsyncHandler;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.amazonaws.services.sqs.model.BatchResultErrorEntry;
@@ -41,74 +40,33 @@ public class SQSService {
                 String msgName = "msg" + counter;
                 QueueMessage queueMessage = new QueueMessage(status, batchList);
                 String message = Serializer.serialize(queueMessage);
+
                 SendMessageBatchRequestEntry entry = new SendMessageBatchRequestEntry(msgName, message);
                 entries.add(entry);
+
                 counter++;
                 batchList = new ArrayList<>();
             }
+            if(entries.size() == 10){
+                sendBatch(entries, UpdateFeedURL);
+                entries = new ArrayList<>();
+            }
         }
-        sendBatch(entries, UpdateFeedURL);
 
-        /*Send any leftover aliases that didn't fit the batch of 25*/
+        /*Add any leftover aliases to a new batch*/
         if (batchList.size() > 0){
             QueueMessage queueMessage = new QueueMessage(status, batchList);
             String message = Serializer.serialize(queueMessage);
             String msgName = "msg" + counter;
             SendMessageBatchRequestEntry entry = new SendMessageBatchRequestEntry(msgName, message);
             entries.add(entry);
+        }
+
+        /*Send any remaining batches */
+        if(entries.size() > 0){
             sendBatch(entries, UpdateFeedURL);
         }
     }
-
-
-//    private void sendMessage(String message, String url){
-//        try{
-//        SendMessageBatchRequestEntry entry = new SendMessageBatchRequestEntry("msg", message);
-//        SendMessageBatchRequest request = new SendMessageBatchRequest()
-//                .withQueueUrl(url)
-//                .withEntries(entry);
-//
-//        System.out.println("Sending a message: " + message);
-//
-//            sqs.sendMessageBatchAsync(request);
-////            SendMessageRequest sendMessageRequest = new SendMessageRequest()
-////                    .withQueueUrl(url)
-////                    .withMessageBody(message);
-//
-//            System.out.println("Message sent");
-//        } catch(Exception e){
-//            e.printStackTrace();
-//            throw new RuntimeException("[Internal Service Error]: Could not send message to queue");
-//        }
-//    }
-
-
-//    private void sendMessage(String message, String url){
-//        try{
-//            System.out.println("Message to send to SQS sendmessage: message" + message);
-//            SendMessageRequest request = new SendMessageRequest()
-//                    .withQueueUrl(url)
-//                    .withMessageBody(message);
-//
-//            sqs.sendMessageAsync(request, new AsyncHandler<SendMessageRequest, SendMessageResult>() {
-//                @Override
-//                public void onError(Exception e) {
-//                    System.out.println("Message was not sent. An error occurred");
-//                    e.printStackTrace();
-//                    throw new RuntimeException("[Internal Service Error]: Could not send SQS message");
-//                }
-//
-//                @Override
-//                public void onSuccess(SendMessageRequest request, SendMessageResult sendMessageResult) {
-//                    System.out.println("Message successfully sent");
-//                    System.out.println("The message that was delivered: " + request.getMessageBody());
-//                }
-//            });
-//        } catch (Exception e){
-//            e.printStackTrace();
-//            throw new RuntimeException("[Internal Service Error]: Could not send SQS message");
-//        }
-//    }
 
     private void sendMessage(String message, String url){
         try{
@@ -121,20 +79,6 @@ public class SQSService {
             System.out.println(result.getSdkResponseMetadata());
             System.out.println(result.getMessageId());
 
-//            sqs.sendMessageAsync(request, new AsyncHandler<SendMessageRequest, SendMessageResult>() {
-//                @Override
-//                public void onError(Exception e) {
-//                    System.out.println("Message was not sent. An error occurred");
-//                    e.printStackTrace();
-//                    throw new RuntimeException("[Internal Service Error]: Could not send SQS message");
-//                }
-//
-//                @Override
-//                public void onSuccess(SendMessageRequest request, SendMessageResult sendMessageResult) {
-//                    System.out.println("Message successfully sent");
-//                    System.out.println("The message that was delivered: " + request.getMessageBody());
-//                }
-//            });
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException("[Internal Service Error]: Could not send SQS message");
@@ -144,7 +88,6 @@ public class SQSService {
     private void sendBatch(List<SendMessageBatchRequestEntry> entries, String url){
         if(entries.size() > 0){
             try{
-                System.out.println("Trying to send a batch");
                 SendMessageBatchRequest request = new SendMessageBatchRequest(url, entries);
 
                 Future<SendMessageBatchResult> resultFuture = sqs.sendMessageBatchAsync(request);
@@ -154,7 +97,6 @@ public class SQSService {
                     for(BatchResultErrorEntry entry : resultFuture.get().getFailed()){
                         System.out.println(entry.getMessage());
                     }
-
                 }
 
             } catch(Exception e){

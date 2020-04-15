@@ -31,9 +31,6 @@ public class PostStatusHandler extends Handler implements RequestHandler<StatusR
         String token = request.getToken();
 
 
-        /*TODO: Remove after done testing*/
-        forTestingValidActiveToken(alias, token);
-
         checkAuthorization(alias, token);
 
 

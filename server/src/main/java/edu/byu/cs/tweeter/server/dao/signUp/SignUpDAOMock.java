@@ -44,13 +44,6 @@ public class SignUpDAOMock implements SignUpDAO {
             String hashed = SignUpDAO.hashPassword(request.getPassword());
             authentication.put(request.getUser().getAlias(), hashed);
 
-            //TODO: save the image and update the
-//            byte[] imageBytes = Base64.getMimeDecoder().decode(theImageString);
-//            ByteArrayInputStream bais = new ByteArrayInputStream(imageBytes);
-//            BufferedImage bufferedImage = ImageIO.read(bais);
-
-//            File imageFile = new File("/tmp/imageFile.jpeg");
-
 
             /*Log the new user in*/
 //            SignInRequest signInRequest = new SignInRequest(request.getUser().getAlias(), request.getPassword());

@@ -32,7 +32,7 @@ class StoryServiceProxyTest {
 
     @Test
     void test_getStoryHandler(){
-        StoryRequest request = new StoryRequest(user, 10, null);
+        StoryRequest request = new StoryRequest(user2, 10, null);
         StoryResponse response = null;
         try{
             response = serviceProxySpy.getStory(request);
@@ -43,7 +43,7 @@ class StoryServiceProxyTest {
         Assertions.assertNotNull(response);
         Assertions.assertNotNull(response.getStory());
         Assertions.assertNotEquals(0, response.getStory().getStory().size());
-        Assertions.assertTrue(response.getHasMorePages());
+        Assertions.assertFalse(response.getHasMorePages());
     }
 
     @Test
@@ -75,7 +75,7 @@ class StoryServiceProxyTest {
 
         Assertions.assertNotNull(response);
         Assertions.assertNotNull(response.getStory());
-        Assertions.assertEquals(5, response.getStory().getStory().size());
+        Assertions.assertNotEquals(0, response.getStory().getStory().size());
         for(Status status: response.getStory().getStory()){
             Assertions.assertNotEquals(lastStatus, status);
             Assertions.assertEquals(user2,status.getAuthor());

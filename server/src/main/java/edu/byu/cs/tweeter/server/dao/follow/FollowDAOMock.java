@@ -14,7 +14,7 @@ import edu.byu.cs.tweeter.server.dao.FollowGenerator;
 /**
  * A DAO for updating 'follow' data in the database.
  */
-public class FollowDAOMock {
+public class FollowDAOMock implements FollowDAO {
 
     private static List<Follow> follows;
     private static Set<User> users;
@@ -110,4 +110,13 @@ public class FollowDAOMock {
         return FollowGenerator.getInstance();
     }
 
+    @Override
+    public boolean getFollow(String followerAlias, String followeeAlias) {
+        return false;
+    }
+
+    @Override
+    public void addFollowersBatch(List<User> followers, User followed) {
+
+    }
 }

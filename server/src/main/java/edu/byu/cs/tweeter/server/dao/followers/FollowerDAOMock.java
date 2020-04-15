@@ -123,4 +123,9 @@ public class FollowerDAOMock implements FollowerDAO {
     public FollowGenerator getFollowGenerator() {
         return FollowGenerator.getInstance();
     }
+
+    @Override
+    public List<String> getAllFollowers(String alias) {
+        return null;
+    }
 }

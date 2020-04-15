@@ -98,6 +98,43 @@ public class FollowerDAOImpl implements FollowerDAO {
 
    }
 
+   public List<String> getAllFollowers(String alias){
+      if(alias.length() == 0){
+          throw new RuntimeException("[Bad Request]: Alias was empty");
+      }
+      try{
+          Table table = dynamoDB.getTable(TableName);
+          NameMap nameMap = new NameMap()
+                  .with("#followeeA", FolloweeAliasAttr);
+
+          ValueMap valueMap = new ValueMap()
+                  .withString(":followeeAlias", alias);
+          Index index = table.getIndex(IndexName);
+
+          QuerySpec querySpec = new QuerySpec()
+                  .withKeyConditionExpression("#followeeA = :followeeAlias")
+                  .withNameMap(nameMap)
+                  .withValueMap(valueMap);
+
+          ItemCollection<QueryOutcome> items = index.query(querySpec);
+          Iterator<Item> iterator = items.iterator();
+
+          List<String> followers = new ArrayList<>();
+          while(iterator.hasNext()){
+              String result = iterator.next().toJSONPretty();
+              DBResults temp = Serializer.deserialize(result, DBResults.class);
+              User follower = Serializer.deserialize(temp.getFollower(), User.class);
+              followers.add(follower.getAlias());
+          }
+          return followers;
+
+      } catch (Exception e){
+          e.printStackTrace();
+          throw new RuntimeException(String.format("[Internal Service Error]: Could not get all of @%s's followers", alias));
+      }
+
+   }
+
 
     private static boolean isNonEmpty(User lastFollower) {
         if(null != lastFollower ){

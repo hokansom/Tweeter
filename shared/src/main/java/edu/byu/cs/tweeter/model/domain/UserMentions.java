@@ -19,9 +19,4 @@ public class UserMentions {
         return this.mentions;
     }
 
-    public boolean checkValidity(){
-       //TODO: Check if the people actually exist
-        return true;
-    }
-
 }

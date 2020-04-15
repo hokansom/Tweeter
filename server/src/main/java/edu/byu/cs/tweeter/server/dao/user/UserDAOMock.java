@@ -35,6 +35,11 @@ public class UserDAOMock implements UserDAO{
 
     private static Map<String, String> authTokens;
 
+    @Override
+    public void addUserBatch(List<User> users) {
+
+    }
+
     /*--------------------------------SIGN IN--------------------------------------------*/
 
     /**
@@ -105,7 +110,6 @@ public class UserDAOMock implements UserDAO{
             String hashed = hashPassword(request.getPassword());
             authentication.put(request.getUser().getAlias(), hashed);
 
-            //TODO: save the image and update the imageurl
 
             /*Log the new user in*/
             SignInRequest signInRequest = new SignInRequest(request.getUser().getAlias(), request.getPassword());
@@ -116,8 +120,6 @@ public class UserDAOMock implements UserDAO{
             else{
                 response = new SignUpResponse(false, signInResponse.getMessage());
             }
-//            /**/
-//            response = new SignUpResponse(request.getUser(), generateAuthToken());
         }
         else{
             response = new SignUpResponse(false, "[Bad Request]: Alias is already taken");
